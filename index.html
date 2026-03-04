@@ -3,166 +3,217 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>SALON COLOR · CLIENT LOG</title>
-  <meta name="theme-color" content="#0b1220" />
+  <title>Salon Color Calc</title>
+  <meta name="theme-color" content="#0b0f1f" />
   <style>
     :root{
-      --bg:#0b1220;
-      --card:rgba(255,255,255,.06);
-      --line:rgba(255,255,255,.12);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.62);
-      --green:#22c55e;
-      --blue:#60a5fa;
-      --red:#fb7185;
-      --shadow:0 18px 40px rgba(0,0,0,.35);
-      --r:18px;
+      --bg0:#070a14;
+      --bg1:#0b0f1f;
+      --glass: rgba(255,255,255,.08);
+      --line: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.62);
+      --neon: #22c55e;
+      --neon2:#60a5fa;
+      --pink:#fb7185;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --r: 22px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:var(--sans);
-      color:var(--text);
+      font-family: var(--sans);
+      color: var(--text);
       background:
-        radial-gradient(900px 600px at 20% 10%, rgba(96,165,250,.18), transparent 55%),
-        radial-gradient(900px 600px at 80% 20%, rgba(34,197,94,.14), transparent 55%),
-        linear-gradient(180deg, var(--bg), #0e1730);
+        radial-gradient(900px 600px at 15% 12%, rgba(96,165,250,.22), transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, rgba(251,113,133,.18), transparent 55%),
+        radial-gradient(900px 700px at 50% 92%, rgba(34,197,94,.16), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
       min-height:100vh;
-      padding: 14px 14px 90px;
+      padding: 16px 16px 90px;
     }
     header{
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      padding: 10px 0 12px;
-      backdrop-filter: blur(12px);
-      background: linear-gradient(180deg, rgba(11,18,32,.90), rgba(11,18,32,.55));
-      border-bottom:1px solid var(--line);
-    }
-    .topbar{
-      max-width: 860px;
-      margin: 0 auto;
+      max-width: 760px;
+      margin: 0 auto 12px;
       display:flex;
-      align-items:flex-end;
       justify-content:space-between;
-      gap: 10px;
-      padding: 0 4px;
+      align-items:flex-end;
+      gap:12px;
+      padding: 6px 2px;
     }
-    .brand{display:flex; flex-direction:column; gap:2px;}
-    .brand .t{font-weight:900; letter-spacing:.3px; font-size:16px;}
-    .brand .s{color:var(--muted); font-size:12px;}
-    .wrap{max-width:860px; margin: 14px auto 0;}
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .title .h{
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    .title .s{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .badge{
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      padding: 8px 10px;
+      border-radius: 999px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .wrap{
+      max-width: 760px;
+      margin: 0 auto;
+      display:grid;
+      gap: 12px;
+    }
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border:1px solid var(--line);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
       border-radius: var(--r);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
     .pad{padding: 14px;}
-    .tabs{
+    .grid2{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:8px;
+      gap: 10px;
     }
-    .tab{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding: 12px 8px;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 900;
-      text-align:center;
-      user-select:none;
+    @media (max-width: 560px){
+      .grid2{grid-template-columns:1fr;}
     }
-    .tab.on{
-      background: rgba(34,197,94,.16);
-      border-color: rgba(34,197,94,.35);
+    label{
+      display:block;
+      margin: 10px 0 6px;
+      font-size: 12px;
+      color: var(--muted);
     }
-    .h{margin:0 0 10px; font-size:14px; font-weight:900}
-    .sub{margin:-6px 0 12px; color:var(--muted); font-size:12px; line-height:1.5}
-    label{display:block; font-size:12px; color:var(--muted); margin: 8px 0 6px;}
-    input, select, textarea{
+    input{
       width:100%;
-      border:1px solid var(--line);
-      background: rgba(0,0,0,.18);
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.20);
       color: var(--text);
       padding: 12px 12px;
-      border-radius: 12px;
+      border-radius: 14px;
       font-size: 16px;
-      outline: none;
+      outline:none;
     }
-    textarea{min-height: 96px; font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,.84)}
-    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-    @media (max-width:520px){ .grid2{grid-template-columns:1fr} }
-    .pillRow{display:flex; gap:8px; flex-wrap:wrap}
-    .pill{
-      border:1px solid var(--line);
+    input::placeholder{color: rgba(255,255,255,.35)}
+    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top: 8px;}
+    .chip{
+      border: 1px solid var(--line);
       background: rgba(255,255,255,.06);
-      color: var(--text);
+      color: rgba(255,255,255,.88);
       padding: 10px 12px;
       border-radius: 999px;
-      font-weight: 900;
+      font-weight: 800;
       font-size: 13px;
       user-select:none;
+      transition: transform .05s ease, background .2s ease, border-color .2s ease;
     }
+    .chip:active{transform: translateY(1px)}
+    .chip.on{
+      border-color: rgba(34,197,94,.35);
+      background: rgba(34,197,94,.14);
+    }
+    .chip.blue.on{
+      border-color: rgba(96,165,250,.35);
+      background: rgba(96,165,250,.14);
+    }
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;}
     .btn{
-      width:100%;
-      border:1px solid var(--line);
+      flex:1;
+      min-width: 140px;
+      border: 1px solid var(--line);
       background: rgba(255,255,255,.08);
       color: var(--text);
       padding: 12px 12px;
-      border-radius: 14px;
-      font-size: 15px;
+      border-radius: 16px;
       font-weight: 900;
-      margin-top: 10px;
+      font-size: 15px;
+      user-select:none;
     }
-    .btn.g{background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.35)}
-    .btn.b{background: rgba(96,165,250,.18); border-color: rgba(96,165,250,.35)}
-    .btn.r{background: rgba(251,113,133,.16); border-color: rgba(251,113,133,.35)}
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .row .btn{flex:1; min-width: 120px}
+    .btn.neon{
+      border-color: rgba(34,197,94,.40);
+      background: rgba(34,197,94,.16);
+      box-shadow: 0 0 0 rgba(34,197,94,0);
+    }
+    .btn.neon:active{transform: translateY(1px)}
+    .btn.copy{
+      border-color: rgba(96,165,250,.40);
+      background: rgba(96,165,250,.16);
+    }
     .result{
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 14px;
+      margin-top: 12px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,.06);
+      border-radius: 18px;
+      padding: 12px;
       font-family: var(--mono);
       font-size: 13px;
-      color: rgba(255,255,255,.86);
       white-space: pre-wrap;
+      color: rgba(255,255,255,.88);
     }
-    .hr{height:1px;background:var(--line); margin: 14px 0;}
-    .item{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.05);
-      border-radius: 14px;
-      padding: 12px;
-      margin-top: 10px;
+    .result .big{
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      margin-bottom: 6px;
+      font-family: var(--sans);
     }
-    .item .title{font-weight: 900; margin-bottom: 6px;}
-    .item .meta{color: var(--muted); font-size: 12px; line-height: 1.45;}
-    .item .actions{display:flex; gap:8px; margin-top: 10px;}
-    .item .actions button{
-      flex:1;
-      border:1px solid var(--line);
+    .muted{color: var(--muted); font-size: 12px; line-height: 1.4;}
+    .hr{height:1px;background:var(--line);opacity:.7;margin: 14px 0;}
+    .historyItem{
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      border-radius: 16px;
+      padding: 10px 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-top: 8px;
+    }
+    .historyItem .txt{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      line-height: 1.35;
+      white-space: pre-line;
+    }
+    .historyItem .act{
+      display:flex;
+      gap:8px;
+    }
+    .mini{
+      border: 1px solid var(--line);
       background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding: 10px;
+      color: rgba(255,255,255,.86);
+      padding: 9px 10px;
       border-radius: 12px;
       font-weight: 900;
-      font-size: 13px;
+      font-size: 12px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .mini.del{
+      border-color: rgba(251,113,133,.40);
+      background: rgba(251,113,133,.14);
     }
     .toast{
       position: fixed;
       left: 50%;
       bottom: 16px;
       transform: translateX(-50%);
-      background: rgba(0,0,0,.75);
+      background: rgba(0,0,0,.78);
       color: white;
       padding: 10px 12px;
       border-radius: 999px;
@@ -178,479 +229,262 @@
     .toast.on{opacity: 1;}
   </style>
 </head>
-
 <body>
-<header>
-  <div class="topbar">
-    <div class="brand">
-      <div class="t">SALON TOOL</div>
-      <div class="s">컬러 계산기 + 고객 시술 기록 (각자 폰에 자동 저장 · 무료)</div>
+  <header>
+    <div class="title">
+      <div class="h">Salon Color Calc</div>
+      <div class="s">인스타 감성 · 초간단 · 결과 복사 · 최근 기록 자동 저장</div>
     </div>
-    <div class="brand s" id="siteUrl" style="text-align:right;">자동저장 ON</div>
-  </div>
-</header>
+    <div class="badge" id="badge">AUTO SAVE</div>
+  </header>
 
-<div class="wrap">
-  <div class="card pad">
-    <div class="tabs">
-      <button class="tab on" id="tabCalc">컬러 계산기</button>
-      <button class="tab" id="tabLog">고객 시술 기록</button>
-    </div>
-  </div>
-
-  <!-- CALC -->
-  <div class="card pad" id="viewCalc">
-    <p class="h">염모제 · 산화제 계산 (총량 + 비율)</p>
-    <p class="sub">총량/비율 버튼만 눌러도 계산됩니다. 결과는 복사해서 카톡으로 보내기.</p>
-
-    <label>총 사용량(g) 빠른 선택</label>
-    <div class="pillRow" id="totalPills"></div>
-    <input id="total" inputmode="decimal" placeholder="직접 입력 (예: 120)" />
-
-    <div class="grid2">
-      <div>
-        <label>염모제 비율</label>
-        <input id="dye" inputmode="decimal" placeholder="예: 1" />
+  <div class="wrap">
+    <div class="card pad">
+      <div class="grid2">
+        <div>
+          <label>총 사용량 (g)</label>
+          <div class="chips" id="chipsTotal"></div>
+          <input id="total" inputmode="decimal" placeholder="예: 120" />
+        </div>
+        <div>
+          <label>비율 프리셋</label>
+          <div class="chips" id="chipsRatio"></div>
+          <div class="grid2">
+            <div>
+              <label>염모제 비율</label>
+              <input id="dye" inputmode="decimal" placeholder="예: 1" />
+            </div>
+            <div>
+              <label>산화제 비율</label>
+              <input id="dev" inputmode="decimal" placeholder="예: 1.5" />
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <label>산화제 비율</label>
-        <input id="dev" inputmode="decimal" placeholder="예: 1.5" />
+
+      <div class="row">
+        <button class="btn neon" id="btnCalc">계산하기</button>
+        <button class="btn copy" id="btnCopy">결과 복사</button>
       </div>
+
+      <div class="result" id="out">
+        <div class="big">—</div>
+        <div class="muted">총량/비율을 입력하거나 버튼을 눌러 계산하세요.</div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="muted">팁: 총량 버튼 → 비율 버튼만 누르면 바로 계산됩니다.</div>
     </div>
 
-    <label>비율 빠른 선택</label>
-    <div class="pillRow" id="ratioPills"></div>
-
-    <div class="row">
-      <button class="btn g" id="btnCalc">계산</button>
-      <button class="btn b" id="btnCopy">복사</button>
-    </div>
-
-    <div class="result" id="out">—</div>
-
-    <div class="hr"></div>
-
-    <p class="h">2컬러 믹스 계산</p>
-    <p class="sub">총량 + A:B 비율로 컬러 g 분배</p>
-
-    <label>믹스 총량(g)</label>
-    <input id="mixTotal" inputmode="decimal" placeholder="예: 100" />
-    <div class="grid2">
-      <div>
-        <label>컬러A 비율</label>
-        <input id="mixA" inputmode="decimal" placeholder="예: 70" />
-      </div>
-      <div>
-        <label>컬러B 비율</label>
-        <input id="mixB" inputmode="decimal" placeholder="예: 30" />
+    <div class="card pad">
+      <div class="h">최근 기록 (최대 5개)</div>
+      <div class="muted">미용실에서 자주 쓰는 조합을 자동으로 남겨둡니다.</div>
+      <div id="history"></div>
+      <div class="row">
+        <button class="btn" id="btnClear" style="border-color: rgba(251,113,133,.35); background: rgba(251,113,133,.12);">기록 전체 삭제</button>
       </div>
     </div>
-
-    <div class="row">
-      <button class="btn g" id="btnMix">계산</button>
-      <button class="btn b" id="btnMixCopy">복사</button>
-    </div>
-
-    <div class="result" id="mixOut">—</div>
   </div>
 
-  <!-- LOG -->
-  <div class="card pad" id="viewLog" style="display:none">
-    <p class="h">고객 시술 기록 (내 폰에 저장)</p>
-    <p class="sub">저장/검색/삭제 가능. 내보내기/가져오기 텍스트로 동료와 공유 가능(서버 없음).</p>
-
-    <div class="grid2">
-      <div>
-        <label>고객명</label>
-        <input id="cl_name" placeholder="예: 김OO" />
-      </div>
-      <div>
-        <label>날짜</label>
-        <input id="cl_date" type="date" />
-      </div>
-    </div>
-
-    <div class="grid2">
-      <div>
-        <label>시술 종류</label>
-        <select id="cl_type">
-          <option value="컬러">컬러</option>
-          <option value="탈색">탈색</option>
-          <option value="톤다운">톤다운</option>
-          <option value="톤업">톤업</option>
-          <option value="새치커버">새치커버</option>
-          <option value="기타">기타</option>
-        </select>
-      </div>
-      <div>
-        <label>산화제</label>
-        <select id="cl_ox">
-          <option value="3%">3%</option>
-          <option value="6%">6%</option>
-          <option value="9%">9%</option>
-          <option value="12%">12%</option>
-          <option value="기타">기타</option>
-        </select>
-      </div>
-    </div>
-
-    <label>레시피(배합)</label>
-    <input id="cl_recipe" placeholder="예: 8A 30g + 7N 30g / OX 1:1.5" />
-
-    <div class="grid2">
-      <div>
-        <label>방치 시간(분)</label>
-        <input id="cl_time" inputmode="decimal" placeholder="예: 20" />
-      </div>
-      <div>
-        <label>메모(선택)</label>
-        <input id="cl_memo" placeholder="예: 모량 많음, 잔류 있음" />
-      </div>
-    </div>
-
-    <div class="row">
-      <button class="btn g" id="btnSaveLog">저장</button>
-      <button class="btn r" id="btnClearForm">입력 초기화</button>
-    </div>
-
-    <div class="hr"></div>
-
-    <label>검색 (고객명/레시피/메모)</label>
-    <input id="cl_search" placeholder="예: 김, 애쉬, 8A" />
-
-    <div id="logList"></div>
-
-    <div class="hr"></div>
-
-    <p class="h">내보내기 / 가져오기</p>
-    <p class="sub">내보내기 버튼 → 텍스트 복사 → 카톡으로 공유. 가져오기 → 받은 텍스트 붙여넣기.</p>
-
-    <div class="row">
-      <button class="btn b" id="btnExport">내보내기</button>
-      <button class="btn g" id="btnImport">가져오기</button>
-    </div>
-
-    <textarea id="cl_io" placeholder="내보내기/가져오기 텍스트가 여기에 표시됩니다."></textarea>
-
-    <div class="row">
-      <button class="btn r" id="btnResetAll">전체 데이터 삭제</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast">완료</div>
+  <div class="toast" id="toast">완료</div>
 
 <script>
-/* ---------- utils ---------- */
-const $ = (id)=>document.getElementById(id);
-const toast = (msg)=>{
-  const t = $("toast");
-  t.textContent = msg;
-  t.classList.add("on");
-  setTimeout(()=>t.classList.remove("on"), 1300);
-};
-const num = (v)=> {
-  const x = parseFloat(String(v||"").replace(/,/g,""));
-  return Number.isFinite(x) ? x : NaN;
-};
-const fmt = (x)=> Number.isFinite(x) ? x.toFixed(1) : "—";
-const LS = {
-  get(k, fallback){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; }catch{ return fallback; } },
-  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
-};
-async function copyText(text){
-  try{
-    await navigator.clipboard.writeText(text);
-    return true;
-  }catch{
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    try{ document.execCommand("copy"); }catch{}
-    document.body.removeChild(ta);
-    return true;
-  }
-}
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
-}
+  const $ = (id)=>document.getElementById(id);
+  const toast = (msg)=>{
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("on");
+    setTimeout(()=>t.classList.remove("on"), 1300);
+  };
+  const num = (v)=>{
+    const x = parseFloat(String(v||"").replace(/,/g,""));
+    return Number.isFinite(x) ? x : NaN;
+  };
+  const fmt = (x)=> Number.isFinite(x) ? x.toFixed(1) : "—";
 
-/* ---------- tabs ---------- */
-const viewCalc = $("viewCalc");
-const viewLog = $("viewLog");
-$("tabCalc").onclick = ()=>{
-  viewCalc.style.display = "";
-  viewLog.style.display = "none";
-  $("tabCalc").classList.add("on");
-  $("tabLog").classList.remove("on");
-  LS.set("ui.tab","calc");
-};
-$("tabLog").onclick = ()=>{
-  viewCalc.style.display = "none";
-  viewLog.style.display = "";
-  $("tabLog").classList.add("on");
-  $("tabCalc").classList.remove("on");
-  LS.set("ui.tab","log");
-  renderLogs();
-};
+  const LS = {
+    get(k, fallback){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; }catch{ return fallback; } },
+    set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
+  };
 
-/* ---------- calc presets ---------- */
-const totalPresets = [60,90,120,150,180];
-const ratioPresets = [
-  {d:1, v:1, label:"1 : 1"},
-  {d:1, v:1.5, label:"1 : 1.5"},
-  {d:1, v:2, label:"1 : 2"},
-];
-function makePills(){
-  const tWrap = $("totalPills");
-  totalPresets.forEach(v=>{
-    const b = document.createElement("button");
-    b.className = "pill";
-    b.textContent = v + "g";
-    b.onclick = ()=>{
-      $("total").value = v;
-      LS.set("val.total", v);
-      calc();
-      toast("총량 선택");
-    };
-    tWrap.appendChild(b);
-  });
-  const rWrap = $("ratioPills");
-  ratioPresets.forEach(p=>{
-    const b = document.createElement("button");
-    b.className = "pill";
-    b.textContent = p.label;
-    b.onclick = ()=>{
-      $("dye").value = p.d;
-      $("dev").value = p.v;
-      LS.set("val.dye", p.d);
-      LS.set("val.dev", p.v);
-      calc();
-      toast("비율 선택");
-    };
-    rWrap.appendChild(b);
-  });
-}
-makePills();
-
-/* ---------- autosave inputs ---------- */
-function bind(id, key, type="input"){
-  const el = $(id);
-  const v = LS.get(key, "");
-  if(type==="select"){
-    el.value = v || el.value;
-    el.addEventListener("change", ()=>LS.set(key, el.value));
-  }else{
-    el.value = v ?? "";
-    el.addEventListener("input", ()=>LS.set(key, el.value));
-  }
-}
-["total","dye","dev","mixTotal","mixA","mixB","cl_name","cl_recipe","cl_time","cl_memo","cl_search","cl_io"]
-  .forEach(id=>bind(id, "val."+id));
-bind("cl_type","val.cl_type","select");
-bind("cl_ox","val.cl_ox","select");
-
-// date default today
-const savedDate = LS.get("val.cl_date","");
-if(savedDate){ $("cl_date").value = savedDate; }
-else{
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth()+1).padStart(2,"0");
-  const dd = String(d.getDate()).padStart(2,"0");
-  $("cl_date").value = `${yyyy}-${mm}-${dd}`;
-}
-$("cl_date").addEventListener("change", ()=>LS.set("val.cl_date", $("cl_date").value));
-
-$("siteUrl").textContent = "링크: " + location.href;
-
-/* ---------- calc ---------- */
-function calc(){
-  const total = num($("total").value);
-  const dye = num($("dye").value);
-  const dev = num($("dev").value);
-  if(!Number.isFinite(total) || !Number.isFinite(dye) || !Number.isFinite(dev) || total<=0 || dye<=0 || dev<=0){
-    $("out").textContent = "입력값을 확인하세요. (총량/비율은 0보다 커야 함)";
-    return "";
-  }
-  const r = dye + dev;
-  const dyeG = total*(dye/r);
-  const devG = total*(dev/r);
-  const text = `염모제 ${fmt(dyeG)} g\n산화제 ${fmt(devG)} g\n(총 ${fmt(total)} g, 비율 ${dye}:${dev})`;
-  $("out").textContent = text;
-  return text;
-}
-$("btnCalc").onclick = ()=>{ calc(); };
-$("btnCopy").onclick = async ()=>{
-  const t = calc();
-  if(t){ await copyText(t); toast("복사됨"); }
-};
-
-function mixCalc(){
-  const total = num($("mixTotal").value);
-  const a = num($("mixA").value);
-  const b = num($("mixB").value);
-  if(!Number.isFinite(total) || !Number.isFinite(a) || !Number.isFinite(b) || total<=0 || a<=0 || b<=0){
-    $("mixOut").textContent = "입력값을 확인하세요. (총량/비율은 0보다 커야 함)";
-    return "";
-  }
-  const r = a + b;
-  const g1 = total*(a/r);
-  const g2 = total*(b/r);
-  const text = `컬러A ${fmt(g1)} g\n컬러B ${fmt(g2)} g\n(총 ${fmt(total)} g, 비율 ${a}:${b})`;
-  $("mixOut").textContent = text;
-  return text;
-}
-$("btnMix").onclick = ()=>{ mixCalc(); };
-$("btnMixCopy").onclick = async ()=>{
-  const t = mixCalc();
-  if(t){ await copyText(t); toast("복사됨"); }
-};
-
-/* ---------- client logs ---------- */
-const LOG_KEY = "client.logs.v1";
-function loadLogs(){ return LS.get(LOG_KEY, []); }
-function saveLogs(list){ LS.set(LOG_KEY, list); }
-
-$("btnSaveLog").onclick = ()=>{
-  const name = $("cl_name").value.trim();
-  const date = $("cl_date").value;
-  const type = $("cl_type").value;
-  const ox = $("cl_ox").value;
-  const recipe = $("cl_recipe").value.trim();
-  const time = $("cl_time").value.trim();
-  const memo = $("cl_memo").value.trim();
-
-  if(!name || !date || !recipe){
-    toast("고객명/날짜/레시피는 필수");
-    return;
-  }
-
-  const list = loadLogs();
-  list.unshift({id: cryptoId(), name, date, type, ox, recipe, time, memo, ts: Date.now()});
-  saveLogs(list);
-  toast("저장됨");
-  renderLogs();
-};
-
-$("btnClearForm").onclick = ()=>{
-  $("cl_name").value = ""; LS.set("val.cl_name","");
-  $("cl_recipe").value = ""; LS.set("val.cl_recipe","");
-  $("cl_time").value = ""; LS.set("val.cl_time","");
-  $("cl_memo").value = ""; LS.set("val.cl_memo","");
-  toast("입력 초기화");
-};
-
-function cryptoId(){
-  return Math.random().toString(16).slice(2) + Date.now().toString(16);
-}
-
-function renderLogs(){
-  const q = ($("cl_search").value || "").trim().toLowerCase();
-  const list = loadLogs().filter(x=>{
-    if(!q) return true;
-    return (x.name||"").toLowerCase().includes(q) ||
-           (x.recipe||"").toLowerCase().includes(q) ||
-           (x.memo||"").toLowerCase().includes(q) ||
-           (x.type||"").toLowerCase().includes(q);
-  });
-
-  const wrap = $("logList");
-  wrap.innerHTML = "";
-  if(list.length===0){
-    wrap.innerHTML = `<div class="result">기록이 없습니다. 위에서 저장해보세요.</div>`;
-    return;
-  }
-  list.forEach((x)=>{
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
-      <div class="title">${escapeHtml(x.name)} · ${escapeHtml(x.date)} · ${escapeHtml(x.type)}</div>
-      <div class="meta">레시피: ${escapeHtml(x.recipe)}</div>
-      <div class="meta">산화제: ${escapeHtml(x.ox)} / 방치: ${escapeHtml(x.time||"-")}분</div>
-      <div class="meta">메모: ${escapeHtml(x.memo||"-")}</div>
-      <div class="actions">
-        <button data-act="copy" data-id="${x.id}">복사</button>
-        <button data-act="del" data-id="${x.id}" style="border-color: rgba(251,113,133,.35); background: rgba(251,113,133,.12)">삭제</button>
-      </div>
-    `;
-    wrap.appendChild(div);
-  });
-}
-
-$("cl_search").addEventListener("input", renderLogs);
-
-$("logList").addEventListener("click", async (e)=>{
-  const act = e.target?.getAttribute?.("data-act");
-  const id = e.target?.getAttribute?.("data-id");
-  if(!act || !id) return;
-
-  const list = loadLogs();
-  const idx = list.findIndex(x=>x.id===id);
-  if(idx < 0) return;
-  const x = list[idx];
-
-  if(act==="copy"){
-    const txt =
-`[고객기록]
-고객: ${x.name}
-날짜: ${x.date}
-시술: ${x.type}
-산화제: ${x.ox}
-방치: ${x.time || "-"}분
-레시피: ${x.recipe}
-메모: ${x.memo || "-"}`.trim();
-    await copyText(txt);
-    toast("복사됨");
-  }
-
-  if(act==="del"){
-    if(confirm("삭제할까요?")){
-      list.splice(idx,1);
-      saveLogs(list);
-      toast("삭제됨");
-      renderLogs();
+  async function copyText(text){
+    try{
+      await navigator.clipboard.writeText(text);
+      return true;
+    }catch{
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try{ document.execCommand("copy"); }catch{}
+      document.body.removeChild(ta);
+      return true;
     }
   }
-});
 
-/* export/import */
-$("btnExport").onclick = async ()=>{
-  const payload = JSON.stringify({v:1, exportedAt: Date.now(), logs: loadLogs()}, null, 2);
-  $("cl_io").value = payload;
-  await copyText(payload);
-  toast("내보내기 복사됨");
-};
+  const totalPresets = [60, 90, 120, 150, 180];
+  const ratioPresets = [
+    {d:1, v:1, label:"1:1"},
+    {d:1, v:1.5, label:"1:1.5"},
+    {d:1, v:2, label:"1:2"},
+  ];
 
-$("btnImport").onclick = ()=>{
-  const txt = ($("cl_io").value||"").trim();
-  if(!txt){ toast("붙여넣을 텍스트가 없음"); return; }
-  try{
-    const obj = JSON.parse(txt);
-    if(!obj || !Array.isArray(obj.logs)) throw new Error("형식 오류");
-    const merged = [...obj.logs, ...loadLogs()];
-    saveLogs(merged);
-    toast("가져오기 완료");
-    renderLogs();
-  }catch{
-    toast("가져오기 실패: JSON 형식 확인");
+  function renderChips(){
+    const tWrap = $("chipsTotal");
+    totalPresets.forEach(v=>{
+      const b = document.createElement("button");
+      b.className = "chip";
+      b.textContent = v + "g";
+      b.onclick = ()=>{
+        $("total").value = v;
+        LS.set("val.total", v);
+        calc(true);
+        toast("총량 선택");
+      };
+      tWrap.appendChild(b);
+    });
+
+    const rWrap = $("chipsRatio");
+    ratioPresets.forEach(p=>{
+      const b = document.createElement("button");
+      b.className = "chip blue";
+      b.textContent = p.label;
+      b.onclick = ()=>{
+        $("dye").value = p.d;
+        $("dev").value = p.v;
+        LS.set("val.dye", p.d);
+        LS.set("val.dev", p.v);
+        calc(true);
+        toast("비율 선택");
+      };
+      rWrap.appendChild(b);
+    });
   }
-};
 
-$("btnResetAll").onclick = ()=>{
-  if(!confirm("정말 전체 데이터 삭제할까요? (고객 기록/입력값 모두 삭제)")) return;
-  localStorage.clear();
-  toast("삭제 완료 (새로고침)");
-  setTimeout(()=>location.reload(), 800);
-};
+  function bind(id, key){
+    const el = $(id);
+    el.value = LS.get(key, "") ?? "";
+    el.addEventListener("input", ()=>LS.set(key, el.value));
+  }
 
-/* init */
-calc();
-mixCalc();
-renderLogs();
-const lastTab = LS.get("ui.tab","calc");
-if(lastTab==="log"){ $("tabLog").click(); }
+  function setOut(title, body){
+    $("out").innerHTML = `<div class="big">${title}</div><div class="muted">${body}</div>`;
+  }
+
+  function calc(auto=false){
+    const total = num($("total").value);
+    const dye = num($("dye").value);
+    const dev = num($("dev").value);
+
+    if(!Number.isFinite(total) || !Number.isFinite(dye) || !Number.isFinite(dev) || total<=0 || dye<=0 || dev<=0){
+      setOut("입력 확인", "총량/비율은 0보다 큰 숫자여야 합니다.");
+      return "";
+    }
+
+    const r = dye + dev;
+    const dyeG = total*(dye/r);
+    const devG = total*(dev/r);
+
+    const title = `염모제 ${fmt(dyeG)}g  ·  산화제 ${fmt(devG)}g`;
+    const body = `총 ${fmt(total)}g / 비율 ${dye}:${dev}`;
+
+    setOut(title, body);
+
+    const text = `염모제 ${fmt(dyeG)}g\n산화제 ${fmt(devG)}g\n총 ${fmt(total)}g / 비율 ${dye}:${dev}`;
+
+    if(auto) pushHistory({total: total, dye, dev, dyeG, devG});
+    return text;
+  }
+
+  const HISTORY_KEY = "color.history.v1";
+
+  function pushHistory(item){
+    const list = LS.get(HISTORY_KEY, []);
+    const key = `${item.total}|${item.dye}|${item.dev}`;
+    const filtered = list.filter(x => x.key !== key);
+    filtered.unshift({ key, ts: Date.now(), ...item });
+    const clipped = filtered.slice(0, 5);
+    LS.set(HISTORY_KEY, clipped);
+    renderHistory();
+  }
+
+  function renderHistory(){
+    const wrap = $("history");
+    const list = LS.get(HISTORY_KEY, []);
+    wrap.innerHTML = "";
+
+    if(list.length === 0){
+      wrap.innerHTML = `<div class="result"><div class="big">기록 없음</div><div class="muted">버튼으로 계산하면 자동으로 기록이 쌓입니다.</div></div>`;
+      return;
+    }
+
+    list.forEach((x, idx)=>{
+      const div = document.createElement("div");
+      div.className = "historyItem";
+      const txt =
+`염모제 ${fmt(x.dyeG)}g / 산화제 ${fmt(x.devG)}g
+총 ${fmt(x.total)}g · 비율 ${x.dye}:${x.dev}`;
+      div.innerHTML = `
+        <div class="txt">${txt}</div>
+        <div class="act">
+          <button class="mini" data-act="use" data-idx="${idx}">불러오기</button>
+          <button class="mini del" data-act="del" data-idx="${idx}">삭제</button>
+        </div>
+      `;
+      wrap.appendChild(div);
+    });
+  }
+
+  $("history").addEventListener("click", async (e)=>{
+    const act = e.target?.getAttribute?.("data-act");
+    const idx = parseInt(e.target?.getAttribute?.("data-idx"), 10);
+    if(!act || !Number.isFinite(idx)) return;
+
+    const list = LS.get(HISTORY_KEY, []);
+    const x = list[idx];
+    if(!x) return;
+
+    if(act === "use"){
+      $("total").value = x.total;
+      $("dye").value = x.dye;
+      $("dev").value = x.dev;
+      LS.set("val.total", x.total);
+      LS.set("val.dye", x.dye);
+      LS.set("val.dev", x.dev);
+      calc(false);
+      toast("불러오기 완료");
+    }
+
+    if(act === "del"){
+      list.splice(idx, 1);
+      LS.set(HISTORY_KEY, list);
+      renderHistory();
+      toast("삭제됨");
+    }
+  });
+
+  $("btnCalc").onclick = ()=>{ calc(false); };
+  $("btnCopy").onclick = async ()=>{
+    const t = calc(false);
+    if(!t) return;
+    await copyText(t);
+    toast("복사됨");
+  };
+  $("btnClear").onclick = ()=>{
+    if(!confirm("최근 기록을 모두 삭제할까요?")) return;
+    localStorage.removeItem(HISTORY_KEY);
+    renderHistory();
+    toast("전체 삭제됨");
+  };
+
+  // init
+  renderChips();
+  bind("total","val.total");
+  bind("dye","val.dye");
+  bind("dev","val.dev");
+  renderHistory();
+  if($("total").value && $("dye").value && $("dev").value) calc(false);
 </script>
 </body>
 </html>
