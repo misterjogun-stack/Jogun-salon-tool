@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JOGUN SALON TOOL</title>
+
+<style>
+
+body{
+font-family:-apple-system;
+background:#0f172a;
+color:white;
+margin:0;
+}
+
+header{
+text-align:center;
+padding:20px;
+font-size:22px;
+font-weight:bold;
+background:#111827;
+}
+
+.container{
+max-width:420px;
+margin:auto;
+padding:20px;
+}
+
+button{
+width:100%;
+padding:14px;
+margin:8px 0;
+border:none;
+border-radius:12px;
+background:#22c55e;
+color:white;
+font-size:17px;
+}
+
+.section{
+display:none;
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+margin-top:10px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:6px 0;
+border-radius:10px;
+border:none;
+font-size:16px;
+}
+
+.result{
+margin-top:10px;
+font-size:18px;
+}
+
+.timer{
+font-size:40px;
+text-align:center;
+margin:20px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>JOGUN SALON TOOL</header>
+
+<div class="container">
+
+<button onclick="show('color')">컬러 계산기</button>
+<button onclick="show('mix')">컬러 믹스</button>
+<button onclick="show('bleach')">탈색 계산</button>
+<button onclick="show('timer')">시술 타이머</button>
+<button onclick="show('recipe')">컬러 레시피 저장</button>
+
+<div id="color" class="section">
+
+<h3>컬러 계산기</h3>
+
+<input id="total" placeholder="총 사용량 g">
+<input id="dye" placeholder="염모제 비율">
+<input id="dev" placeholder="산화제 비율">
+
+<button onclick="colorCalc()">계산</button>
+
+<div class="result" id="colorResult"></div>
+
+</div>
+
+<div id="mix" class="section">
+
+<h3>컬러 믹스</h3>
+
+<input id="mixTotal" placeholder="총 g">
+<input id="mix1" placeholder="컬러1 비율">
+<input id="mix2" placeholder="컬러2 비율">
+
+<button onclick="mixCalc()">계산</button>
+
+<div class="result" id="mixResult"></div>
+
+</div>
+
+<div id="bleach" class="section">
+
+<h3>탈색 계산</h3>
+
+<input id="bTotal" placeholder="총 g">
+<input id="bPowder" placeholder="탈색제 비율">
+<input id="bDev" placeholder="산화제 비율">
+
+<button onclick="bleachCalc()">계산</button>
+
+<div class="result" id="bleachResult"></div>
+
+</div>
+
+<div id="timer" class="section">
+
+<h3>아이롱펌 타이머</h3>
+
+<div class="timer" id="time">05:00</div>
+
+<button onclick="start()">Start</button>
+<button onclick="pause()">Pause</button>
+<button onclick="reset()">Reset</button>
+
+</div>
+
+<div id="recipe" class="section">
+
+<h3>컬러 레시피 저장</h3>
+
+<input id="recipeName" placeholder="컬러 이름">
+<input id="recipeMix" placeholder="예: 8A + 7N">
+
+<button onclick="saveRecipe()">저장</button>
+
+<div id="recipeList"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function show(id){
+
+document.querySelectorAll('.section').forEach(s=>{
+s.style.display="none"
+})
+
+document.getElementById(id).style.display="block"
+
+}
+
+function colorCalc(){
+
+let total=parseFloat(total.value)
+let dye=parseFloat(dye.value)
+let dev=parseFloat(dev.value)
+
+let ratio=dye+dev
+
+let dyeG=total*(dye/ratio)
+let devG=total*(dev/ratio)
+
+colorResult.innerText=
+"염모제 "+dyeG.toFixed(1)+"g / 산화제 "+devG.toFixed(1)+"g"
+
+}
+
+function mixCalc(){
+
+let total=parseFloat(mixTotal.value)
+let c1=parseFloat(mix1.value)
+let c2=parseFloat(mix2.value)
+
+let r=c1+c2
+
+let g1=total*(c1/r)
+let g2=total*(c2/r)
+
+mixResult.innerText=
+"컬러1 "+g1.toFixed(1)+"g / 컬러2 "+g2.toFixed(1)+"g"
+
+}
+
+function bleachCalc(){
+
+let total=parseFloat(bTotal.value)
+let p=parseFloat(bPowder.value)
+let d=parseFloat(bDev.value)
+
+let r=p+d
+
+let g1=total*(p/r)
+let g2=total*(d/r)
+
+bleachResult.innerText=
+"탈색제 "+g1.toFixed(1)+"g / 산화제 "+g2.toFixed(1)+"g"
+
+}
+
+let t=300
+let interval
+
+function start(){
+
+interval=setInterval(()=>{
+
+t--
+
+let m=Math.floor(t/60)
+let s=t%60
+
+time.innerText=m+":"+String(s).padStart(2,'0')
+
+if(t<=0)clearInterval(interval)
+
+},1000)
+
+}
+
+function pause(){
+
+clearInterval(interval)
+
+}
+
+function reset(){
+
+clearInterval(interval)
+t=300
+time.innerText="05:00"
+
+}
+
+function saveRecipe(){
+
+let name=document.getElementById("recipeName").value
+let mix=document.getElementById("recipeMix").value
+
+let div=document.createElement("div")
+
+div.innerText=name+" : "+mix
+
+document.getElementById("recipeList").appendChild(div)
+
+}
+
+</script>
+
+</body>
+</html>
