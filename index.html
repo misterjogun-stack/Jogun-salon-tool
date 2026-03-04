@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>SALON COLOR TOOL</title>
+  <title>SALON COLOR · CLIENT LOG</title>
   <meta name="theme-color" content="#0b1220" />
   <style>
     :root{
@@ -14,8 +14,8 @@
       --muted:rgba(255,255,255,.62);
       --green:#22c55e;
       --blue:#60a5fa;
-      --purple:#c084fc;
-      --shadow:0 16px 36px rgba(0,0,0,.35);
+      --red:#fb7185;
+      --shadow:0 18px 40px rgba(0,0,0,.35);
       --r:18px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
@@ -27,21 +27,33 @@
       color:var(--text);
       background:
         radial-gradient(900px 600px at 20% 10%, rgba(96,165,250,.18), transparent 55%),
-        radial-gradient(900px 600px at 80% 20%, rgba(192,132,252,.16), transparent 55%),
-        radial-gradient(900px 600px at 50% 90%, rgba(34,197,94,.14), transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, rgba(34,197,94,.14), transparent 55%),
         linear-gradient(180deg, var(--bg), #0e1730);
       min-height:100vh;
-      padding: 14px 14px 24px;
+      padding: 14px 14px 90px;
     }
     header{
-      max-width:820px;
-      margin: 0 auto 12px;
-      padding: 10px 6px 6px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 10px 0 12px;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(11,18,32,.90), rgba(11,18,32,.55));
+      border-bottom:1px solid var(--line);
     }
-    .brand{display:flex; align-items:flex-end; justify-content:space-between; gap:10px}
-    .brand .t{font-weight:900; letter-spacing:.2px; font-size:18px}
-    .brand .s{color:var(--muted); font-size:12px}
-    .wrap{max-width:820px; margin: 0 auto;}
+    .topbar{
+      max-width: 860px;
+      margin: 0 auto;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 0 4px;
+    }
+    .brand{display:flex; flex-direction:column; gap:2px;}
+    .brand .t{font-weight:900; letter-spacing:.3px; font-size:16px;}
+    .brand .s{color:var(--muted); font-size:12px;}
+    .wrap{max-width:860px; margin: 14px auto 0;}
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       border:1px solid var(--line);
@@ -62,15 +74,18 @@
       padding: 12px 8px;
       border-radius: 14px;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
       text-align:center;
       user-select:none;
     }
-    .tab.on{background: rgba(34,197,94,.14); border-color: rgba(34,197,94,.35);}
+    .tab.on{
+      background: rgba(34,197,94,.16);
+      border-color: rgba(34,197,94,.35);
+    }
     .h{margin:0 0 10px; font-size:14px; font-weight:900}
     .sub{margin:-6px 0 12px; color:var(--muted); font-size:12px; line-height:1.5}
     label{display:block; font-size:12px; color:var(--muted); margin: 8px 0 6px;}
-    input, select{
+    input, select, textarea{
       width:100%;
       border:1px solid var(--line);
       background: rgba(0,0,0,.18);
@@ -80,6 +95,7 @@
       font-size: 16px;
       outline: none;
     }
+    textarea{min-height: 96px; font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,.84)}
     .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
     @media (max-width:520px){ .grid2{grid-template-columns:1fr} }
     .pillRow{display:flex; gap:8px; flex-wrap:wrap}
@@ -89,11 +105,10 @@
       color: var(--text);
       padding: 10px 12px;
       border-radius: 999px;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 13px;
       user-select:none;
     }
-    .pill.on{background: rgba(96,165,250,.18); border-color: rgba(96,165,250,.35);}
     .btn{
       width:100%;
       border:1px solid var(--line);
@@ -105,8 +120,11 @@
       font-weight: 900;
       margin-top: 10px;
     }
-    .btn.g{background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.35);}
-    .btn.b{background: rgba(96,165,250,.18); border-color: rgba(96,165,250,.35);}
+    .btn.g{background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.35)}
+    .btn.b{background: rgba(96,165,250,.18); border-color: rgba(96,165,250,.35)}
+    .btn.r{background: rgba(251,113,133,.16); border-color: rgba(251,113,133,.35)}
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .row .btn{flex:1; min-width: 120px}
     .result{
       margin-top: 10px;
       padding: 12px;
@@ -118,9 +136,27 @@
       color: rgba(255,255,255,.86);
       white-space: pre-wrap;
     }
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .row .btn{flex:1; min-width: 120px}
     .hr{height:1px;background:var(--line); margin: 14px 0;}
+    .item{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    .item .title{font-weight: 900; margin-bottom: 6px;}
+    .item .meta{color: var(--muted); font-size: 12px; line-height: 1.45;}
+    .item .actions{display:flex; gap:8px; margin-top: 10px;}
+    .item .actions button{
+      flex:1;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 13px;
+    }
     .toast{
       position: fixed;
       left: 50%;
@@ -140,64 +176,36 @@
       z-index: 999;
     }
     .toast.on{opacity: 1;}
-
-    /* 3D area */
-    .canvasWrap{
-      border:1px solid var(--line);
-      background: rgba(0,0,0,.20);
-      border-radius: 16px;
-      overflow:hidden;
-      aspect-ratio: 16 / 10;
-      min-height: 260px;
-    }
-    canvas{width:100%; height:100%; display:block;}
-    .swatch{
-      border:1px solid var(--line);
-      border-radius:14px;
-      background: rgba(255,255,255,.06);
-      padding: 12px;
-      display:flex;
-      gap:12px;
-      align-items:center;
-      margin-top: 10px;
-    }
-    .chip{
-      width:44px; height:44px;
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,.18);
-      background: #888;
-      box-shadow: 0 12px 24px rgba(0,0,0,.25);
-    }
-    .swatch .txt{font-family:var(--mono); font-size:12px; color: rgba(255,255,255,.82)}
   </style>
 </head>
+
 <body>
 <header>
-  <div class="brand">
-    <div>
-      <div class="t">SALON COLOR TOOL</div>
-      <div class="s">현장용 초간단 계산기 + 3D 컬러 시각화(교육/상담용)</div>
+  <div class="topbar">
+    <div class="brand">
+      <div class="t">SALON TOOL</div>
+      <div class="s">컬러 계산기 + 고객 시술 기록 (각자 폰에 자동 저장 · 무료)</div>
     </div>
-    <div class="s" id="saveHint">자동저장 ON</div>
+    <div class="brand s" id="siteUrl" style="text-align:right;">자동저장 ON</div>
   </div>
 </header>
 
 <div class="wrap">
   <div class="card pad">
     <div class="tabs">
-      <button class="tab on" id="tab1">계산기(초간단)</button>
-      <button class="tab" id="tab2">3D 시각화</button>
+      <button class="tab on" id="tabCalc">컬러 계산기</button>
+      <button class="tab" id="tabLog">고객 시술 기록</button>
     </div>
   </div>
 
-  <!-- VIEW 1: SIMPLE CALC -->
-  <div class="card pad" id="view1">
-    <p class="h">컬러 계산기 (총량 + 비율)</p>
-    <p class="sub">총량/비율 버튼 누르면 바로 계산됩니다. 결과는 “복사”로 바로 공유.</p>
+  <!-- CALC -->
+  <div class="card pad" id="viewCalc">
+    <p class="h">염모제 · 산화제 계산 (총량 + 비율)</p>
+    <p class="sub">총량/비율 버튼만 눌러도 계산됩니다. 결과는 복사해서 카톡으로 보내기.</p>
 
-    <label>총 사용량(g)</label>
+    <label>총 사용량(g) 빠른 선택</label>
     <div class="pillRow" id="totalPills"></div>
-    <input id="total" inputmode="decimal" placeholder="직접 입력도 가능 (예: 120)" />
+    <input id="total" inputmode="decimal" placeholder="직접 입력 (예: 120)" />
 
     <div class="grid2">
       <div>
@@ -210,7 +218,7 @@
       </div>
     </div>
 
-    <label>비율 프리셋</label>
+    <label>비율 빠른 선택</label>
     <div class="pillRow" id="ratioPills"></div>
 
     <div class="row">
@@ -222,12 +230,11 @@
 
     <div class="hr"></div>
 
-    <p class="h">빠른 믹스(2컬러)</p>
-    <p class="sub">총량 + A:B 비율로 2가지 컬러 g 분배.</p>
+    <p class="h">2컬러 믹스 계산</p>
+    <p class="sub">총량 + A:B 비율로 컬러 g 분배</p>
 
     <label>믹스 총량(g)</label>
     <input id="mixTotal" inputmode="decimal" placeholder="예: 100" />
-
     <div class="grid2">
       <div>
         <label>컬러A 비율</label>
@@ -247,41 +254,86 @@
     <div class="result" id="mixOut">—</div>
   </div>
 
-  <!-- VIEW 2: 3D -->
-  <div class="card pad" id="view2" style="display:none">
-    <p class="h">3D 컬러 시각화(기본형)</p>
-    <p class="sub">정밀 예측이 아니라 “톤/비율 변화”를 시각적으로 보여주는 교육·상담용입니다.</p>
+  <!-- LOG -->
+  <div class="card pad" id="viewLog" style="display:none">
+    <p class="h">고객 시술 기록 (내 폰에 저장)</p>
+    <p class="sub">저장/검색/삭제 가능. 내보내기/가져오기 텍스트로 동료와 공유 가능(서버 없음).</p>
 
     <div class="grid2">
       <div>
-        <label>베이스 레벨(1~12)</label>
-        <input id="baseLevel" inputmode="decimal" placeholder="예: 7" />
+        <label>고객명</label>
+        <input id="cl_name" placeholder="예: 김OO" />
       </div>
       <div>
-        <label>목표 톤</label>
-        <select id="tone">
-          <option value="natural">Natural</option>
-          <option value="ash">Ash(쿨)</option>
-          <option value="beige">Beige(뉴트럴)</option>
-          <option value="violet">Violet(보정)</option>
-          <option value="warm">Warm(웜)</option>
+        <label>날짜</label>
+        <input id="cl_date" type="date" />
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <label>시술 종류</label>
+        <select id="cl_type">
+          <option value="컬러">컬러</option>
+          <option value="탈색">탈색</option>
+          <option value="톤다운">톤다운</option>
+          <option value="톤업">톤업</option>
+          <option value="새치커버">새치커버</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+      <div>
+        <label>산화제</label>
+        <select id="cl_ox">
+          <option value="3%">3%</option>
+          <option value="6%">6%</option>
+          <option value="9%">9%</option>
+          <option value="12%">12%</option>
+          <option value="기타">기타</option>
         </select>
       </div>
     </div>
 
-    <label>혼합 강도(0~100)</label>
-    <input id="strength" inputmode="decimal" placeholder="예: 60" />
+    <label>레시피(배합)</label>
+    <input id="cl_recipe" placeholder="예: 8A 30g + 7N 30g / OX 1:1.5" />
 
-    <div class="row">
-      <button class="btn g" id="btnApply3d">3D 적용</button>
-      <button class="btn b" id="btnReset3d">기본으로</button>
+    <div class="grid2">
+      <div>
+        <label>방치 시간(분)</label>
+        <input id="cl_time" inputmode="decimal" placeholder="예: 20" />
+      </div>
+      <div>
+        <label>메모(선택)</label>
+        <input id="cl_memo" placeholder="예: 모량 많음, 잔류 있음" />
+      </div>
     </div>
 
-    <div class="canvasWrap"><canvas id="c"></canvas></div>
+    <div class="row">
+      <button class="btn g" id="btnSaveLog">저장</button>
+      <button class="btn r" id="btnClearForm">입력 초기화</button>
+    </div>
 
-    <div class="swatch">
-      <div class="chip" id="chipColor"></div>
-      <div class="txt" id="chipText">—</div>
+    <div class="hr"></div>
+
+    <label>검색 (고객명/레시피/메모)</label>
+    <input id="cl_search" placeholder="예: 김, 애쉬, 8A" />
+
+    <div id="logList"></div>
+
+    <div class="hr"></div>
+
+    <p class="h">내보내기 / 가져오기</p>
+    <p class="sub">내보내기 버튼 → 텍스트 복사 → 카톡으로 공유. 가져오기 → 받은 텍스트 붙여넣기.</p>
+
+    <div class="row">
+      <button class="btn b" id="btnExport">내보내기</button>
+      <button class="btn g" id="btnImport">가져오기</button>
+    </div>
+
+    <textarea id="cl_io" placeholder="내보내기/가져오기 텍스트가 여기에 표시됩니다."></textarea>
+
+    <div class="row">
+      <button class="btn r" id="btnResetAll">전체 데이터 삭제</button>
     </div>
   </div>
 </div>
@@ -320,31 +372,36 @@ async function copyText(text){
     return true;
   }
 }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+}
 
 /* ---------- tabs ---------- */
-$("tab1").onclick = ()=>{
-  $("view1").style.display = "";
-  $("view2").style.display = "none";
-  $("tab1").classList.add("on");
-  $("tab2").classList.remove("on");
+const viewCalc = $("viewCalc");
+const viewLog = $("viewLog");
+$("tabCalc").onclick = ()=>{
+  viewCalc.style.display = "";
+  viewLog.style.display = "none";
+  $("tabCalc").classList.add("on");
+  $("tabLog").classList.remove("on");
+  LS.set("ui.tab","calc");
 };
-$("tab2").onclick = ()=>{
-  $("view1").style.display = "none";
-  $("view2").style.display = "";
-  $("tab2").classList.add("on");
-  $("tab1").classList.remove("on");
-  resizeCanvas();
-  draw3d();
+$("tabLog").onclick = ()=>{
+  viewCalc.style.display = "none";
+  viewLog.style.display = "";
+  $("tabLog").classList.add("on");
+  $("tabCalc").classList.remove("on");
+  LS.set("ui.tab","log");
+  renderLogs();
 };
 
-/* ---------- presets ---------- */
+/* ---------- calc presets ---------- */
 const totalPresets = [60,90,120,150,180];
 const ratioPresets = [
   {d:1, v:1, label:"1 : 1"},
   {d:1, v:1.5, label:"1 : 1.5"},
   {d:1, v:2, label:"1 : 2"},
 ];
-
 function makePills(){
   const tWrap = $("totalPills");
   totalPresets.forEach(v=>{
@@ -359,7 +416,6 @@ function makePills(){
     };
     tWrap.appendChild(b);
   });
-
   const rWrap = $("ratioPills");
   ratioPresets.forEach(p=>{
     const b = document.createElement("button");
@@ -379,21 +435,35 @@ function makePills(){
 makePills();
 
 /* ---------- autosave inputs ---------- */
-function bind(id, key){
+function bind(id, key, type="input"){
   const el = $(id);
-  el.value = LS.get(key, "") ?? "";
-  el.addEventListener("input", ()=>LS.set(key, el.value));
-}
-["total","dye","dev","mixTotal","mixA","mixB","baseLevel","strength","tone"].forEach(id=>{
-  const key = "val."+id;
-  if(id==="tone"){
-    const v = LS.get(key, "natural");
-    $(id).value = v;
-    $(id).addEventListener("change", ()=>LS.set(key, $(id).value));
+  const v = LS.get(key, "");
+  if(type==="select"){
+    el.value = v || el.value;
+    el.addEventListener("change", ()=>LS.set(key, el.value));
   }else{
-    bind(id, key);
+    el.value = v ?? "";
+    el.addEventListener("input", ()=>LS.set(key, el.value));
   }
-});
+}
+["total","dye","dev","mixTotal","mixA","mixB","cl_name","cl_recipe","cl_time","cl_memo","cl_search","cl_io"]
+  .forEach(id=>bind(id, "val."+id));
+bind("cl_type","val.cl_type","select");
+bind("cl_ox","val.cl_ox","select");
+
+// date default today
+const savedDate = LS.get("val.cl_date","");
+if(savedDate){ $("cl_date").value = savedDate; }
+else{
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  const dd = String(d.getDate()).padStart(2,"0");
+  $("cl_date").value = `${yyyy}-${mm}-${dd}`;
+}
+$("cl_date").addEventListener("change", ()=>LS.set("val.cl_date", $("cl_date").value));
+
+$("siteUrl").textContent = "링크: " + location.href;
 
 /* ---------- calc ---------- */
 function calc(){
@@ -438,145 +508,149 @@ $("btnMixCopy").onclick = async ()=>{
   if(t){ await copyText(t); toast("복사됨"); }
 };
 
-/* ---------- simple 3D (no library) ---------- */
-/* NOTE: This is "pseudo-3D" (shaded sphere + hair ribbon) rendered on canvas.
-   It is lightweight and works on GitHub Pages with zero dependencies.
-*/
-const canvas = $("c");
-const ctx = canvas.getContext("2d");
+/* ---------- client logs ---------- */
+const LOG_KEY = "client.logs.v1";
+function loadLogs(){ return LS.get(LOG_KEY, []); }
+function saveLogs(list){ LS.set(LOG_KEY, list); }
 
-function resizeCanvas(){
-  const rect = canvas.getBoundingClientRect();
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
-  canvas.width = Math.floor(rect.width * dpr);
-  canvas.height = Math.floor(rect.height * dpr);
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-}
-window.addEventListener("resize", ()=>{ if($("view2").style.display!=="none"){ resizeCanvas(); draw3d(); } });
+$("btnSaveLog").onclick = ()=>{
+  const name = $("cl_name").value.trim();
+  const date = $("cl_date").value;
+  const type = $("cl_type").value;
+  const ox = $("cl_ox").value;
+  const recipe = $("cl_recipe").value.trim();
+  const time = $("cl_time").value.trim();
+  const memo = $("cl_memo").value.trim();
 
-function clamp(x,a,b){ return Math.max(a, Math.min(b,x)); }
-
-function colorFromParams(level, tone, strength){
-  // level: 1..12 (darker -> lighter)
-  // strength: 0..100
-  const L = clamp((level-1)/11, 0, 1);       // 0 dark, 1 light
-  const S = clamp(strength/100, 0, 1);
-
-  // base neutral brown-ish in HSL
-  let h = 30;          // warm brown hue
-  let s = 0.35;
-  let l = 0.12 + L*0.55;
-
-  // tone shifts hue/saturation
-  if(tone==="natural"){ h = 32; s = 0.30 + 0.10*S; }
-  if(tone==="ash"){ h = 210; s = 0.18 + 0.18*S; }
-  if(tone==="beige"){ h = 45; s = 0.22 + 0.18*S; }
-  if(tone==="violet"){ h = 275; s = 0.18 + 0.22*S; }
-  if(tone==="warm"){ h = 20; s = 0.32 + 0.20*S; }
-
-  return {h, s, l};
-}
-
-function hslToCss(h,s,l){
-  return `hsl(${h} ${(s*100).toFixed(1)}% ${(l*100).toFixed(1)}%)`;
-}
-
-function drawShadedCircle(cx,cy,r, baseHsl){
-  // faux 3D shading via radial gradients
-  const grad = ctx.createRadialGradient(cx-r*0.35, cy-r*0.45, r*0.15, cx, cy, r);
-  grad.addColorStop(0, hslToCss(baseHsl.h, clamp(baseHsl.s*0.75,0,1), clamp(baseHsl.l+0.22,0,1)));
-  grad.addColorStop(0.45, hslToCss(baseHsl.h, baseHsl.s, baseHsl.l));
-  grad.addColorStop(1, hslToCss(baseHsl.h, clamp(baseHsl.s*1.15,0,1), clamp(baseHsl.l-0.18,0,1)));
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(cx,cy,r,0,Math.PI*2);
-  ctx.fill();
-
-  // subtle rim light
-  ctx.strokeStyle = "rgba(255,255,255,.10)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(cx,cy,r-1,0,Math.PI*2);
-  ctx.stroke();
-}
-
-function drawHairRibbon(cx, cy, r, baseHsl){
-  // hair ribbon: layered strokes, gives "strand" feel
-  const startX = cx - r*0.95;
-  const endX   = cx + r*0.95;
-  const topY   = cy - r*0.85;
-  const midY   = cy - r*0.25;
-
-  for(let i=0;i<60;i++){
-    const t = i/59;
-    const y = topY + (midY-topY)*t;
-    const wobble = Math.sin(t*8)*r*0.03;
-    const l = clamp(baseHsl.l + 0.08 - t*0.18, 0, 1);
-    const s = clamp(baseHsl.s + 0.10, 0, 1);
-    ctx.strokeStyle = hslToCss(baseHsl.h, s, l);
-    ctx.lineWidth = 1.6;
-    ctx.beginPath();
-    ctx.moveTo(startX, y);
-    ctx.bezierCurveTo(cx-r*0.2, y+wobble, cx+r*0.2, y-wobble, endX, y);
-    ctx.stroke();
+  if(!name || !date || !recipe){
+    toast("고객명/날짜/레시피는 필수");
+    return;
   }
 
-  // highlight streak
-  ctx.strokeStyle = "rgba(255,255,255,.18)";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(startX, topY+r*0.18);
-  ctx.bezierCurveTo(cx-r*0.2, topY, cx+r*0.2, topY+r*0.12, endX, topY+r*0.16);
-  ctx.stroke();
-}
-
-function draw3d(){
-  resizeCanvas();
-  const rect = canvas.getBoundingClientRect();
-  const w = rect.width, h = rect.height;
-  ctx.clearRect(0,0,w,h);
-
-  // background vignette
-  const bg = ctx.createRadialGradient(w*0.5,h*0.3, 10, w*0.5,h*0.6, Math.max(w,h)*0.9);
-  bg.addColorStop(0,"rgba(255,255,255,.06)");
-  bg.addColorStop(1,"rgba(0,0,0,.35)");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0,0,w,h);
-
-  const level = clamp(num($("baseLevel").value)||7, 1, 12);
-  const tone = $("tone").value || "natural";
-  const strength = clamp(num($("strength").value)||60, 0, 100);
-
-  const base = colorFromParams(level, tone, strength);
-
-  const cx = w*0.5;
-  const cy = h*0.58;
-  const r = Math.min(w,h)*0.28;
-
-  // head sphere
-  drawShadedCircle(cx,cy,r, {h: 30, s: 0.16, l: 0.28}); // skin-ish base
-
-  // hair mass on top
-  drawHairRibbon(cx, cy, r*1.25, base);
-
-  // swatch
-  const css = hslToCss(base.h, base.s, base.l);
-  $("chipColor").style.background = css;
-  $("chipText").textContent = `HSL ${base.h.toFixed(0)} / ${(base.s*100).toFixed(0)}% / ${(base.l*100).toFixed(0)}%   | level ${level.toFixed(0)} | ${tone} | strength ${strength.toFixed(0)}`;
-}
-
-$("btnApply3d").onclick = ()=>{ draw3d(); toast("3D 적용"); };
-$("btnReset3d").onclick = ()=>{
-  $("baseLevel").value = 7; LS.set("val.baseLevel", 7);
-  $("tone").value = "natural"; LS.set("val.tone", "natural");
-  $("strength").value = 60; LS.set("val.strength", 60);
-  draw3d(); toast("초기화");
+  const list = loadLogs();
+  list.unshift({id: cryptoId(), name, date, type, ox, recipe, time, memo, ts: Date.now()});
+  saveLogs(list);
+  toast("저장됨");
+  renderLogs();
 };
 
-// initial
+$("btnClearForm").onclick = ()=>{
+  $("cl_name").value = ""; LS.set("val.cl_name","");
+  $("cl_recipe").value = ""; LS.set("val.cl_recipe","");
+  $("cl_time").value = ""; LS.set("val.cl_time","");
+  $("cl_memo").value = ""; LS.set("val.cl_memo","");
+  toast("입력 초기화");
+};
+
+function cryptoId(){
+  return Math.random().toString(16).slice(2) + Date.now().toString(16);
+}
+
+function renderLogs(){
+  const q = ($("cl_search").value || "").trim().toLowerCase();
+  const list = loadLogs().filter(x=>{
+    if(!q) return true;
+    return (x.name||"").toLowerCase().includes(q) ||
+           (x.recipe||"").toLowerCase().includes(q) ||
+           (x.memo||"").toLowerCase().includes(q) ||
+           (x.type||"").toLowerCase().includes(q);
+  });
+
+  const wrap = $("logList");
+  wrap.innerHTML = "";
+  if(list.length===0){
+    wrap.innerHTML = `<div class="result">기록이 없습니다. 위에서 저장해보세요.</div>`;
+    return;
+  }
+  list.forEach((x)=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="title">${escapeHtml(x.name)} · ${escapeHtml(x.date)} · ${escapeHtml(x.type)}</div>
+      <div class="meta">레시피: ${escapeHtml(x.recipe)}</div>
+      <div class="meta">산화제: ${escapeHtml(x.ox)} / 방치: ${escapeHtml(x.time||"-")}분</div>
+      <div class="meta">메모: ${escapeHtml(x.memo||"-")}</div>
+      <div class="actions">
+        <button data-act="copy" data-id="${x.id}">복사</button>
+        <button data-act="del" data-id="${x.id}" style="border-color: rgba(251,113,133,.35); background: rgba(251,113,133,.12)">삭제</button>
+      </div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+$("cl_search").addEventListener("input", renderLogs);
+
+$("logList").addEventListener("click", async (e)=>{
+  const act = e.target?.getAttribute?.("data-act");
+  const id = e.target?.getAttribute?.("data-id");
+  if(!act || !id) return;
+
+  const list = loadLogs();
+  const idx = list.findIndex(x=>x.id===id);
+  if(idx < 0) return;
+  const x = list[idx];
+
+  if(act==="copy"){
+    const txt =
+`[고객기록]
+고객: ${x.name}
+날짜: ${x.date}
+시술: ${x.type}
+산화제: ${x.ox}
+방치: ${x.time || "-"}분
+레시피: ${x.recipe}
+메모: ${x.memo || "-"}`.trim();
+    await copyText(txt);
+    toast("복사됨");
+  }
+
+  if(act==="del"){
+    if(confirm("삭제할까요?")){
+      list.splice(idx,1);
+      saveLogs(list);
+      toast("삭제됨");
+      renderLogs();
+    }
+  }
+});
+
+/* export/import */
+$("btnExport").onclick = async ()=>{
+  const payload = JSON.stringify({v:1, exportedAt: Date.now(), logs: loadLogs()}, null, 2);
+  $("cl_io").value = payload;
+  await copyText(payload);
+  toast("내보내기 복사됨");
+};
+
+$("btnImport").onclick = ()=>{
+  const txt = ($("cl_io").value||"").trim();
+  if(!txt){ toast("붙여넣을 텍스트가 없음"); return; }
+  try{
+    const obj = JSON.parse(txt);
+    if(!obj || !Array.isArray(obj.logs)) throw new Error("형식 오류");
+    const merged = [...obj.logs, ...loadLogs()];
+    saveLogs(merged);
+    toast("가져오기 완료");
+    renderLogs();
+  }catch{
+    toast("가져오기 실패: JSON 형식 확인");
+  }
+};
+
+$("btnResetAll").onclick = ()=>{
+  if(!confirm("정말 전체 데이터 삭제할까요? (고객 기록/입력값 모두 삭제)")) return;
+  localStorage.clear();
+  toast("삭제 완료 (새로고침)");
+  setTimeout(()=>location.reload(), 800);
+};
+
+/* init */
 calc();
 mixCalc();
-draw3d();
+renderLogs();
+const lastTab = LS.get("ui.tab","calc");
+if(lastTab==="log"){ $("tabLog").click(); }
 </script>
 </body>
 </html>
