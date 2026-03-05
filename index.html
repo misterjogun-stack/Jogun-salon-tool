@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>JOGUN COLOR AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>JOGUN IRON DESIGN SIM (2D)</title>
 <meta name="theme-color" content="#0b0f1f" />
 <style>
   :root{
@@ -14,37 +14,33 @@
     --muted: rgba(255,255,255,.62);
     --shadow: 0 18px 50px rgba(0,0,0,.45);
     --r: 22px;
+    --green:#22c55e;
+    --blue:#60a5fa;
+    --pink:#fb7185;
+    --yellow:#fbbf24;
     --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --sans: -apple-system, BlinkMacSystemFont, system-ui, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   }
   *{box-sizing:border-box}
   body{
-    margin:0;
-    font-family: var(--sans);
-    color: var(--text);
+    margin:0; font-family: var(--sans); color: var(--text);
     background:
       radial-gradient(900px 600px at 15% 12%, rgba(96,165,250,.22), transparent 55%),
-      radial-gradient(900px 600px at 85% 20%, rgba(251,113,133,.18), transparent 55%),
-      radial-gradient(900px 700px at 50% 92%, rgba(34,197,94,.16), transparent 55%),
+      radial-gradient(900px 600px at 85% 20%, rgba(34,197,94,.16), transparent 55%),
       linear-gradient(180deg, var(--bg0), var(--bg1));
     min-height:100vh;
-    padding: 16px 16px 90px;
+    padding: 16px 16px 70px;
   }
   header{
-    max-width: 860px;
-    margin: 0 auto 12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    gap:12px;
+    max-width: 980px; margin: 0 auto 12px;
+    display:flex; justify-content:space-between; align-items:flex-end; gap:12px;
     padding: 6px 2px;
   }
   .title{display:flex;flex-direction:column;gap:6px;}
   .title .h{font-size:18px;font-weight:900;letter-spacing:.2px;}
   .title .s{font-size:12px;color:var(--muted);line-height:1.35;}
-  .ig{
-    font-size: 12px;
-    color: rgba(255,255,255,.86);
+  .pill{
+    font-size:12px; color: rgba(255,255,255,.86);
     border: 1px solid var(--line);
     background: rgba(255,255,255,.06);
     padding: 9px 10px;
@@ -52,229 +48,134 @@
     user-select:none;
     white-space:nowrap;
   }
-  .wrap{max-width: 860px;margin:0 auto;display:grid;gap:12px;}
+
+  .wrap{max-width:980px;margin:0 auto;display:grid;gap:12px;}
   .card{
-    border: 1px solid var(--line);
+    border:1px solid var(--line);
     background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
     border-radius: var(--r);
     box-shadow: var(--shadow);
     overflow:hidden;
   }
   .pad{padding:14px;}
-  .tabs{
+
+  .grid{
     display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap:8px;
+    grid-template-columns: 1.05fr .95fr;
+    gap:12px;
   }
-  .tab{
+  @media (max-width: 880px){ .grid{grid-template-columns:1fr;} }
+
+  .h2{margin:0 0 10px; font-size:14px; font-weight:900;}
+  .sub{margin:-6px 0 12px; color:var(--muted); font-size:12px; line-height:1.5;}
+
+  /* 2D head map */
+  .mapWrap{
     border:1px solid var(--line);
-    background: rgba(255,255,255,.06);
-    color: var(--text);
-    padding: 12px 8px;
-    border-radius: 14px;
-    font-size: 13px;
-    font-weight: 900;
-    text-align:center;
-    user-select:none;
-  }
-  .tab.on{
-    border-color: rgba(34,197,94,.35);
-    background: rgba(34,197,94,.14);
-  }
-
-  label{display:block;margin:10px 0 6px;font-size:12px;color:var(--muted);}
-  input{
-    width:100%;
-    border: 1px solid var(--line);
     background: rgba(0,0,0,.20);
-    color: var(--text);
-    padding: 12px 12px;
-    border-radius: 14px;
-    font-size: 16px;
-    outline:none;
-  }
-  input::placeholder{color: rgba(255,255,255,.35)}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  @media (max-width: 560px){ .grid2{grid-template-columns:1fr;} }
-
-  .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top: 8px;}
-  .chip{
-    border: 1px solid var(--line);
-    background: rgba(255,255,255,.06);
-    color: rgba(255,255,255,.88);
-    padding: 10px 12px;
-    border-radius: 999px;
-    font-weight: 900;
-    font-size: 13px;
-    user-select:none;
-  }
-  .row{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;}
-  .btn{
-    flex:1; min-width: 140px;
-    border: 1px solid var(--line);
-    background: rgba(255,255,255,.08);
-    color: var(--text);
-    padding: 12px 12px;
-    border-radius: 16px;
-    font-weight: 900;
-    font-size: 15px;
-    user-select:none;
-  }
-  .btn.neon{
-    border-color: rgba(34,197,94,.40);
-    background: rgba(34,197,94,.16);
-  }
-  .btn.copy{
-    border-color: rgba(96,165,250,.40);
-    background: rgba(96,165,250,.16);
-  }
-  .result{
-    margin-top: 12px;
-    border: 1px solid var(--line);
-    background: rgba(255,255,255,.06);
     border-radius: 18px;
     padding: 12px;
-    font-family: var(--mono);
-    font-size: 13px;
-    white-space: pre-wrap;
-    color: rgba(255,255,255,.88);
   }
-  .result .big{
-    font-size: 20px;
-    font-weight: 900;
-    letter-spacing: .2px;
-    margin-bottom: 6px;
-    font-family: var(--sans);
-  }
-  .muted{color: var(--muted); font-size: 12px; line-height: 1.4;}
-  .hr{height:1px;background:var(--line);opacity:.7;margin: 14px 0;}
-
-  /* 3D */
-  .viewer{
-    border: 1px solid var(--line);
-    background: rgba(0,0,0,.20);
-    border-radius: 18px;
-    overflow:hidden;
-    aspect-ratio: 16 / 10;
-    min-height: 280px;
-    position: relative;
-  }
-  #threeCanvas{width:100%;height:100%;display:block;}
-
-  .overlayHint{
-    position:absolute;
-    left: 10px;
-    top: 10px;
+  svg{width:100%; height:auto; display:block;}
+  .zoneLabel{
     font-size: 12px;
-    color: rgba(255,255,255,.75);
-    background: rgba(0,0,0,.35);
-    border: 1px solid rgba(255,255,255,.15);
-    padding: 8px 10px;
-    border-radius: 999px;
+    fill: rgba(255,255,255,.75);
+    font-weight: 800;
     user-select:none;
-    z-index: 6;
-  }
-
-  /* photo overlay layer */
-  .photoLayer{
-    position:absolute;
-    inset:0;
-    z-index: 3;
-    pointer-events:none; /* rotate control still works */
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .photoLayer img{
-    width:100%;
-    height:100%;
-    object-fit: cover;
-    opacity: .0;
-    filter: saturate(1.05) contrast(1.03);
-    transition: opacity .15s ease;
-  }
-
-  /* guide layer */
-  .guideLayer{
-    position:absolute;
-    inset:0;
-    z-index: 5;
     pointer-events:none;
-    opacity: 1;
-  }
-  .guideLayer svg{
-    width:100%;
-    height:100%;
-    display:block;
-  }
-
-  .controlsCard{
-    margin-top: 10px;
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.05);
-    border-radius: 16px;
-    padding: 12px;
-  }
-  .controlRow{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap:10px;
-  }
-  @media (max-width:560px){ .controlRow{grid-template-columns:1fr;} }
-  .toggleRow{
-    display:flex; gap:10px; flex-wrap:wrap;
-    margin-top: 10px;
-  }
-  .toggleBtn{
-    flex:1; min-width: 160px;
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.06);
-    color: rgba(255,255,255,.90);
-    padding: 12px;
-    border-radius: 14px;
-    font-weight: 900;
-    font-size: 13px;
-    user-select:none;
-    text-align:center;
-  }
-
-  .colorRow{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top: 10px;
   }
   .zone{
-    flex:1;
-    min-width: 160px;
-    border: 1px solid var(--line);
-    background: rgba(255,255,255,.06);
-    border-radius: 16px;
-    padding: 10px 12px;
+    cursor:pointer;
+    stroke: rgba(255,255,255,.20);
+    stroke-width: 2;
+    transition: opacity .15s ease, stroke .15s ease;
   }
-  .zoneTitle{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+  .zone:hover{opacity:.92}
+  .zone.active{stroke: rgba(255,255,255,.65); stroke-width: 3;}
+  .legend{
+    display:flex; gap:10px; flex-wrap:wrap;
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;}
+  .rowL{display:flex;align-items:center;gap:8px;}
+
+  /* controls */
+  label{display:block;margin:10px 0 6px;font-size:12px;color:var(--muted);}
+  input[type="range"]{width:100%;}
+  .ctl{
+    width:100%;
+    border:1px solid var(--line);
+    background: rgba(0,0,0,.20);
+    color: var(--text);
+    padding: 12px;
+    border-radius: 14px;
+    font-size: 15px;
+    outline:none;
+  }
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media (max-width:520px){ .two{grid-template-columns:1fr;} }
+
+  .kv{
+    display:flex; justify-content:space-between; align-items:center;
     gap:10px;
-    font-weight: 900;
-    font-size: 13px;
-  }
-  .sw{
-    width:18px;height:18px;border-radius:6px;border:1px solid rgba(255,255,255,.22);
-    background:#999;
-  }
-  .swatches{display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px;}
-  .swBtn{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: rgba(255,255,255,.85);
+    padding: 10px 12px;
     border:1px solid var(--line);
     background: rgba(255,255,255,.06);
-    color: rgba(255,255,255,.88);
-    padding: 10px 12px;
-    border-radius: 999px;
+    border-radius: 14px;
+    margin-top: 8px;
+  }
+
+  /* scores */
+  .scores{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top: 12px;}
+  @media (max-width: 720px){ .scores{grid-template-columns:1fr;} }
+  .scoreCard{
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.06);
+    border-radius: 18px;
+    padding: 12px;
+  }
+  .scoreCard .t{font-weight:900; margin-bottom:6px;}
+  .scoreBar{
+    height: 10px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.18);
+    overflow:hidden;
+  }
+  .fill{height:100%; width:0%;}
+  .scoreVal{margin-top:8px; font-family:var(--mono); font-size:12px; color:rgba(255,255,255,.85);}
+
+  .resultBox{
+    margin-top: 12px;
+    border:1px solid var(--line);
+    background: rgba(0,0,0,.18);
+    border-radius: 18px;
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    color: rgba(255,255,255,.86);
+  }
+
+  .btnRow{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;}
+  .btn{
+    flex:1; min-width: 160px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.08);
+    color: var(--text);
+    padding: 12px;
+    border-radius: 16px;
     font-weight: 900;
-    font-size: 12px;
+    font-size: 14px;
     user-select:none;
   }
+  .btn.g{border-color: rgba(34,197,94,.40); background: rgba(34,197,94,.16);}
+  .btn.b{border-color: rgba(96,165,250,.40); background: rgba(96,165,250,.16);}
+  .btn.r{border-color: rgba(251,113,133,.40); background: rgba(251,113,133,.14);}
   .toast{
     position: fixed;
     left: 50%;
@@ -300,531 +201,599 @@
 
 <header>
   <div class="title">
-    <div class="h">JOGUN COLOR AI</div>
-    <div class="s">Created by JOGUN · Instagram @soowan_jg · 컬러 계산기 + 3D 두상(사진 오버레이/가이드)</div>
+    <div class="h">JOGUN IRON DESIGN SIM · 2D</div>
+    <div class="s">5구역(탑/크라운/사이드/후두/넥) · 각도 슬라이더 · 결과(1~5) · 실패 방지 가이드</div>
   </div>
-  <div class="ig" onclick="window.open('https://instagram.com/soowan_jg','_blank')">📸 @soowan_jg</div>
+  <div class="pill">Created by JOGUN · @soowan_jg</div>
 </header>
 
 <div class="wrap">
+  <div class="card pad grid">
+    <!-- LEFT: MAP -->
+    <div class="mapWrap">
+      <div class="h2">두상 지도</div>
+      <div class="sub">구역을 누르고(선택) 오른쪽에서 값을 조절하세요. 지도 색은 리스크(핑크)와 루트 강도(그린)를 반영합니다.</div>
+
+      <svg viewBox="0 0 800 520" role="img" aria-label="head map">
+        <!-- head outline -->
+        <ellipse cx="400" cy="280" rx="210" ry="240" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.18)" stroke-width="3"/>
+        <!-- zones (simple stylized) -->
+        <!-- TOP -->
+        <path id="z_top" class="zone" d="M300 140 Q400 85 500 140 Q470 210 400 220 Q330 210 300 140 Z" fill="rgba(34,197,94,.12)"/>
+        <text class="zoneLabel" x="400" y="155" text-anchor="middle">탑</text>
+
+        <!-- CROWN -->
+        <path id="z_crown" class="zone" d="M300 175 Q400 120 500 175 Q520 260 400 270 Q280 260 300 175 Z" fill="rgba(96,165,250,.10)"/>
+        <text class="zoneLabel" x="400" y="215" text-anchor="middle">크라운</text>
+
+        <!-- SIDE (L+R as one zone for simplicity) -->
+        <path id="z_side" class="zone" d="M210 250 Q240 160 300 175 Q280 260 300 350 Q250 380 210 330 Q190 290 210 250 Z" fill="rgba(255,255,255,.07)"/>
+        <path id="z_side2" class="zone" d="M590 250 Q560 160 500 175 Q520 260 500 350 Q550 380 590 330 Q610 290 590 250 Z" fill="rgba(255,255,255,.07)"/>
+        <text class="zoneLabel" x="400" y="325" text-anchor="middle">사이드</text>
+
+        <!-- OCCIPITAL -->
+        <path id="z_occ" class="zone" d="M290 300 Q400 330 510 300 Q540 390 400 420 Q260 390 290 300 Z" fill="rgba(255,255,255,.06)"/>
+        <text class="zoneLabel" x="400" y="380" text-anchor="middle">후두</text>
+
+        <!-- NAPE -->
+        <path id="z_nape" class="zone" d="M330 410 Q400 455 470 410 Q450 500 400 505 Q350 500 330 410 Z" fill="rgba(251,113,133,.10)"/>
+        <text class="zoneLabel" x="400" y="470" text-anchor="middle">넥</text>
+      </svg>
+
+      <div class="legend">
+        <div class="rowL"><span class="dot" style="background:var(--green)"></span><span>루트 강도 높음</span></div>
+        <div class="rowL"><span class="dot" style="background:var(--pink)"></span><span>리스크 높음</span></div>
+        <div class="rowL"><span class="dot" style="background:rgba(255,255,255,.35)"></span><span>중립</span></div>
+      </div>
+
+      <div class="kv"><span>현재 선택 구역</span><b id="zoneName">탑</b></div>
+      <div class="kv"><span>저장된 레시피 수</span><b id="recipeCount">0</b></div>
+    </div>
+
+    <!-- RIGHT: CONTROLS -->
+    <div>
+      <div class="h2">설계 컨트롤</div>
+      <div class="sub">각도/텐션/열/섹션 + 모발 상태 + 목표를 바꾸면 점수/리스크/수정안이 자동으로 갱신됩니다.</div>
+
+      <label>각도 (0~135°)</label>
+      <input id="angle" type="range" min="0" max="135" step="1" />
+      <div class="kv"><span>Angle</span><b id="angleVal"></b></div>
+
+      <div class="two">
+        <div>
+          <label>텐션 (1~5)</label>
+          <input id="tension" type="range" min="1" max="5" step="1" />
+          <div class="kv"><span>Tension</span><b id="tensionVal"></b></div>
+        </div>
+        <div>
+          <label>열/접촉 (1~5)</label>
+          <input id="heat" type="range" min="1" max="5" step="1" />
+          <div class="kv"><span>Heat</span><b id="heatVal"></b></div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <label>섹션(폭/두께) (1~5)</label>
+          <input id="section" type="range" min="1" max="5" step="1" />
+          <div class="kv"><span>Section</span><b id="sectionVal"></b></div>
+        </div>
+        <div>
+          <label>손상도 (1~5)</label>
+          <input id="damage" type="range" min="1" max="5" step="1" />
+          <div class="kv"><span>Damage</span><b id="damageVal"></b></div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <label>모량</label>
+          <select id="density" class="ctl">
+            <option value="low">적음</option>
+            <option value="mid" selected>보통</option>
+            <option value="high">많음</option>
+          </select>
+        </div>
+        <div>
+          <label>모발 굵기</label>
+          <select id="thick" class="ctl">
+            <option value="thin">가늘</option>
+            <option value="mid" selected>보통</option>
+            <option value="thick">굵음</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <label>곱슬/부스스 (1~5)</label>
+          <input id="frizz" type="range" min="1" max="5" step="1" />
+          <div class="kv"><span>Frizz</span><b id="frizzVal"></b></div>
+        </div>
+        <div>
+          <label>목표 루트볼륨 (1~5)</label>
+          <input id="goalRoot" type="range" min="1" max="5" step="1" />
+          <div class="kv"><span>Goal Root</span><b id="goalRootVal"></b></div>
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <label>목표 끝컬 (1~5)</label>
+          <input id="goalEnd" type="range" min="1" max="5" step="1" />
+          <div class="kv"><span>Goal End</span><b id="goalEndVal"></b></div>
+        </div>
+        <div>
+          <label>길이</label>
+          <select id="length" class="ctl">
+            <option value="short">짧음</option>
+            <option value="mid" selected>미디</option>
+            <option value="long">김</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="scores">
+        <div class="scoreCard">
+          <div class="t">루트볼륨</div>
+          <div class="scoreBar"><div class="fill" id="fRoot"></div></div>
+          <div class="scoreVal" id="sRoot">—</div>
+        </div>
+        <div class="scoreCard">
+          <div class="t">끝컬</div>
+          <div class="scoreBar"><div class="fill" id="fEnd"></div></div>
+          <div class="scoreVal" id="sEnd">—</div>
+        </div>
+        <div class="scoreCard">
+          <div class="t">리스크</div>
+          <div class="scoreBar"><div class="fill" id="fRisk"></div></div>
+          <div class="scoreVal" id="sRisk">—</div>
+        </div>
+      </div>
+
+      <div class="resultBox" id="advice">—</div>
+
+      <div class="btnRow">
+        <button class="btn g" id="save">레시피 저장</button>
+        <button class="btn b" id="copy">레시피 복사</button>
+        <button class="btn r" id="reset">전체 초기화</button>
+      </div>
+    </div>
+  </div>
 
   <div class="card pad">
-    <div class="tabs">
-      <button class="tab on" id="tabCalc">컬러 계산기</button>
-      <button class="tab" id="tab3d">3D 두상</button>
-    </div>
+    <div class="h2">저장된 레시피</div>
+    <div class="sub">기기 안에 저장됩니다(무료). 교육생/동료에게 “복사”로 공유 가능.</div>
+    <div id="list" class="resultBox">아직 저장된 레시피가 없습니다.</div>
   </div>
-
-  <!-- CALC VIEW -->
-  <div class="card pad" id="viewCalc">
-    <div class="grid2">
-      <div>
-        <label>총 사용량 (g)</label>
-        <div class="chips" id="chipsTotal"></div>
-        <input id="total" inputmode="decimal" placeholder="예: 120" />
-      </div>
-      <div>
-        <label>비율 프리셋</label>
-        <div class="chips" id="chipsRatio"></div>
-        <div class="grid2">
-          <div>
-            <label>염모제 비율</label>
-            <input id="dye" inputmode="decimal" placeholder="예: 1" />
-          </div>
-          <div>
-            <label>산화제 비율</label>
-            <input id="dev" inputmode="decimal" placeholder="예: 1.5" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <button class="btn neon" id="btnCalc">계산하기</button>
-      <button class="btn copy" id="btnCopy">결과 복사</button>
-    </div>
-
-    <div class="result" id="out">
-      <div class="big">—</div>
-      <div class="muted">총량/비율을 입력하거나 버튼을 눌러 계산하세요.</div>
-    </div>
-
-    <div class="hr"></div>
-    <div class="muted">팁: 총량 버튼 → 비율 버튼만 눌러도 바로 계산됩니다.</div>
-  </div>
-
-  <!-- 3D VIEW -->
-  <div class="card pad" id="view3d" style="display:none">
-    <div class="muted" style="margin-bottom:10px;">
-      회전: 드래그 · 줌: 핀치/휠(지원 시) · 사진 오버레이 투명도 조절로 상담/교육용으로 사용하세요.
-    </div>
-
-    <div class="viewer" id="viewer">
-      <div class="overlayHint">Drag to rotate</div>
-
-      <!-- three canvas -->
-      <canvas id="threeCanvas"></canvas>
-
-      <!-- photo overlay -->
-      <div class="photoLayer">
-        <img id="photoOverlay" alt="overlay" />
-      </div>
-
-      <!-- guide overlay -->
-      <div class="guideLayer" id="guideLayer">
-        <!-- 16:10 영역에 맞춘 가이드: center line + root/mid/ends bands -->
-        <svg viewBox="0 0 1600 1000" preserveAspectRatio="none">
-          <!-- center line -->
-          <line x1="800" y1="40" x2="800" y2="960" stroke="rgba(255,255,255,.22)" stroke-width="2" stroke-dasharray="10 10"/>
-          <!-- face oval -->
-          <ellipse cx="800" cy="560" rx="280" ry="330" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3"/>
-          <!-- hair cap oval -->
-          <ellipse cx="800" cy="420" rx="330" ry="250" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3"/>
-          <!-- zones -->
-          <line x1="430" y1="345" x2="1170" y2="345" stroke="rgba(34,197,94,.22)" stroke-width="3"/>
-          <text x="1188" y="350" fill="rgba(34,197,94,.75)" font-size="26" font-family="system-ui" font-weight="700">ROOT</text>
-
-          <line x1="410" y1="520" x2="1190" y2="520" stroke="rgba(96,165,250,.22)" stroke-width="3"/>
-          <text x="1208" y="526" fill="rgba(96,165,250,.75)" font-size="26" font-family="system-ui" font-weight="700">MID</text>
-
-          <line x1="430" y1="705" x2="1170" y2="705" stroke="rgba(251,113,133,.22)" stroke-width="3"/>
-          <text x="1188" y="712" fill="rgba(251,113,133,.75)" font-size="26" font-family="system-ui" font-weight="700">ENDS</text>
-        </svg>
-      </div>
-    </div>
-
-    <div class="controlsCard">
-      <div class="controlRow">
-        <div>
-          <label>사진 업로드(오버레이)</label>
-          <input id="photoInput" type="file" accept="image/*" />
-        </div>
-        <div>
-          <label>오버레이 투명도 (0~100)</label>
-          <input id="opacityInput" inputmode="decimal" placeholder="예: 35" />
-        </div>
-      </div>
-
-      <div class="toggleRow">
-        <div class="toggleBtn" id="btnToggleGuide">가이드: ON</div>
-        <div class="toggleBtn" id="btnClearPhoto">사진 제거</div>
-      </div>
-      <div class="muted" style="margin-top:10px;">
-        팁: 투명도 25~45가 상담용으로 보기 좋습니다. 사진은 서버로 업로드되지 않고 기기에서만 표시됩니다.
-      </div>
-    </div>
-
-    <div class="colorRow">
-      <div class="zone">
-        <div class="zoneTitle">
-          <span>ROOT (뿌리)</span>
-          <span class="sw" id="swRoot"></span>
-        </div>
-        <div class="swatches" id="rootBtns"></div>
-      </div>
-
-      <div class="zone">
-        <div class="zoneTitle">
-          <span>MID (중간)</span>
-          <span class="sw" id="swMid"></span>
-        </div>
-        <div class="swatches" id="midBtns"></div>
-      </div>
-
-      <div class="zone">
-        <div class="zoneTitle">
-          <span>ENDS (끝)</span>
-          <span class="sw" id="swEnds"></span>
-        </div>
-        <div class="swatches" id="endsBtns"></div>
-      </div>
-    </div>
-
-    <div class="result" id="mixInfo" style="margin-top:12px;">
-      <div class="big">3D 컬러 맵</div>
-      <div class="muted">ROOT / MID / ENDS 색상 조합이 여기에 표시됩니다.</div>
-    </div>
-  </div>
-
 </div>
 
 <div class="toast" id="toast">완료</div>
 
-<!-- Three.js (CDN) -->
-<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-<script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
-
 <script>
-  const $ = (id)=>document.getElementById(id);
-  const toast = (msg)=>{
-    const t = $("toast");
-    t.textContent = msg;
-    t.classList.add("on");
-    setTimeout(()=>t.classList.remove("on"), 1200);
-  };
-  const num = (v)=>{
-    const x = parseFloat(String(v||"").replace(/,/g,""));
-    return Number.isFinite(x) ? x : NaN;
-  };
-  const fmt = (x)=> Number.isFinite(x) ? x.toFixed(1) : "—";
-  const LS = {
-    get(k, fallback){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; }catch{ return fallback; } },
-    set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
-  };
-  async function copyText(text){
-    try{
-      await navigator.clipboard.writeText(text);
-      return true;
-    }catch{
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      try{ document.execCommand("copy"); }catch{}
-      document.body.removeChild(ta);
-      return true;
-    }
+/* ---------- helpers ---------- */
+const $ = (id)=>document.getElementById(id);
+const toast = (msg)=>{
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  setTimeout(()=>t.classList.remove("on"), 1200);
+};
+const LS = {
+  get(k, fallback){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; }catch{ return fallback; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
+};
+const clamp = (x,a,b)=>Math.max(a, Math.min(b,x));
+const pctFrom1to5 = (s)=> ((s-1)/4)*100;
+
+/* ---------- zones ---------- */
+const ZONES = [
+  {key:"top",   name:"탑",    ids:["z_top"]},
+  {key:"crown", name:"크라운", ids:["z_crown"]},
+  {key:"side",  name:"사이드", ids:["z_side","z_side2"]},
+  {key:"occ",   name:"후두",  ids:["z_occ"]},
+  {key:"nape",  name:"넥",    ids:["z_nape"]},
+];
+let zoneKey = LS.get("sim.zone","top");
+
+/* ---------- state ---------- */
+const state = LS.get("sim.state", {
+  angle: 90,
+  tension: 3,
+  heat: 3,
+  section: 3,
+  damage: 2,
+  density: "mid",
+  thick: "mid",
+  frizz: 2,
+  goalRoot: 4,
+  goalEnd: 3,
+  length: "mid",
+});
+
+/* ---------- init controls ---------- */
+function initControls(){
+  $("angle").value = state.angle;
+  $("tension").value = state.tension;
+  $("heat").value = state.heat;
+  $("section").value = state.section;
+  $("damage").value = state.damage;
+  $("density").value = state.density;
+  $("thick").value = state.thick;
+  $("frizz").value = state.frizz;
+  $("goalRoot").value = state.goalRoot;
+  $("goalEnd").value = state.goalEnd;
+  $("length").value = state.length;
+  syncValLabels();
+}
+function syncValLabels(){
+  $("angleVal").textContent = `${state.angle}°`;
+  $("tensionVal").textContent = `${state.tension}/5`;
+  $("heatVal").textContent = `${state.heat}/5`;
+  $("sectionVal").textContent = `${state.section}/5`;
+  $("damageVal").textContent = `${state.damage}/5`;
+  $("frizzVal").textContent = `${state.frizz}/5`;
+  $("goalRootVal").textContent = `${state.goalRoot}/5`;
+  $("goalEndVal").textContent = `${state.goalEnd}/5`;
+}
+
+/* ---------- scoring engine (rule-based) ---------- */
+function zoneBias(key){
+  // zone-specific default tendencies (tuned for teaching, not "absolute truth")
+  // returns multipliers and offsets
+  switch(key){
+    case "top":   return {root:+0.6, end:-0.2, risk:+0.2}; // root matters most
+    case "crown": return {root:+0.4, end: 0.0, risk:+0.2};
+    case "side":  return {root:+0.2, end:+0.2, risk:+0.4}; // frizz/shape risk
+    case "occ":   return {root:+0.1, end:+0.5, risk:+0.2}; // curl design
+    case "nape":  return {root:-0.1, end:+0.6, risk:+0.5}; // sensitive heat risk
+    default:      return {root:0, end:0, risk:0};
+  }
+}
+function densityFactor(v){ return v==="high" ? 0.45 : (v==="low" ? -0.25 : 0.0); }
+function thickFactor(v){ return v==="thick" ? 0.35 : (v==="thin" ? -0.15 : 0.0); }
+function lengthFactor(v){ return v==="long" ? 0.25 : (v==="short" ? -0.15 : 0.0); }
+
+function compute(){
+  const b = zoneBias(zoneKey);
+
+  // normalize 0..1
+  const ang = state.angle / 135;                // 0..1 (more open -> deeper root seating)
+  const ten = (state.tension-1)/4;
+  const heat = (state.heat-1)/4;
+  const sec = (state.section-1)/4;
+  const dmg = (state.damage-1)/4;
+  const frz = (state.frizz-1)/4;
+  const goalR = (state.goalRoot-1)/4;
+  const goalE = (state.goalEnd-1)/4;
+
+  // --- Root score ---
+  // angle open + tension moderate + section smaller + frizz control increases root effect
+  let root = 0.35
+    + 0.55*ang
+    + 0.15*ten
+    - 0.25*sec
+    - 0.12*dmg
+    - 0.10*frz
+    + 0.18*goalR
+    + b.root*0.15
+    + densityFactor(state.density)*0.10
+    + thickFactor(state.thick)*0.08;
+
+  // --- End curl score ---
+  // angle closed-ish helps end curl; heat and tension raise end curl, but damage reduces
+  // use (1-ang) to represent more closed angle weighting toward ends
+  let end = 0.35
+    + 0.45*(1-ang)
+    + 0.18*heat
+    + 0.18*ten
+    + 0.10*sec
+    - 0.22*dmg
+    + 0.20*goalE
+    + b.end*0.18
+    + lengthFactor(state.length)*0.08;
+
+  // --- Risk score ---
+  // risk rises with high heat+tension+damage+frizz+thick+high density, and mismatch between goals
+  const mismatch = Math.abs(goalR - goalE);
+  let risk = 0.20
+    + 0.30*heat
+    + 0.20*ten
+    + 0.28*dmg
+    + 0.22*frz
+    + 0.15*sec
+    + densityFactor(state.density)*0.18
+    + thickFactor(state.thick)*0.16
+    + mismatch*0.20
+    + b.risk*0.20;
+
+  // clamp 0..1
+  root = clamp(root, 0, 1);
+  end  = clamp(end, 0, 1);
+  risk = clamp(risk, 0, 1);
+
+  // convert to 1..5
+  const rootS = clamp(Math.round(1 + root*4), 1, 5);
+  const endS  = clamp(Math.round(1 + end*4), 1, 5);
+  const riskS = clamp(Math.round(1 + risk*4), 1, 5);
+
+  return {rootS, endS, riskS, root, end, risk};
+}
+
+/* ---------- advice generator ---------- */
+function adviceText(scores){
+  const {rootS, endS, riskS} = scores;
+
+  const lines = [];
+  lines.push(`[${ZONES.find(z=>z.key===zoneKey).name}] 설계 요약`);
+  lines.push(`각도 ${state.angle}° / 텐션 ${state.tension} / 열 ${state.heat} / 섹션 ${state.section}`);
+  lines.push(`목표: 루트 ${state.goalRoot} · 끝컬 ${state.goalEnd} | 모발: 손상 ${state.damage} · 곱슬 ${state.frizz} · 모량 ${labelDensity(state.density)} · 굵기 ${labelThick(state.thick)} · 길이 ${labelLen(state.length)}`);
+  lines.push(``);
+  lines.push(`점수(1~5) → 루트: ${rootS} / 끝컬: ${endS} / 리스크: ${riskS}`);
+
+  // auto guardrails
+  const warns = [];
+  const fixes = [];
+
+  // 1) heat + damage
+  if(state.heat>=4 && state.damage>=4){
+    warns.push("열이 강하고 손상이 높음 → 과열/탄력 저하 리스크↑");
+    fixes.push("열 1단계↓ 또는 텐션 1단계↓ + 섹션 더 얇게(컨트롤) + 보호제/열접촉 시간 최소화");
   }
 
-  /* ---------- tabs ---------- */
-  const viewCalc = $("viewCalc");
-  const view3d = $("view3d");
-  $("tabCalc").onclick = ()=>{
-    viewCalc.style.display = "";
-    view3d.style.display = "none";
-    $("tabCalc").classList.add("on");
-    $("tab3d").classList.remove("on");
-    LS.set("ui.tab","calc");
-  };
-  $("tab3d").onclick = ()=>{
-    viewCalc.style.display = "none";
-    view3d.style.display = "";
-    $("tab3d").classList.add("on");
-    $("tabCalc").classList.remove("on");
-    LS.set("ui.tab","3d");
-    ensure3D();
-    onResize();
-  };
+  // 2) volume crowding
+  if(state.density==="high" && state.section>=4 && state.angle<=60){
+    warns.push("모량 많음 + 섹션 큼 + 각도 닫힘 → 부해짐/루트 눌림 가능");
+    fixes.push("각도↑(더 오픈) + 섹션 1단계↓ + 텐션 과하지 않게");
+  }
 
-  /* ---------- calc UI ---------- */
-  const totalPresets = [60, 90, 120, 150, 180];
-  const ratioPresets = [
-    {d:1, v:1, label:"1:1"},
-    {d:1, v:1.5, label:"1:1.5"},
-    {d:1, v:2, label:"1:2"},
-  ];
+  // 3) curl overshoot with strong root goal
+  if(state.goalRoot>=4 && state.goalEnd>=4 && state.tension>=4){
+    warns.push("루트/끝 목표 둘 다 강 + 텐션 높음 → 컬 과출(오버) 가능");
+    fixes.push("루트 목표 1단계↓ 또는 텐션 1단계↓, 끝 방향성은 열/각도로 조절");
+  }
 
-  function renderChips(){
-    const tWrap = $("chipsTotal");
-    totalPresets.forEach(v=>{
-      const b = document.createElement("button");
-      b.className = "chip";
-      b.textContent = v + "g";
-      b.onclick = ()=>{
-        $("total").value = v;
-        LS.set("val.total", v);
-        calc(true);
-        toast("총량 선택");
-      };
-      tWrap.appendChild(b);
+  // 4) frizz high + easy style
+  if(state.frizz>=4 && zoneKey==="side"){
+    warns.push("사이드 곱슬/부스스 강 → 라인 흐트러짐 리스크");
+    fixes.push("사이드 구간은 열/텐션 과하지 않게 + 다운/정리 베이스 우선(드라이 루틴 포함)");
+  }
+
+  // 5) nape caution
+  if(zoneKey==="nape" && state.heat>=4){
+    warns.push("넥 구간 열 강함 → 피부/과열/각 풀림 리스크");
+    fixes.push("넥은 열 1단계↓ + 섹션 얇게 + 작업 속도 빠르게(접촉시간 줄이기)");
+  }
+
+  // 6) if risk high but user wants strong result
+  if(riskS>=4 && (state.goalRoot>=4 || state.goalEnd>=4)){
+    warns.push("리스크가 높은데 목표 강함 → ‘안전 먼저’ 세팅 필요");
+    fixes.push("손상/곱슬 높은 경우: 열/텐션/섹션 중 1~2개는 반드시 낮춰서 안전 확보");
+  }
+
+  if(warns.length){
+    lines.push(``);
+    lines.push(`⚠️ 경고`);
+    warns.forEach(w=>lines.push(`- ${w}`));
+  }
+  if(fixes.length){
+    lines.push(``);
+    lines.push(`✅ 수정안(자동)`);
+    fixes.forEach(f=>lines.push(`- ${f}`));
+  }
+
+  // zone-specific tip
+  lines.push(``);
+  lines.push(`🎯 구역 팁`);
+  lines.push(zoneTip(zoneKey));
+
+  return lines.join("\n");
+}
+
+function zoneTip(k){
+  if(k==="top")   return "탑은 ‘각도 오픈 + 섹션 컨트롤’이 핵심. 루트가 살아나면 끝컬은 과출될 수 있어 목표 균형을 먼저 잡기.";
+  if(k==="crown") return "크라운은 볼륨 포인트. 텐션/열은 중간값으로 안정적으로, 섹션을 너무 두껍게 하지 않기.";
+  if(k==="side")  return "사이드는 라인이 무너지기 쉬움. 곱슬/부스스가 높으면 열/텐션을 낮추고 다운/정리 베이스를 우선.";
+  if(k==="occ")   return "후두는 ‘끝컬 설계’ 중심. 각도를 너무 오픈하면 루트가 과해질 수 있고, 닫히면 끝컬이 더 강해짐.";
+  if(k==="nape")  return "넥은 민감 구간. 열 강도는 낮추고 섹션은 얇게, 접촉 시간은 짧게. 리스크 관리가 최우선.";
+  return "";
+}
+
+function labelDensity(v){ return v==="high"?"많음":(v==="low"?"적음":"보통"); }
+function labelThick(v){ return v==="thick"?"굵음":(v==="thin"?"가늘":"보통"); }
+function labelLen(v){ return v==="long"?"김":(v==="short"?"짧음":"미디"); }
+
+/* ---------- map coloring ---------- */
+function colorForZone(scores){
+  // blend root strength (green) with risk (pink)
+  // return rgba string by weighting
+  const rootW = (scores.rootS-1)/4; // 0..1
+  const riskW = (scores.riskS-1)/4; // 0..1
+
+  // base neutral
+  let r=120, g=120, b=130, a=0.22;
+
+  // add green
+  r += (34 - r)*rootW;
+  g += (197 - g)*rootW;
+  b += (94 - b)*rootW;
+
+  // add pink (risk overlays toward pink)
+  r += (251 - r)*riskW;
+  g += (113 - g)*riskW;
+  b += (133 - b)*riskW;
+
+  a = 0.18 + 0.25*Math.max(rootW, riskW);
+  return `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a.toFixed(2)})`;
+}
+
+/* ---------- update UI ---------- */
+function setActiveZone(){
+  ZONES.forEach(z=>{
+    z.ids.forEach(id=>{
+      const el = $(id);
+      if(!el) return;
+      el.classList.toggle("active", z.key===zoneKey);
     });
+  });
+  $("zoneName").textContent = ZONES.find(z=>z.key===zoneKey).name;
+}
 
-    const rWrap = $("chipsRatio");
-    ratioPresets.forEach(p=>{
-      const b = document.createElement("button");
-      b.className = "chip";
-      b.textContent = p.label;
-      b.onclick = ()=>{
-        $("dye").value = p.d;
-        $("dev").value = p.v;
-        LS.set("val.dye", p.d);
-        LS.set("val.dev", p.v);
-        calc(true);
-        toast("비율 선택");
-      };
-      rWrap.appendChild(b);
+function update(){
+  syncValLabels();
+  LS.set("sim.state", state);
+  LS.set("sim.zone", zoneKey);
+
+  const scores = compute();
+
+  // score bars
+  $("fRoot").style.width = pctFrom1to5(scores.rootS) + "%";
+  $("fEnd").style.width  = pctFrom1to5(scores.endS) + "%";
+  $("fRisk").style.width = pctFrom1to5(scores.riskS) + "%";
+
+  $("fRoot").style.background = "rgba(34,197,94,.70)";
+  $("fEnd").style.background  = "rgba(96,165,250,.70)";
+  $("fRisk").style.background = "rgba(251,113,133,.70)";
+
+  $("sRoot").textContent = `Root ${scores.rootS}/5`;
+  $("sEnd").textContent  = `End ${scores.endS}/5`;
+  $("sRisk").textContent = `Risk ${scores.riskS}/5`;
+
+  // advice
+  $("advice").textContent = adviceText(scores);
+
+  // color current zone fill based on current zone scores
+  // also give other zones a "preview" based on shared state but different bias
+  ZONES.forEach(z=>{
+    const prevKey = zoneKey;
+    zoneKey = z.key;
+    const sc = compute();
+    zoneKey = prevKey;
+    const fill = colorForZone(sc);
+    z.ids.forEach(id=>{
+      const el = $(id);
+      if(el) el.setAttribute("fill", fill);
     });
+  });
+  setActiveZone();
+
+  // list count
+  renderList();
+}
+
+/* ---------- map click ---------- */
+function bindMap(){
+  ZONES.forEach(z=>{
+    z.ids.forEach(id=>{
+      const el = $(id);
+      if(!el) return;
+      el.addEventListener("click", ()=>{
+        zoneKey = z.key;
+        toast(`${z.name} 선택`);
+        update();
+      });
+    });
+  });
+}
+
+/* ---------- recipes ---------- */
+const RECIPE_KEY = "iron.recipes.v1";
+function loadRecipes(){ return LS.get(RECIPE_KEY, []); }
+function saveRecipes(list){ LS.set(RECIPE_KEY, list); }
+
+function recipeSnapshot(){
+  const sc = compute();
+  return {
+    id: Math.random().toString(16).slice(2) + Date.now().toString(16),
+    ts: Date.now(),
+    zone: zoneKey,
+    zoneName: ZONES.find(z=>z.key===zoneKey).name,
+    state: {...state},
+    scores: {root: sc.rootS, end: sc.endS, risk: sc.riskS},
+  };
+}
+
+function recipeText(r){
+  return `[JOGUN IRON DESIGN]
+구역: ${r.zoneName}
+각도 ${r.state.angle}° / 텐션 ${r.state.tension} / 열 ${r.state.heat} / 섹션 ${r.state.section}
+모발: 손상 ${r.state.damage} · 곱슬 ${r.state.frizz} · 모량 ${labelDensity(r.state.density)} · 굵기 ${labelThick(r.state.thick)} · 길이 ${labelLen(r.state.length)}
+목표: 루트 ${r.state.goalRoot} · 끝컬 ${r.state.goalEnd}
+점수: 루트 ${r.scores.root}/5 · 끝컬 ${r.scores.end}/5 · 리스크 ${r.scores.risk}/5`;
+}
+
+function renderList(){
+  const list = loadRecipes();
+  $("recipeCount").textContent = String(list.length);
+  if(!list.length){
+    $("list").textContent = "아직 저장된 레시피가 없습니다.";
+    return;
   }
+  const lines = list.slice(0, 12).map((r,i)=>`${i+1}) ${new Date(r.ts).toLocaleString()} · ${r.zoneName} · 각도 ${r.state.angle}° · T${r.state.tension} H${r.state.heat} S${r.state.section} · 루트${r.scores.root}/끝${r.scores.end}/리스크${r.scores.risk}`);
+  $("list").textContent = lines.join("\n");
+}
 
-  function bind(id, key){
-    const el = $(id);
-    el.value = LS.get(key, "") ?? "";
-    el.addEventListener("input", ()=>LS.set(key, el.value));
-  }
+$("save").addEventListener("click", ()=>{
+  const list = loadRecipes();
+  list.unshift(recipeSnapshot());
+  saveRecipes(list.slice(0, 50)); // cap
+  toast("레시피 저장됨");
+  renderList();
+});
 
-  function setOut(title, body){
-    $("out").innerHTML = `<div class="big">${title}</div><div class="muted">${body}</div>`;
-  }
-
-  function calc(){
-    const total = num($("total").value);
-    const dye = num($("dye").value);
-    const dev = num($("dev").value);
-
-    if(!Number.isFinite(total) || !Number.isFinite(dye) || !Number.isFinite(dev) || total<=0 || dye<=0 || dev<=0){
-      setOut("입력 확인", "총량/비율은 0보다 큰 숫자여야 합니다.");
-      return "";
-    }
-    const r = dye + dev;
-    const dyeG = total*(dye/r);
-    const devG = total*(dev/r);
-
-    const title = `염모제 ${fmt(dyeG)}g  ·  산화제 ${fmt(devG)}g`;
-    const body = `총 ${fmt(total)}g / 비율 ${dye}:${dev}`;
-    setOut(title, body);
-
-    return `염모제 ${fmt(dyeG)}g\n산화제 ${fmt(devG)}g\n총 ${fmt(total)}g / 비율 ${dye}:${dev}`;
-  }
-
-  $("btnCalc").onclick = ()=>{ calc(); };
-  $("btnCopy").onclick = async ()=>{
-    const t = calc();
-    if(!t) return;
-    await copyText(t);
+$("copy").addEventListener("click", async ()=>{
+  const snap = recipeSnapshot();
+  const txt = recipeText(snap) + `\nInstagram: @soowan_jg`;
+  try{
+    await navigator.clipboard.writeText(txt);
     toast("복사됨");
-  };
+  }catch{
+    toast("복사 실패(브라우저 제한)");
+  }
+});
 
-  renderChips();
-  bind("total","val.total");
-  bind("dye","val.dye");
-  bind("dev","val.dev");
-  if($("total").value && $("dye").value && $("dev").value) calc();
-
-  /* ---------- 3D ---------- */
-  let inited3D = false;
-  let renderer, scene, camera, controls;
-  let headMesh, hairMesh;
-  let rootMesh, midMesh, endsMesh;
-
-  const palette = [
-    {name:"Natural", hex:"#7a5c46"},
-    {name:"Ash",     hex:"#6b7c8f"},
-    {name:"Beige",   hex:"#c9a07a"},
-    {name:"Violet",  hex:"#6f4aa8"},
-    {name:"Warm",    hex:"#b06a3c"},
-    {name:"Black",   hex:"#1a1a1a"},
-    {name:"Blonde",  hex:"#d8c07a"},
-  ];
-
-  const state3d = LS.get("3d.colors", {
-    root: "#7a5c46",
-    mid:  "#c9a07a",
-    ends: "#d8c07a"
+$("reset").addEventListener("click", ()=>{
+  if(!confirm("전체 값을 초기화할까요?")) return;
+  Object.assign(state, {
+    angle: 90, tension: 3, heat: 3, section: 3, damage: 2,
+    density: "mid", thick: "mid", frizz: 2,
+    goalRoot: 4, goalEnd: 3, length: "mid",
   });
+  zoneKey = "top";
+  initControls();
+  toast("초기화 완료");
+  update();
+});
 
-  function setSwatchesUI(){
-    $("swRoot").style.background = state3d.root;
-    $("swMid").style.background = state3d.mid;
-    $("swEnds").style.background = state3d.ends;
-    $("mixInfo").innerHTML =
-      `<div class="big">ROOT / MID / ENDS</div>
-       <div class="muted">ROOT: ${state3d.root} · MID: ${state3d.mid} · ENDS: ${state3d.ends}</div>`;
-  }
+/* ---------- input bindings ---------- */
+function bindInputs(){
+  $("angle").addEventListener("input", (e)=>{ state.angle = parseInt(e.target.value,10); update(); });
+  $("tension").addEventListener("input", (e)=>{ state.tension = parseInt(e.target.value,10); update(); });
+  $("heat").addEventListener("input", (e)=>{ state.heat = parseInt(e.target.value,10); update(); });
+  $("section").addEventListener("input", (e)=>{ state.section = parseInt(e.target.value,10); update(); });
+  $("damage").addEventListener("input", (e)=>{ state.damage = parseInt(e.target.value,10); update(); });
+  $("frizz").addEventListener("input", (e)=>{ state.frizz = parseInt(e.target.value,10); update(); });
+  $("goalRoot").addEventListener("input", (e)=>{ state.goalRoot = parseInt(e.target.value,10); update(); });
+  $("goalEnd").addEventListener("input", (e)=>{ state.goalEnd = parseInt(e.target.value,10); update(); });
 
-  function makeColorButtons(wrapId, onPick){
-    const wrap = $(wrapId);
-    wrap.innerHTML = "";
-    palette.forEach(p=>{
-      const b = document.createElement("button");
-      b.className = "swBtn";
-      b.textContent = p.name;
-      b.onclick = ()=> onPick(p.hex);
-      wrap.appendChild(b);
-    });
-  }
+  $("density").addEventListener("change", (e)=>{ state.density = e.target.value; update(); });
+  $("thick").addEventListener("change", (e)=>{ state.thick = e.target.value; update(); });
+  $("length").addEventListener("change", (e)=>{ state.length = e.target.value; update(); });
+}
 
-  function applyZoneColors(){
-    if(!rootMesh) return;
-    rootMesh.material.color.set(state3d.root);
-    midMesh.material.color.set(state3d.mid);
-    endsMesh.material.color.set(state3d.ends);
-    hairMesh.material.color.set(state3d.mid);
-    setSwatchesUI();
-    LS.set("3d.colors", state3d);
-  }
+/* ---------- init ---------- */
+function init(){
+  initControls();
+  bindMap();
+  bindInputs();
 
-  function ensure3D(){
-    if(inited3D) return;
+  // restore zone and set active highlight
+  if(!ZONES.some(z=>z.key===zoneKey)) zoneKey = "top";
+  setActiveZone();
 
-    const canvas = $("threeCanvas");
-    renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-
-    scene = new THREE.Scene();
-
-    camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 1.2, 4.2);
-
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.enablePan = false;
-    controls.minDistance = 2.7;
-    controls.maxDistance = 6.0;
-    controls.target.set(0, 1.15, 0);
-
-    const key = new THREE.DirectionalLight(0xffffff, 1.1);
-    key.position.set(3, 4, 2);
-    scene.add(key);
-
-    const fill = new THREE.DirectionalLight(0x88aaff, 0.55);
-    fill.position.set(-3, 2, 2);
-    scene.add(fill);
-
-    const rim = new THREE.DirectionalLight(0xffffff, 0.35);
-    rim.position.set(0, 3, -4);
-    scene.add(rim);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.25));
-
-    // head
-    const headGeo = new THREE.SphereGeometry(1.05, 64, 64);
-    const headMat = new THREE.MeshStandardMaterial({color: "#c89b7b", roughness:0.65, metalness:0.02});
-    headMesh = new THREE.Mesh(headGeo, headMat);
-    headMesh.position.set(0, 1.15, 0);
-    scene.add(headMesh);
-
-    // hair cap
-    const hairGeo = new THREE.SphereGeometry(1.10, 64, 64, 0, Math.PI*2, 0, Math.PI*0.75);
-    const hairMat = new THREE.MeshStandardMaterial({color: state3d.mid, roughness:0.55, metalness:0.02});
-    hairMesh = new THREE.Mesh(hairGeo, hairMat);
-    hairMesh.position.copy(headMesh.position);
-    hairMesh.position.y += 0.05;
-    scene.add(hairMesh);
-
-    // zones as bands
-    const bandGeo = new THREE.TorusGeometry(1.06, 0.055, 24, 128);
-
-    rootMesh = new THREE.Mesh(bandGeo, new THREE.MeshStandardMaterial({color: state3d.root, roughness:0.45, metalness:0.02}));
-    midMesh  = new THREE.Mesh(bandGeo, new THREE.MeshStandardMaterial({color: state3d.mid,  roughness:0.45, metalness:0.02}));
-    endsMesh = new THREE.Mesh(bandGeo, new THREE.MeshStandardMaterial({color: state3d.ends, roughness:0.45, metalness:0.02}));
-
-    [rootMesh, midMesh, endsMesh].forEach(m=>{
-      m.rotation.x = Math.PI/2;
-      scene.add(m);
-    });
-
-    rootMesh.position.set(0, 1.78, 0);
-    midMesh.position.set(0, 1.25, 0);
-    endsMesh.position.set(0, 0.78, 0);
-
-    // ground
-    const groundGeo = new THREE.CircleGeometry(3.2, 64);
-    const groundMat = new THREE.MeshStandardMaterial({color:"#0a0f22", roughness:1, metalness:0});
-    const ground = new THREE.Mesh(groundGeo, groundMat);
-    ground.rotation.x = -Math.PI/2;
-    ground.position.y = 0.05;
-    scene.add(ground);
-
-    makeColorButtons("rootBtns", (hex)=>{ state3d.root = hex; applyZoneColors(); toast("ROOT 변경"); });
-    makeColorButtons("midBtns",  (hex)=>{ state3d.mid  = hex; applyZoneColors(); toast("MID 변경"); });
-    makeColorButtons("endsBtns", (hex)=>{ state3d.ends = hex; applyZoneColors(); toast("ENDS 변경"); });
-
-    applyZoneColors();
-    inited3D = true;
-    animate();
-  }
-
-  function onResize(){
-    if(!inited3D) return;
-    const canvas = $("threeCanvas");
-    const rect = canvas.getBoundingClientRect();
-    const w = Math.max(1, rect.width);
-    const h = Math.max(1, rect.height);
-    renderer.setSize(w, h, false);
-    camera.aspect = w/h;
-    camera.updateProjectionMatrix();
-  }
-  window.addEventListener("resize", onResize);
-
-  function animate(){
-    requestAnimationFrame(animate);
-    if(!inited3D) return;
-    controls.update();
-    renderer.render(scene, camera);
-  }
-
-  /* ---------- photo overlay + guide controls ---------- */
-  const photoOverlay = $("photoOverlay");
-  const guideLayer = $("guideLayer");
-  const opacityInput = $("opacityInput");
-  const guideKey = "3d.guideOn";
-  const opacityKey = "3d.photoOpacity";
-  const photoKey = "3d.photoDataUrl";
-
-  let guideOn = LS.get(guideKey, true);
-  let photoOpacity = LS.get(opacityKey, 35);
-
-  function applyGuideUI(){
-    guideLayer.style.opacity = guideOn ? "1" : "0";
-    $("btnToggleGuide").textContent = "가이드: " + (guideOn ? "ON" : "OFF");
-  }
-
-  function applyOpacityUI(){
-    const v = Math.max(0, Math.min(100, Number(photoOpacity)));
-    photoOverlay.style.opacity = (v/100).toString();
-    opacityInput.value = String(v);
-  }
-
-  function loadSavedPhoto(){
-    const dataUrl = LS.get(photoKey, "");
-    if(dataUrl){
-      photoOverlay.src = dataUrl;
-      // show with current opacity
-      applyOpacityUI();
-    }else{
-      photoOverlay.removeAttribute("src");
-      photoOverlay.style.opacity = "0";
-    }
-  }
-
-  $("photoInput").addEventListener("change",(e)=>{
-    const f = e.target.files?.[0];
-    if(!f) return;
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      const url = String(reader.result || "");
-      photoOverlay.src = url;
-      LS.set(photoKey, url);
-      applyOpacityUI();
-      toast("사진 적용됨");
-    };
-    reader.readAsDataURL(f);
-  });
-
-  opacityInput.addEventListener("input", ()=>{
-    const v = num(opacityInput.value);
-    if(!Number.isFinite(v)) return;
-    photoOpacity = Math.max(0, Math.min(100, v));
-    LS.set(opacityKey, photoOpacity);
-    applyOpacityUI();
-  });
-
-  $("btnToggleGuide").addEventListener("click", ()=>{
-    guideOn = !guideOn;
-    LS.set(guideKey, guideOn);
-    applyGuideUI();
-    toast("가이드 변경");
-  });
-
-  $("btnClearPhoto").addEventListener("click", ()=>{
-    if(!confirm("오버레이 사진을 제거할까요?")) return;
-    LS.set(photoKey, "");
-    $("photoInput").value = "";
-    loadSavedPhoto();
-    toast("사진 제거됨");
-  });
-
-  // init 3d ui settings
-  applyGuideUI();
-  applyOpacityUI();
-  loadSavedPhoto();
-
-  // init tab restore
-  const lastTab = LS.get("ui.tab","calc");
-  if(lastTab==="3d"){
-    $("tab3d").click();
-  }
+  update();
+}
+init();
 </script>
 </body>
 </html>
