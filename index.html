@@ -1,799 +1,105 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>JOGUN IRON DESIGN SIM (2D)</title>
-<meta name="theme-color" content="#0b0f1f" />
-<style>
-  :root{
-    --bg0:#070a14;
-    --bg1:#0b0f1f;
-    --line: rgba(255,255,255,.14);
-    --text: rgba(255,255,255,.92);
-    --muted: rgba(255,255,255,.62);
-    --shadow: 0 18px 50px rgba(0,0,0,.45);
-    --r: 22px;
-    --green:#22c55e;
-    --blue:#60a5fa;
-    --pink:#fb7185;
-    --yellow:#fbbf24;
-    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --sans: -apple-system, BlinkMacSystemFont, system-ui, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family: var(--sans); color: var(--text);
-    background:
-      radial-gradient(900px 600px at 15% 12%, rgba(96,165,250,.22), transparent 55%),
-      radial-gradient(900px 600px at 85% 20%, rgba(34,197,94,.16), transparent 55%),
-      linear-gradient(180deg, var(--bg0), var(--bg1));
-    min-height:100vh;
-    padding: 16px 16px 70px;
-  }
-  header{
-    max-width: 980px; margin: 0 auto 12px;
-    display:flex; justify-content:space-between; align-items:flex-end; gap:12px;
-    padding: 6px 2px;
-  }
-  .title{display:flex;flex-direction:column;gap:6px;}
-  .title .h{font-size:18px;font-weight:900;letter-spacing:.2px;}
-  .title .s{font-size:12px;color:var(--muted);line-height:1.35;}
-  .pill{
-    font-size:12px; color: rgba(255,255,255,.86);
-    border: 1px solid var(--line);
-    background: rgba(255,255,255,.06);
-    padding: 9px 10px;
-    border-radius: 999px;
-    user-select:none;
-    white-space:nowrap;
-  }
-
-  .wrap{max-width:980px;margin:0 auto;display:grid;gap:12px;}
-  .card{
-    border:1px solid var(--line);
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
-    border-radius: var(--r);
-    box-shadow: var(--shadow);
-    overflow:hidden;
-  }
-  .pad{padding:14px;}
-
-  .grid{
-    display:grid;
-    grid-template-columns: 1.05fr .95fr;
-    gap:12px;
-  }
-  @media (max-width: 880px){ .grid{grid-template-columns:1fr;} }
-
-  .h2{margin:0 0 10px; font-size:14px; font-weight:900;}
-  .sub{margin:-6px 0 12px; color:var(--muted); font-size:12px; line-height:1.5;}
-
-  /* 2D head map */
-  .mapWrap{
-    border:1px solid var(--line);
-    background: rgba(0,0,0,.20);
-    border-radius: 18px;
-    padding: 12px;
-  }
-  svg{width:100%; height:auto; display:block;}
-  .zoneLabel{
-    font-size: 12px;
-    fill: rgba(255,255,255,.75);
-    font-weight: 800;
-    user-select:none;
-    pointer-events:none;
-  }
-  .zone{
-    cursor:pointer;
-    stroke: rgba(255,255,255,.20);
-    stroke-width: 2;
-    transition: opacity .15s ease, stroke .15s ease;
-  }
-  .zone:hover{opacity:.92}
-  .zone.active{stroke: rgba(255,255,255,.65); stroke-width: 3;}
-  .legend{
-    display:flex; gap:10px; flex-wrap:wrap;
-    margin-top: 10px;
-    color: var(--muted);
-    font-size: 12px;
-  }
-  .dot{width:10px;height:10px;border-radius:50%;}
-  .rowL{display:flex;align-items:center;gap:8px;}
-
-  /* controls */
-  label{display:block;margin:10px 0 6px;font-size:12px;color:var(--muted);}
-  input[type="range"]{width:100%;}
-  .ctl{
-    width:100%;
-    border:1px solid var(--line);
-    background: rgba(0,0,0,.20);
-    color: var(--text);
-    padding: 12px;
-    border-radius: 14px;
-    font-size: 15px;
-    outline:none;
-  }
-  .two{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-  @media (max-width:520px){ .two{grid-template-columns:1fr;} }
-
-  .kv{
-    display:flex; justify-content:space-between; align-items:center;
-    gap:10px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: rgba(255,255,255,.85);
-    padding: 10px 12px;
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.06);
-    border-radius: 14px;
-    margin-top: 8px;
-  }
-
-  /* scores */
-  .scores{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top: 12px;}
-  @media (max-width: 720px){ .scores{grid-template-columns:1fr;} }
-  .scoreCard{
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.06);
-    border-radius: 18px;
-    padding: 12px;
-  }
-  .scoreCard .t{font-weight:900; margin-bottom:6px;}
-  .scoreBar{
-    height: 10px; border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.18);
-    overflow:hidden;
-  }
-  .fill{height:100%; width:0%;}
-  .scoreVal{margin-top:8px; font-family:var(--mono); font-size:12px; color:rgba(255,255,255,.85);}
-
-  .resultBox{
-    margin-top: 12px;
-    border:1px solid var(--line);
-    background: rgba(0,0,0,.18);
-    border-radius: 18px;
-    padding: 12px;
-    font-size: 13px;
-    line-height: 1.55;
-    white-space: pre-wrap;
-    color: rgba(255,255,255,.86);
-  }
-
-  .btnRow{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;}
-  .btn{
-    flex:1; min-width: 160px;
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.08);
-    color: var(--text);
-    padding: 12px;
-    border-radius: 16px;
-    font-weight: 900;
-    font-size: 14px;
-    user-select:none;
-  }
-  .btn.g{border-color: rgba(34,197,94,.40); background: rgba(34,197,94,.16);}
-  .btn.b{border-color: rgba(96,165,250,.40); background: rgba(96,165,250,.16);}
-  .btn.r{border-color: rgba(251,113,133,.40); background: rgba(251,113,133,.14);}
-  .toast{
-    position: fixed;
-    left: 50%;
-    bottom: 16px;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,.78);
-    color: white;
-    padding: 10px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.18);
-    font-size: 12px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s ease;
-    max-width: 90vw;
-    text-align:center;
-    z-index: 999;
-  }
-  .toast.on{opacity: 1;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프리미엄 공유미용실 파트너 모집</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-white text-gray-900">
 
-<header>
-  <div class="title">
-    <div class="h">JOGUN IRON DESIGN SIM · 2D</div>
-    <div class="s">5구역(탑/크라운/사이드/후두/넥) · 각도 슬라이더 · 결과(1~5) · 실패 방지 가이드</div>
-  </div>
-  <div class="pill">Created by JOGUN · @soowan_jg</div>
-</header>
-
-<div class="wrap">
-  <div class="card pad grid">
-    <!-- LEFT: MAP -->
-    <div class="mapWrap">
-      <div class="h2">두상 지도</div>
-      <div class="sub">구역을 누르고(선택) 오른쪽에서 값을 조절하세요. 지도 색은 리스크(핑크)와 루트 강도(그린)를 반영합니다.</div>
-
-      <svg viewBox="0 0 800 520" role="img" aria-label="head map">
-        <!-- head outline -->
-        <ellipse cx="400" cy="280" rx="210" ry="240" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.18)" stroke-width="3"/>
-        <!-- zones (simple stylized) -->
-        <!-- TOP -->
-        <path id="z_top" class="zone" d="M300 140 Q400 85 500 140 Q470 210 400 220 Q330 210 300 140 Z" fill="rgba(34,197,94,.12)"/>
-        <text class="zoneLabel" x="400" y="155" text-anchor="middle">탑</text>
-
-        <!-- CROWN -->
-        <path id="z_crown" class="zone" d="M300 175 Q400 120 500 175 Q520 260 400 270 Q280 260 300 175 Z" fill="rgba(96,165,250,.10)"/>
-        <text class="zoneLabel" x="400" y="215" text-anchor="middle">크라운</text>
-
-        <!-- SIDE (L+R as one zone for simplicity) -->
-        <path id="z_side" class="zone" d="M210 250 Q240 160 300 175 Q280 260 300 350 Q250 380 210 330 Q190 290 210 250 Z" fill="rgba(255,255,255,.07)"/>
-        <path id="z_side2" class="zone" d="M590 250 Q560 160 500 175 Q520 260 500 350 Q550 380 590 330 Q610 290 590 250 Z" fill="rgba(255,255,255,.07)"/>
-        <text class="zoneLabel" x="400" y="325" text-anchor="middle">사이드</text>
-
-        <!-- OCCIPITAL -->
-        <path id="z_occ" class="zone" d="M290 300 Q400 330 510 300 Q540 390 400 420 Q260 390 290 300 Z" fill="rgba(255,255,255,.06)"/>
-        <text class="zoneLabel" x="400" y="380" text-anchor="middle">후두</text>
-
-        <!-- NAPE -->
-        <path id="z_nape" class="zone" d="M330 410 Q400 455 470 410 Q450 500 400 505 Q350 500 330 410 Z" fill="rgba(251,113,133,.10)"/>
-        <text class="zoneLabel" x="400" y="470" text-anchor="middle">넥</text>
-      </svg>
-
-      <div class="legend">
-        <div class="rowL"><span class="dot" style="background:var(--green)"></span><span>루트 강도 높음</span></div>
-        <div class="rowL"><span class="dot" style="background:var(--pink)"></span><span>리스크 높음</span></div>
-        <div class="rowL"><span class="dot" style="background:rgba(255,255,255,.35)"></span><span>중립</span></div>
-      </div>
-
-      <div class="kv"><span>현재 선택 구역</span><b id="zoneName">탑</b></div>
-      <div class="kv"><span>저장된 레시피 수</span><b id="recipeCount">0</b></div>
-    </div>
-
-    <!-- RIGHT: CONTROLS -->
-    <div>
-      <div class="h2">설계 컨트롤</div>
-      <div class="sub">각도/텐션/열/섹션 + 모발 상태 + 목표를 바꾸면 점수/리스크/수정안이 자동으로 갱신됩니다.</div>
-
-      <label>각도 (0~135°)</label>
-      <input id="angle" type="range" min="0" max="135" step="1" />
-      <div class="kv"><span>Angle</span><b id="angleVal"></b></div>
-
-      <div class="two">
-        <div>
-          <label>텐션 (1~5)</label>
-          <input id="tension" type="range" min="1" max="5" step="1" />
-          <div class="kv"><span>Tension</span><b id="tensionVal"></b></div>
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-tighter text-black">SHARE SALON</h1>
+            <a href="#apply" class="bg-black text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-800 transition">투어 신청하기</a>
         </div>
-        <div>
-          <label>열/접촉 (1~5)</label>
-          <input id="heat" type="range" min="1" max="5" step="1" />
-          <div class="kv"><span>Heat</span><b id="heatVal"></b></div>
+    </nav>
+
+    <header class="hero-bg h-screen flex items-center justify-center text-center text-white px-6">
+        <div class="animate__animated animate__fadeInUp">
+            <p class="text-lg mb-4 font-light tracking-widest text-gray-300">PREMIUM PARTNERSHIP</p>
+            <h2 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
+                당신의 가위가 빛나는 곳,<br>오직 디자이너를 위한 독립 공간
+            </h2>
+            <p class="text-gray-200 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                인테리어, 마케팅, 운영은 저희가 하겠습니다. <br>
+                원장님은 오직 고객님의 아름다움에만 집중하세요.
+            </p>
+            <div class="space-x-4">
+                <a href="#apply" class="bg-white text-black px-8 py-4 rounded-md font-bold hover:bg-gray-200 transition">지금 입점 문의하기</a>
+                <a href="#benefits" class="border border-white text-white px-8 py-4 rounded-md font-bold hover:bg-white/10 transition">혜택 자세히 보기</a>
+            </div>
         </div>
-      </div>
+    </header>
 
-      <div class="two">
-        <div>
-          <label>섹션(폭/두께) (1~5)</label>
-          <input id="section" type="range" min="1" max="5" step="1" />
-          <div class="kv"><span>Section</span><b id="sectionVal"></b></div>
+    <section id="benefits" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h3 class="text-3xl font-bold mb-4">왜 우리와 함께해야 할까요?</h3>
+            <div class="w-16 h-1 bg-black mx-auto"></div>
         </div>
-        <div>
-          <label>손상도 (1~5)</label>
-          <input id="damage" type="range" min="1" max="5" step="1" />
-          <div class="kv"><span>Damage</span><b id="damageVal"></b></div>
+        
+        <div class="grid md:grid-cols-3 gap-12">
+            <div class="p-8 border border-gray-100 rounded-2xl bg-gray-50 hover:shadow-xl transition">
+                <div class="text-4xl mb-4">💰</div>
+                <h4 class="text-xl font-bold mb-3">초기 비용 0원</h4>
+                <p class="text-gray-600 leading-relaxed">권리금, 보증금, 인테리어 비용 걱정 없이 몸만 오세요. 모든 장비가 준비되어 있습니다.</p>
+            </div>
+            <div class="p-8 border border-gray-100 rounded-2xl bg-gray-50 hover:shadow-xl transition">
+                <div class="text-4xl mb-4">✨</div>
+                <h4 class="text-xl font-bold mb-3">프리미엄 인테리어</h4>
+                <p class="text-gray-600 leading-relaxed">최고급 가구와 조명으로 설계된 감각적인 공간에서 고객님께 최상의 경험을 선사합니다.</p>
+            </div>
+            <div class="p-8 border border-gray-100 rounded-2xl bg-gray-50 hover:shadow-xl transition">
+                <div class="text-4xl mb-4">🚀</div>
+                <h4 class="text-xl font-bold mb-3">통합 운영 지원</h4>
+                <p class="text-gray-600 leading-relaxed">세무, 노무, 마케팅부터 비품 관리까지 본사 전문가가 원스톱으로 지원해 드립니다.</p>
+            </div>
         </div>
-      </div>
+    </section>
 
-      <div class="two">
-        <div>
-          <label>모량</label>
-          <select id="density" class="ctl">
-            <option value="low">적음</option>
-            <option value="mid" selected>보통</option>
-            <option value="high">많음</option>
-          </select>
+    <section id="apply" class="py-24 bg-gray-900 text-white">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold mb-4">무료 상담 및 공간 투어 신청</h3>
+                <p class="text-gray-400">성함과 연락처를 남겨주시면 담당자가 순차적으로 안내해 드립니다.</p>
+            </div>
+            
+            <form class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">성함</label>
+                    <input type="text" class="w-full bg-gray-800 border-none rounded-lg p-4 focus:ring-2 focus:ring-white outline-none" placeholder="홍길동">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">연락처</label>
+                    <input type="tel" class="w-full bg-gray-800 border-none rounded-lg p-4 focus:ring-2 focus:ring-white outline-none" placeholder="010-0000-0000">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">현재 경력</label>
+                    <select class="w-full bg-gray-800 border-none rounded-lg p-4 focus:ring-2 focus:ring-white outline-none">
+                        <option>경력 5년 미만</option>
+                        <option>경력 5년 이상</option>
+                        <option>현직 원장님</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-gray-200 transition">신청하기</button>
+            </form>
         </div>
-        <div>
-          <label>모발 굵기</label>
-          <select id="thick" class="ctl">
-            <option value="thin">가늘</option>
-            <option value="mid" selected>보통</option>
-            <option value="thick">굵음</option>
-          </select>
-        </div>
-      </div>
+    </section>
 
-      <div class="two">
-        <div>
-          <label>곱슬/부스스 (1~5)</label>
-          <input id="frizz" type="range" min="1" max="5" step="1" />
-          <div class="kv"><span>Frizz</span><b id="frizzVal"></b></div>
-        </div>
-        <div>
-          <label>목표 루트볼륨 (1~5)</label>
-          <input id="goalRoot" type="range" min="1" max="5" step="1" />
-          <div class="kv"><span>Goal Root</span><b id="goalRootVal"></b></div>
-        </div>
-      </div>
+    <footer class="py-10 border-t text-center text-sm text-gray-500">
+        &copy; 2024 SHARE SALON. All rights reserved.
+    </footer>
 
-      <div class="two">
-        <div>
-          <label>목표 끝컬 (1~5)</label>
-          <input id="goalEnd" type="range" min="1" max="5" step="1" />
-          <div class="kv"><span>Goal End</span><b id="goalEndVal"></b></div>
-        </div>
-        <div>
-          <label>길이</label>
-          <select id="length" class="ctl">
-            <option value="short">짧음</option>
-            <option value="mid" selected>미디</option>
-            <option value="long">김</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="scores">
-        <div class="scoreCard">
-          <div class="t">루트볼륨</div>
-          <div class="scoreBar"><div class="fill" id="fRoot"></div></div>
-          <div class="scoreVal" id="sRoot">—</div>
-        </div>
-        <div class="scoreCard">
-          <div class="t">끝컬</div>
-          <div class="scoreBar"><div class="fill" id="fEnd"></div></div>
-          <div class="scoreVal" id="sEnd">—</div>
-        </div>
-        <div class="scoreCard">
-          <div class="t">리스크</div>
-          <div class="scoreBar"><div class="fill" id="fRisk"></div></div>
-          <div class="scoreVal" id="sRisk">—</div>
-        </div>
-      </div>
-
-      <div class="resultBox" id="advice">—</div>
-
-      <div class="btnRow">
-        <button class="btn g" id="save">레시피 저장</button>
-        <button class="btn b" id="copy">레시피 복사</button>
-        <button class="btn r" id="reset">전체 초기화</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="card pad">
-    <div class="h2">저장된 레시피</div>
-    <div class="sub">기기 안에 저장됩니다(무료). 교육생/동료에게 “복사”로 공유 가능.</div>
-    <div id="list" class="resultBox">아직 저장된 레시피가 없습니다.</div>
-  </div>
-</div>
-
-<div class="toast" id="toast">완료</div>
-
-<script>
-/* ---------- helpers ---------- */
-const $ = (id)=>document.getElementById(id);
-const toast = (msg)=>{
-  const t = $("toast");
-  t.textContent = msg;
-  t.classList.add("on");
-  setTimeout(()=>t.classList.remove("on"), 1200);
-};
-const LS = {
-  get(k, fallback){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; }catch{ return fallback; } },
-  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
-};
-const clamp = (x,a,b)=>Math.max(a, Math.min(b,x));
-const pctFrom1to5 = (s)=> ((s-1)/4)*100;
-
-/* ---------- zones ---------- */
-const ZONES = [
-  {key:"top",   name:"탑",    ids:["z_top"]},
-  {key:"crown", name:"크라운", ids:["z_crown"]},
-  {key:"side",  name:"사이드", ids:["z_side","z_side2"]},
-  {key:"occ",   name:"후두",  ids:["z_occ"]},
-  {key:"nape",  name:"넥",    ids:["z_nape"]},
-];
-let zoneKey = LS.get("sim.zone","top");
-
-/* ---------- state ---------- */
-const state = LS.get("sim.state", {
-  angle: 90,
-  tension: 3,
-  heat: 3,
-  section: 3,
-  damage: 2,
-  density: "mid",
-  thick: "mid",
-  frizz: 2,
-  goalRoot: 4,
-  goalEnd: 3,
-  length: "mid",
-});
-
-/* ---------- init controls ---------- */
-function initControls(){
-  $("angle").value = state.angle;
-  $("tension").value = state.tension;
-  $("heat").value = state.heat;
-  $("section").value = state.section;
-  $("damage").value = state.damage;
-  $("density").value = state.density;
-  $("thick").value = state.thick;
-  $("frizz").value = state.frizz;
-  $("goalRoot").value = state.goalRoot;
-  $("goalEnd").value = state.goalEnd;
-  $("length").value = state.length;
-  syncValLabels();
-}
-function syncValLabels(){
-  $("angleVal").textContent = `${state.angle}°`;
-  $("tensionVal").textContent = `${state.tension}/5`;
-  $("heatVal").textContent = `${state.heat}/5`;
-  $("sectionVal").textContent = `${state.section}/5`;
-  $("damageVal").textContent = `${state.damage}/5`;
-  $("frizzVal").textContent = `${state.frizz}/5`;
-  $("goalRootVal").textContent = `${state.goalRoot}/5`;
-  $("goalEndVal").textContent = `${state.goalEnd}/5`;
-}
-
-/* ---------- scoring engine (rule-based) ---------- */
-function zoneBias(key){
-  // zone-specific default tendencies (tuned for teaching, not "absolute truth")
-  // returns multipliers and offsets
-  switch(key){
-    case "top":   return {root:+0.6, end:-0.2, risk:+0.2}; // root matters most
-    case "crown": return {root:+0.4, end: 0.0, risk:+0.2};
-    case "side":  return {root:+0.2, end:+0.2, risk:+0.4}; // frizz/shape risk
-    case "occ":   return {root:+0.1, end:+0.5, risk:+0.2}; // curl design
-    case "nape":  return {root:-0.1, end:+0.6, risk:+0.5}; // sensitive heat risk
-    default:      return {root:0, end:0, risk:0};
-  }
-}
-function densityFactor(v){ return v==="high" ? 0.45 : (v==="low" ? -0.25 : 0.0); }
-function thickFactor(v){ return v==="thick" ? 0.35 : (v==="thin" ? -0.15 : 0.0); }
-function lengthFactor(v){ return v==="long" ? 0.25 : (v==="short" ? -0.15 : 0.0); }
-
-function compute(){
-  const b = zoneBias(zoneKey);
-
-  // normalize 0..1
-  const ang = state.angle / 135;                // 0..1 (more open -> deeper root seating)
-  const ten = (state.tension-1)/4;
-  const heat = (state.heat-1)/4;
-  const sec = (state.section-1)/4;
-  const dmg = (state.damage-1)/4;
-  const frz = (state.frizz-1)/4;
-  const goalR = (state.goalRoot-1)/4;
-  const goalE = (state.goalEnd-1)/4;
-
-  // --- Root score ---
-  // angle open + tension moderate + section smaller + frizz control increases root effect
-  let root = 0.35
-    + 0.55*ang
-    + 0.15*ten
-    - 0.25*sec
-    - 0.12*dmg
-    - 0.10*frz
-    + 0.18*goalR
-    + b.root*0.15
-    + densityFactor(state.density)*0.10
-    + thickFactor(state.thick)*0.08;
-
-  // --- End curl score ---
-  // angle closed-ish helps end curl; heat and tension raise end curl, but damage reduces
-  // use (1-ang) to represent more closed angle weighting toward ends
-  let end = 0.35
-    + 0.45*(1-ang)
-    + 0.18*heat
-    + 0.18*ten
-    + 0.10*sec
-    - 0.22*dmg
-    + 0.20*goalE
-    + b.end*0.18
-    + lengthFactor(state.length)*0.08;
-
-  // --- Risk score ---
-  // risk rises with high heat+tension+damage+frizz+thick+high density, and mismatch between goals
-  const mismatch = Math.abs(goalR - goalE);
-  let risk = 0.20
-    + 0.30*heat
-    + 0.20*ten
-    + 0.28*dmg
-    + 0.22*frz
-    + 0.15*sec
-    + densityFactor(state.density)*0.18
-    + thickFactor(state.thick)*0.16
-    + mismatch*0.20
-    + b.risk*0.20;
-
-  // clamp 0..1
-  root = clamp(root, 0, 1);
-  end  = clamp(end, 0, 1);
-  risk = clamp(risk, 0, 1);
-
-  // convert to 1..5
-  const rootS = clamp(Math.round(1 + root*4), 1, 5);
-  const endS  = clamp(Math.round(1 + end*4), 1, 5);
-  const riskS = clamp(Math.round(1 + risk*4), 1, 5);
-
-  return {rootS, endS, riskS, root, end, risk};
-}
-
-/* ---------- advice generator ---------- */
-function adviceText(scores){
-  const {rootS, endS, riskS} = scores;
-
-  const lines = [];
-  lines.push(`[${ZONES.find(z=>z.key===zoneKey).name}] 설계 요약`);
-  lines.push(`각도 ${state.angle}° / 텐션 ${state.tension} / 열 ${state.heat} / 섹션 ${state.section}`);
-  lines.push(`목표: 루트 ${state.goalRoot} · 끝컬 ${state.goalEnd} | 모발: 손상 ${state.damage} · 곱슬 ${state.frizz} · 모량 ${labelDensity(state.density)} · 굵기 ${labelThick(state.thick)} · 길이 ${labelLen(state.length)}`);
-  lines.push(``);
-  lines.push(`점수(1~5) → 루트: ${rootS} / 끝컬: ${endS} / 리스크: ${riskS}`);
-
-  // auto guardrails
-  const warns = [];
-  const fixes = [];
-
-  // 1) heat + damage
-  if(state.heat>=4 && state.damage>=4){
-    warns.push("열이 강하고 손상이 높음 → 과열/탄력 저하 리스크↑");
-    fixes.push("열 1단계↓ 또는 텐션 1단계↓ + 섹션 더 얇게(컨트롤) + 보호제/열접촉 시간 최소화");
-  }
-
-  // 2) volume crowding
-  if(state.density==="high" && state.section>=4 && state.angle<=60){
-    warns.push("모량 많음 + 섹션 큼 + 각도 닫힘 → 부해짐/루트 눌림 가능");
-    fixes.push("각도↑(더 오픈) + 섹션 1단계↓ + 텐션 과하지 않게");
-  }
-
-  // 3) curl overshoot with strong root goal
-  if(state.goalRoot>=4 && state.goalEnd>=4 && state.tension>=4){
-    warns.push("루트/끝 목표 둘 다 강 + 텐션 높음 → 컬 과출(오버) 가능");
-    fixes.push("루트 목표 1단계↓ 또는 텐션 1단계↓, 끝 방향성은 열/각도로 조절");
-  }
-
-  // 4) frizz high + easy style
-  if(state.frizz>=4 && zoneKey==="side"){
-    warns.push("사이드 곱슬/부스스 강 → 라인 흐트러짐 리스크");
-    fixes.push("사이드 구간은 열/텐션 과하지 않게 + 다운/정리 베이스 우선(드라이 루틴 포함)");
-  }
-
-  // 5) nape caution
-  if(zoneKey==="nape" && state.heat>=4){
-    warns.push("넥 구간 열 강함 → 피부/과열/각 풀림 리스크");
-    fixes.push("넥은 열 1단계↓ + 섹션 얇게 + 작업 속도 빠르게(접촉시간 줄이기)");
-  }
-
-  // 6) if risk high but user wants strong result
-  if(riskS>=4 && (state.goalRoot>=4 || state.goalEnd>=4)){
-    warns.push("리스크가 높은데 목표 강함 → ‘안전 먼저’ 세팅 필요");
-    fixes.push("손상/곱슬 높은 경우: 열/텐션/섹션 중 1~2개는 반드시 낮춰서 안전 확보");
-  }
-
-  if(warns.length){
-    lines.push(``);
-    lines.push(`⚠️ 경고`);
-    warns.forEach(w=>lines.push(`- ${w}`));
-  }
-  if(fixes.length){
-    lines.push(``);
-    lines.push(`✅ 수정안(자동)`);
-    fixes.forEach(f=>lines.push(`- ${f}`));
-  }
-
-  // zone-specific tip
-  lines.push(``);
-  lines.push(`🎯 구역 팁`);
-  lines.push(zoneTip(zoneKey));
-
-  return lines.join("\n");
-}
-
-function zoneTip(k){
-  if(k==="top")   return "탑은 ‘각도 오픈 + 섹션 컨트롤’이 핵심. 루트가 살아나면 끝컬은 과출될 수 있어 목표 균형을 먼저 잡기.";
-  if(k==="crown") return "크라운은 볼륨 포인트. 텐션/열은 중간값으로 안정적으로, 섹션을 너무 두껍게 하지 않기.";
-  if(k==="side")  return "사이드는 라인이 무너지기 쉬움. 곱슬/부스스가 높으면 열/텐션을 낮추고 다운/정리 베이스를 우선.";
-  if(k==="occ")   return "후두는 ‘끝컬 설계’ 중심. 각도를 너무 오픈하면 루트가 과해질 수 있고, 닫히면 끝컬이 더 강해짐.";
-  if(k==="nape")  return "넥은 민감 구간. 열 강도는 낮추고 섹션은 얇게, 접촉 시간은 짧게. 리스크 관리가 최우선.";
-  return "";
-}
-
-function labelDensity(v){ return v==="high"?"많음":(v==="low"?"적음":"보통"); }
-function labelThick(v){ return v==="thick"?"굵음":(v==="thin"?"가늘":"보통"); }
-function labelLen(v){ return v==="long"?"김":(v==="short"?"짧음":"미디"); }
-
-/* ---------- map coloring ---------- */
-function colorForZone(scores){
-  // blend root strength (green) with risk (pink)
-  // return rgba string by weighting
-  const rootW = (scores.rootS-1)/4; // 0..1
-  const riskW = (scores.riskS-1)/4; // 0..1
-
-  // base neutral
-  let r=120, g=120, b=130, a=0.22;
-
-  // add green
-  r += (34 - r)*rootW;
-  g += (197 - g)*rootW;
-  b += (94 - b)*rootW;
-
-  // add pink (risk overlays toward pink)
-  r += (251 - r)*riskW;
-  g += (113 - g)*riskW;
-  b += (133 - b)*riskW;
-
-  a = 0.18 + 0.25*Math.max(rootW, riskW);
-  return `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a.toFixed(2)})`;
-}
-
-/* ---------- update UI ---------- */
-function setActiveZone(){
-  ZONES.forEach(z=>{
-    z.ids.forEach(id=>{
-      const el = $(id);
-      if(!el) return;
-      el.classList.toggle("active", z.key===zoneKey);
-    });
-  });
-  $("zoneName").textContent = ZONES.find(z=>z.key===zoneKey).name;
-}
-
-function update(){
-  syncValLabels();
-  LS.set("sim.state", state);
-  LS.set("sim.zone", zoneKey);
-
-  const scores = compute();
-
-  // score bars
-  $("fRoot").style.width = pctFrom1to5(scores.rootS) + "%";
-  $("fEnd").style.width  = pctFrom1to5(scores.endS) + "%";
-  $("fRisk").style.width = pctFrom1to5(scores.riskS) + "%";
-
-  $("fRoot").style.background = "rgba(34,197,94,.70)";
-  $("fEnd").style.background  = "rgba(96,165,250,.70)";
-  $("fRisk").style.background = "rgba(251,113,133,.70)";
-
-  $("sRoot").textContent = `Root ${scores.rootS}/5`;
-  $("sEnd").textContent  = `End ${scores.endS}/5`;
-  $("sRisk").textContent = `Risk ${scores.riskS}/5`;
-
-  // advice
-  $("advice").textContent = adviceText(scores);
-
-  // color current zone fill based on current zone scores
-  // also give other zones a "preview" based on shared state but different bias
-  ZONES.forEach(z=>{
-    const prevKey = zoneKey;
-    zoneKey = z.key;
-    const sc = compute();
-    zoneKey = prevKey;
-    const fill = colorForZone(sc);
-    z.ids.forEach(id=>{
-      const el = $(id);
-      if(el) el.setAttribute("fill", fill);
-    });
-  });
-  setActiveZone();
-
-  // list count
-  renderList();
-}
-
-/* ---------- map click ---------- */
-function bindMap(){
-  ZONES.forEach(z=>{
-    z.ids.forEach(id=>{
-      const el = $(id);
-      if(!el) return;
-      el.addEventListener("click", ()=>{
-        zoneKey = z.key;
-        toast(`${z.name} 선택`);
-        update();
-      });
-    });
-  });
-}
-
-/* ---------- recipes ---------- */
-const RECIPE_KEY = "iron.recipes.v1";
-function loadRecipes(){ return LS.get(RECIPE_KEY, []); }
-function saveRecipes(list){ LS.set(RECIPE_KEY, list); }
-
-function recipeSnapshot(){
-  const sc = compute();
-  return {
-    id: Math.random().toString(16).slice(2) + Date.now().toString(16),
-    ts: Date.now(),
-    zone: zoneKey,
-    zoneName: ZONES.find(z=>z.key===zoneKey).name,
-    state: {...state},
-    scores: {root: sc.rootS, end: sc.endS, risk: sc.riskS},
-  };
-}
-
-function recipeText(r){
-  return `[JOGUN IRON DESIGN]
-구역: ${r.zoneName}
-각도 ${r.state.angle}° / 텐션 ${r.state.tension} / 열 ${r.state.heat} / 섹션 ${r.state.section}
-모발: 손상 ${r.state.damage} · 곱슬 ${r.state.frizz} · 모량 ${labelDensity(r.state.density)} · 굵기 ${labelThick(r.state.thick)} · 길이 ${labelLen(r.state.length)}
-목표: 루트 ${r.state.goalRoot} · 끝컬 ${r.state.goalEnd}
-점수: 루트 ${r.scores.root}/5 · 끝컬 ${r.scores.end}/5 · 리스크 ${r.scores.risk}/5`;
-}
-
-function renderList(){
-  const list = loadRecipes();
-  $("recipeCount").textContent = String(list.length);
-  if(!list.length){
-    $("list").textContent = "아직 저장된 레시피가 없습니다.";
-    return;
-  }
-  const lines = list.slice(0, 12).map((r,i)=>`${i+1}) ${new Date(r.ts).toLocaleString()} · ${r.zoneName} · 각도 ${r.state.angle}° · T${r.state.tension} H${r.state.heat} S${r.state.section} · 루트${r.scores.root}/끝${r.scores.end}/리스크${r.scores.risk}`);
-  $("list").textContent = lines.join("\n");
-}
-
-$("save").addEventListener("click", ()=>{
-  const list = loadRecipes();
-  list.unshift(recipeSnapshot());
-  saveRecipes(list.slice(0, 50)); // cap
-  toast("레시피 저장됨");
-  renderList();
-});
-
-$("copy").addEventListener("click", async ()=>{
-  const snap = recipeSnapshot();
-  const txt = recipeText(snap) + `\nInstagram: @soowan_jg`;
-  try{
-    await navigator.clipboard.writeText(txt);
-    toast("복사됨");
-  }catch{
-    toast("복사 실패(브라우저 제한)");
-  }
-});
-
-$("reset").addEventListener("click", ()=>{
-  if(!confirm("전체 값을 초기화할까요?")) return;
-  Object.assign(state, {
-    angle: 90, tension: 3, heat: 3, section: 3, damage: 2,
-    density: "mid", thick: "mid", frizz: 2,
-    goalRoot: 4, goalEnd: 3, length: "mid",
-  });
-  zoneKey = "top";
-  initControls();
-  toast("초기화 완료");
-  update();
-});
-
-/* ---------- input bindings ---------- */
-function bindInputs(){
-  $("angle").addEventListener("input", (e)=>{ state.angle = parseInt(e.target.value,10); update(); });
-  $("tension").addEventListener("input", (e)=>{ state.tension = parseInt(e.target.value,10); update(); });
-  $("heat").addEventListener("input", (e)=>{ state.heat = parseInt(e.target.value,10); update(); });
-  $("section").addEventListener("input", (e)=>{ state.section = parseInt(e.target.value,10); update(); });
-  $("damage").addEventListener("input", (e)=>{ state.damage = parseInt(e.target.value,10); update(); });
-  $("frizz").addEventListener("input", (e)=>{ state.frizz = parseInt(e.target.value,10); update(); });
-  $("goalRoot").addEventListener("input", (e)=>{ state.goalRoot = parseInt(e.target.value,10); update(); });
-  $("goalEnd").addEventListener("input", (e)=>{ state.goalEnd = parseInt(e.target.value,10); update(); });
-
-  $("density").addEventListener("change", (e)=>{ state.density = e.target.value; update(); });
-  $("thick").addEventListener("change", (e)=>{ state.thick = e.target.value; update(); });
-  $("length").addEventListener("change", (e)=>{ state.length = e.target.value; update(); });
-}
-
-/* ---------- init ---------- */
-function init(){
-  initControls();
-  bindMap();
-  bindInputs();
-
-  // restore zone and set active highlight
-  if(!ZONES.some(z=>z.key===zoneKey)) zoneKey = "top";
-  setActiveZone();
-
-  update();
-}
-init();
-</script>
 </body>
 </html>
