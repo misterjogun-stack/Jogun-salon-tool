@@ -1,164 +1,258 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FUTURE LOTTO 2026</title>
-    <style>
-        :root {
-            --neon-pink: #ff007f;
-            --neon-blue: #00f3ff;
-            --glass: rgba(255, 255, 255, 0.1);
-        }
+<meta charset="UTF-8">
+<title>JOGUN 4D LOTTO</title>
 
-        body {
-            background: radial-gradient(circle at center, #1a1a2e 0%, #020205 100%);
-            color: white;
-            font-family: 'Pretendard', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
+<style>
 
-        h1 {
-            font-size: 3rem;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px var(--neon-blue);
-            margin-bottom: 50px;
-        }
+body{
+background:#030312;
+font-family:Arial;
+text-align:center;
+color:white;
+padding-top:60px;
+}
 
-        /* 4D 컨테이너 스타일 */
-        .lotto-container {
-            display: flex;
-            gap: 20px;
-            perspective: 1000px;
-            margin-bottom: 50px;
-        }
+/* 제목 */
 
-        .ball {
-            width: 80px;
-            height: 80px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 
-                        inset 0 0 15px rgba(255, 255, 255, 0.1);
-            transform: translateZ(20px) rotateX(10deg);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0;
-        }
+.title{
+font-size:42px;
+font-weight:900;
+color:#00eaff;
+text-shadow:0 0 20px #00eaff;
+}
 
-        .ball.active {
-            opacity: 1;
-            transform: translateZ(50px) rotateX(0deg);
-            border-color: var(--neon-pink);
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
+.instagram{
+color:#ff2bd6;
+margin-bottom:40px;
+}
 
-        /* MZ 버튼 스타일 */
-        button {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: 800;
-            background: transparent;
-            color: var(--neon-blue);
-            border: 2px solid var(--neon-blue);
-            border-radius: 50px;
-            cursor: pointer;
-            position: relative;
-            transition: 0.3s;
-            overflow: hidden;
-            text-transform: uppercase;
-        }
+/* 버튼 */
 
-        button:hover {
-            background: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 0 40px var(--neon-blue);
-        }
+button{
+padding:16px 30px;
+margin:10px;
+font-size:18px;
+border:none;
+border-radius:30px;
+cursor:pointer;
 
-        button:active {
-            transform: scale(0.95);
-        }
+background:linear-gradient(45deg,#00eaff,#0066ff);
+color:white;
 
-        /* 배경 장식 */
-        .grid {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(500px) rotateX(60deg);
-            z-index: -1;
-            bottom: -50%;
-            animation: move-grid 10s linear infinite;
-        }
+box-shadow:0 0 20px #00eaff;
+transition:0.3s;
+}
 
-        @keyframes move-grid {
-            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
-            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
-        }
-    </style>
+button:hover{
+transform:scale(1.05);
+}
+
+/* 번호 영역 */
+
+#numbers{
+margin-top:40px;
+display:flex;
+justify-content:center;
+gap:20px;
+}
+
+/* 로또볼 */
+
+.ball{
+
+width:70px;
+height:70px;
+
+border-radius:50%;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:22px;
+font-weight:bold;
+
+background:radial-gradient(circle at 30% 30%, white, #ffd000 40%, #ff8c00);
+
+box-shadow:
+0 0 15px rgba(255,255,255,0.7),
+inset -5px -10px 15px rgba(0,0,0,0.4);
+
+transform:scale(0) rotate(0deg);
+
+}
+
+/* 등장 애니메이션 */
+
+.show{
+animation:pop 0.6s forwards;
+}
+
+@keyframes pop{
+
+0%{
+transform:scale(0) rotate(0deg);
+}
+
+60%{
+transform:scale(1.2) rotate(360deg);
+}
+
+100%{
+transform:scale(1) rotate(720deg);
+}
+
+}
+
+.footer{
+margin-top:60px;
+color:#777;
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="grid"></div>
+<div class="title">JOGUN 4D LOTTO</div>
 
-    <h1>Future Luck</h1>
+<div class="instagram">
+INSTAGRAM @soowan_jogun
+</div>
 
-    <div class="lotto-container" id="lotto-box">
-        <div class="ball">?</div>
-        <div class="ball">?</div>
-        <div class="ball">?</div>
-        <div class="ball">?</div>
-        <div class="ball">?</div>
-        <div class="ball">?</div>
-    </div>
+<button onclick="draw3D()">🎰 3D 추첨</button>
+<button onclick="drawAI()">🤖 AI 추천</button>
 
-    <button onclick="generateLotto()">Generate Numbers</button>
+<div id="numbers"></div>
 
-    <script>
-        function generateLotto() {
-            const balls = document.querySelectorAll('.ball');
-            const numbers = [];
+<div class="footer">
+Created by JOGUN
+</div>
 
-            // 1~45 번호 추출
-            while(numbers.length < 6) {
-                let num = Math.floor(Math.random() * 45) + 1;
-                if(!numbers.includes(num)) {
-                    numbers.push(num);
-                }
-            }
-            numbers.sort((a, b) => a - b);
+<script>
 
-            // 애니메이션 효과와 함께 번호 노출
-            balls.forEach((ball, index) => {
-                ball.classList.remove('active');
-                
-                setTimeout(() => {
-                    ball.textContent = numbers[index];
-                    ball.classList.add('active');
-                    
-                    // 4D 햅틱 느낌의 진동 (지원되는 브라우저만)
-                    if (navigator.vibrate) {
-                        navigator.vibrate(20);
-                    }
-                }, index * 200); // 0.2초 간격으로 하나씩 등장
-            });
-        }
-    </script>
+/* 랜덤 번호 */
+
+function randomNumbers(){
+
+let numbers=[];
+
+while(numbers.length<5){
+
+let n=Math.floor(Math.random()*45)+1;
+
+if(!numbers.includes(n)){
+numbers.push(n);
+}
+
+}
+
+return numbers.sort((a,b)=>a-b);
+
+}
+
+/* 3D 추첨 */
+
+function draw3D(){
+
+let container=document.getElementById("numbers");
+container.innerHTML="";
+
+let nums=randomNumbers();
+
+nums.forEach((num,i)=>{
+
+setTimeout(()=>{
+
+let ball=document.createElement("div");
+
+ball.className="ball";
+
+ball.innerText=num;
+
+container.appendChild(ball);
+
+setTimeout(()=>{
+
+ball.classList.add("show");
+
+},50);
+
+},i*700);
+
+});
+
+}
+
+/* AI 추천 (가중치 방식) */
+
+function drawAI(){
+
+let container=document.getElementById("numbers");
+container.innerHTML="";
+
+/* 가짜 과거 데이터 */
+
+let history=[
+1,3,5,7,8,10,12,14,17,19,
+21,23,24,27,29,31,33,36,38,41
+];
+
+/* 확률 계산 */
+
+let pool=[];
+
+for(let i=1;i<=45;i++){
+
+let weight=history.includes(i)?1:3;
+
+for(let j=0;j<weight;j++){
+pool.push(i);
+}
+
+}
+
+let result=[];
+
+while(result.length<5){
+
+let pick=pool[Math.floor(Math.random()*pool.length)];
+
+if(!result.includes(pick)){
+result.push(pick);
+}
+
+}
+
+result.sort((a,b)=>a-b);
+
+result.forEach((num,i)=>{
+
+setTimeout(()=>{
+
+let ball=document.createElement("div");
+
+ball.className="ball";
+
+ball.innerText=num;
+
+container.appendChild(ball);
+
+setTimeout(()=>{
+
+ball.classList.add("show");
+
+},50);
+
+},i*700);
+
+});
+
+}
+
+</script>
+
 </body>
 </html>
