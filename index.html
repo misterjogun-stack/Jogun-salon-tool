@@ -792,6 +792,8 @@
       isDrawing = false;
       startBtn.disabled = false;
       resetBtn.disabled = false;
+      saveBtn.disabled = true;
+      shareBtn.disabled = true;
       orbiter.classList.remove('fast');
       orbiter.classList.add('medium');
       statusText.textContent = '버튼을 누르면 로또 볼이 고속 회전 후 5개 번호가 하나씩 추첨됩니다.';
@@ -892,6 +894,8 @@
       startBtn.disabled = true;
       resetBtn.disabled = true;
       installBtn.disabled = true;
+      saveBtn.disabled = true;
+      shareBtn.disabled = true;
       resetResultBalls();
       initAudio();
       if (audioCtx && audioCtx.state === 'suspended') {
@@ -923,12 +927,77 @@
       isDrawing = false;
       resetBtn.disabled = false;
       installBtn.disabled = false;
+      saveBtn.disabled = false;
+      shareBtn.disabled = false;
     }
 
     function showInstallGuide() {
       installTip.classList.add('show');
       clearTimeout(showInstallGuide._timer);
       showInstallGuide._timer = setTimeout(() => installTip.classList.remove('show'), 4200);
+    }
+
+    function renderHistory() {
+      if (!savedHistory.length) {
+        historyList.innerHTML = '<div class="history-empty">아직 저장된 결과가 없습니다.</div>';
+        return;
+      }
+      historyList.innerHTML = savedHistory.map(item => `
+        <div class="history-item">
+          <div>
+            <div>${item.date}</div>
+            <strong>${item.numbers}</strong>
+          </div>
+          <div>${item.level}</div>
+        </div>
+      `).join('');
+    }
+
+    function loadHistory() {
+      try {
+        const raw = localStorage.getItem('luck-sphere-history');
+        savedHistory = raw ? JSON.parse(raw) : [];
+      } catch (_) {
+        savedHistory = [];
+      }
+      renderHistory();
+    }
+
+    function saveCurrentResult() {
+      if (!drawnNumbers.length) return;
+      const item = {
+        date: new Date().toLocaleString('ko-KR'),
+        numbers: drawnNumbers.map(formatNum).join(' / '),
+        level: luckLevel.textContent
+      };
+      savedHistory.unshift(item);
+      savedHistory = savedHistory.slice(0, 8);
+      localStorage.setItem('luck-sphere-history', JSON.stringify(savedHistory));
+      renderHistory();
+      statusText.textContent = '현재 추첨 결과를 저장했습니다.';
+      playTone({ freq: 780, duration: 0.08, type: 'triangle', gain: 0.03 });
+    }
+
+    async function shareCurrentResult() {
+      if (!drawnNumbers.length) return;
+      const text = `LUCK SPHERE\n번호: ${drawnNumbers.map(formatNum).join(' / ')}\n행운 레벨: ${luckLevel.textContent}\n행운 메시지: ${luckMessage.textContent}\n@soowan_jogun`;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'LUCK SPHERE', text });
+          statusText.textContent = '결과 공유를 완료했습니다.';
+        } else {
+          await navigator.clipboard.writeText(text);
+          statusText.textContent = '공유 기능이 없어 텍스트를 클립보드에 복사했습니다.';
+        }
+      } catch (_) {
+        statusText.textContent = '공유가 취소되었거나 지원되지 않습니다.';
+      }
+    }
+
+    function showScreenshotGuide() {
+      flash.classList.add('show');
+      setTimeout(() => flash.classList.remove('show'), 180);
+      statusText.textContent = '아이폰에서는 측면 버튼 + 볼륨 업 버튼으로 화면을 캡처하세요.';
     }
 
     function tryRegisterSW() {
@@ -978,6 +1047,9 @@
     startBtn.addEventListener('click', startDraw);
     resetBtn.addEventListener('click', resetApp);
     installBtn.addEventListener('click', showInstallGuide);
+    saveBtn.addEventListener('click', saveCurrentResult);
+    shareBtn.addEventListener('click', shareCurrentResult);
+    shotBtn.addEventListener('click', showScreenshotGuide);
 
     window.addEventListener('resize', () => {
       if (!isDrawing) createFloatingBalls();
@@ -991,6 +1063,7 @@
 
     injectManifestIfNeeded();
     tryRegisterSW();
+    loadHistory();
     resetApp();
   </script>
 </body>
