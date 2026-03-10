@@ -1,1070 +1,256 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#090d1a" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Luck Sphere" />
-  <meta name="application-name" content="Luck Sphere" />
-  <title>LUCK SPHERE — JOGUN Edition</title>
-  <style>
-    :root {
-      --bg-1: #050816;
-      --bg-2: #0b1023;
-      --bg-3: #101734;
-      --panel: rgba(255,255,255,0.06);
-      --panel-2: rgba(255,255,255,0.04);
-      --line: rgba(255,255,255,0.14);
-      --text: #f6f8ff;
-      --muted: rgba(255,255,255,0.66);
-      --accent: #7a5cff;
-      --accent-2: #00d6ff;
-      --accent-3: #ffd84d;
-      --red: #ff5f7a;
-      --green: #6cffb8;
-      --shadow: 0 24px 60px rgba(0,0,0,.42);
-      --radius-xl: 30px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JOGUN LUCK SPHERE</title>
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Noto Sans KR,sans-serif;
+  background:radial-gradient(circle at 20% 20%,#0f1635,#050816 70%);
+  color:#fff;
+  text-align:center;
+}
 
-    * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
-    body {
-      font-family: "Pretendard", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 15% 10%, rgba(0,214,255,.14), transparent 24%),
-        radial-gradient(circle at 85% 15%, rgba(122,92,255,.20), transparent 28%),
-        radial-gradient(circle at 50% 85%, rgba(255,95,122,.12), transparent 26%),
-        linear-gradient(160deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
+h1{
+  margin-top:30px;
+  font-size:48px;
+  letter-spacing:-1px;
+}
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size: 34px 34px;
-      mask-image: radial-gradient(circle at center, rgba(0,0,0,.95), transparent 82%);
-      opacity: .36;
-    }
+.sub{
+  opacity:.6;
+  margin-bottom:20px;
+}
 
-    .wrap {
-      width: min(100%, 1040px);
-      margin: 0 auto;
-      padding: calc(18px + var(--safe-top)) 16px calc(42px + var(--safe-bottom));
-      position: relative;
-      z-index: 1;
-    }
+#machineWrap{
+  position:relative;
+  width:500px;
+  height:500px;
+  margin:auto;
+}
 
-    .hero {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+canvas{
+  background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.15),rgba(255,255,255,.03) 40%,transparent 60%);
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.25);
+  box-shadow:0 0 40px rgba(0,0,0,.6), inset 0 0 30px rgba(255,255,255,.08);
+}
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255,255,255,.05);
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
+#controls{
+  margin-top:30px;
+}
 
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--red), var(--accent-3));
-      box-shadow: 0 0 14px rgba(255,95,122,.85);
-      animation: pulse 1.4s infinite;
-    }
+button{
+  padding:14px 24px;
+  border-radius:14px;
+  border:none;
+  margin:6px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
 
-    @keyframes pulse {
-      0%,100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.45); opacity: .6; }
-    }
+.start{
+  background:linear-gradient(45deg,#7a5cff,#00d6ff);
+  color:#fff;
+}
 
-    h1 {
-      margin: 0;
-      font-size: clamp(34px, 7vw, 62px);
-      line-height: .98;
-      letter-spacing: -.05em;
-      font-weight: 900;
-      background: linear-gradient(135deg, #ffffff, #c7d4ff 34%, #7a5cff 66%, #00d6ff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+.reset{
+  background:#333;
+  color:#fff;
+}
 
-    .subtitle {
-      max-width: 760px;
-      margin: 14px auto 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.7;
-    }
+#results{
+  margin-top:25px;
+  font-size:26px;
+  letter-spacing:3px;
+}
 
-    .brand-line {
-      margin-top: 10px;
-      color: rgba(255,255,255,.48);
-      font-size: 13px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
+.ballResult{
+  display:inline-block;
+  width:52px;
+  height:52px;
+  line-height:52px;
+  border-radius:50%;
+  margin:4px;
+  font-weight:800;
+  background:#ffd84d;
+  color:#111;
+}
 
-    .stage-card {
-      position: relative;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
+#fortune{
+  margin-top:20px;
+  opacity:.8;
+  font-size:18px;
+}
 
-    .stage-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.10), transparent 44%);
-    }
-
-    .machine-zone {
-      position: relative;
-      min-height: 670px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px 0 8px;
-    }
-
-    .machine {
-      position: relative;
-      width: min(92vw, 640px);
-      height: 610px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .glow-back {
-      position: absolute;
-      width: 580px;
-      height: 580px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,214,255,.14), rgba(122,92,255,.14) 40%, transparent 72%);
-      filter: blur(28px);
-      transform: translateY(-28px);
-      pointer-events: none;
-    }
-
-    .sphere-wrap {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      width: min(80vw, 470px);
-      height: min(80vw, 470px);
-      transform: translateX(-50%);
-    }
-
-    .sphere {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 36% 28%, rgba(255,255,255,.30), rgba(255,255,255,.06) 28%, rgba(255,255,255,.02) 54%, rgba(255,255,255,.08) 76%, rgba(255,255,255,.04) 100%);
-      border: 2px solid rgba(255,255,255,.19);
-      box-shadow:
-        inset 0 18px 42px rgba(255,255,255,.14),
-        inset 0 -28px 38px rgba(0,0,0,.16),
-        0 24px 44px rgba(0,0,0,.36),
-        0 0 70px rgba(122,92,255,.12);
-      overflow: hidden;
-      backdrop-filter: blur(8px);
-    }
-
-    .sphere::before {
-      content: "";
-      position: absolute;
-      top: 8%;
-      left: 9%;
-      width: 42%;
-      height: 24%;
-      border-radius: 50%;
-      background: linear-gradient(180deg, rgba(255,255,255,.50), rgba(255,255,255,.08));
-      transform: rotate(-18deg);
-      filter: blur(8px);
-      opacity: .86;
-    }
-
-    .sphere::after {
-      content: "";
-      position: absolute;
-      inset: 14px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,.09);
-      box-shadow: inset 0 0 42px rgba(255,255,255,.04);
-    }
-
-    .axis {
-      position: absolute;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 12px;
-      height: calc(100% - 32px);
-      border-radius: 999px;
-      background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.05));
-      box-shadow: inset 0 0 14px rgba(255,255,255,.08);
-      opacity: .84;
-      z-index: 3;
-    }
-
-    .sensor {
-      position: absolute;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #ff3b30;
-      box-shadow: 0 0 14px rgba(255,59,48,.9);
-      z-index: 4;
-      animation: pulse 1.5s infinite;
-    }
-
-    .orbiter {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      z-index: 2;
-      animation: spin 10s linear infinite;
-      transform-origin: center center;
-    }
-
-    .orbiter.medium { animation-duration: 3.1s; }
-    .orbiter.fast { animation-duration: 1.4s; }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .ball {
-      position: absolute;
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 18px;
-      box-shadow:
-        inset -8px -10px 14px rgba(0,0,0,.24),
-        inset 8px 10px 14px rgba(255,255,255,.22),
-        0 7px 16px rgba(0,0,0,.26);
-      border: 1px solid rgba(255,255,255,.45);
-      user-select: none;
-      text-shadow: 0 1px 0 rgba(255,255,255,.24);
-    }
-
-    .ball::before {
-      content: "";
-      position: absolute;
-      top: 7px;
-      left: 10px;
-      width: 18px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.44);
-      filter: blur(2px);
-      transform: rotate(-20deg);
-    }
-
-    .yellow { background: radial-gradient(circle at 30% 28%, #fff7b7, #ffd84d 48%, #f0a900 100%); color: #111; }
-    .red { background: radial-gradient(circle at 30% 28%, #ffc0cb, #ff5f7a 50%, #d61c4e 100%); color: #fff; }
-    .blue { background: radial-gradient(circle at 30% 28%, #cde8ff, #54a8ff 50%, #1568d8 100%); color: #fff; }
-    .black { background: radial-gradient(circle at 30% 28%, #7d7d7d, #2b2b35 55%, #05050b 100%); color: #ffe96b; }
-
-    .ball.floaty { animation: floaty 1.8s ease-in-out infinite alternate; }
-    @keyframes floaty { from { transform: translateY(-2px); } to { transform: translateY(4px); } }
-
-    .support {
-      position: absolute;
-      left: 50%;
-      bottom: 68px;
-      transform: translateX(-50%);
-      width: 400px;
-      height: 190px;
-      pointer-events: none;
-    }
-
-    .columns {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      width: 250px;
-      height: 120px;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 8px;
-    }
-
-    .columns span {
-      width: 16px;
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.22));
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.16);
-      opacity: .76;
-    }
-
-    .rail-wrap {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 450px;
-      height: 180px;
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    .rail {
-      position: absolute;
-      left: 50%;
-      bottom: 60px;
-      transform: translateX(-50%) rotate(-10deg);
-      width: 290px;
-      height: 20px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,.08));
-      border: 1px solid rgba(255,255,255,.24);
-      box-shadow: inset 0 0 16px rgba(255,255,255,.08);
-    }
-
-    .rail::after {
-      content: "";
-      position: absolute;
-      inset: 5px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
-    }
-
-    .tray {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      width: 366px;
-      min-height: 82px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.04));
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: inset 0 0 30px rgba(255,255,255,.04);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      padding: 14px;
-    }
-
-    .result-ball {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 18px;
-      opacity: 0;
-      transform: translateY(-22px) scale(.82);
-      transition: all .45s ease;
-      box-shadow:
-        inset -8px -10px 14px rgba(0,0,0,.22),
-        inset 8px 10px 14px rgba(255,255,255,.18),
-        0 8px 18px rgba(0,0,0,.25);
-      border: 1px solid rgba(255,255,255,.45);
-    }
-
-    .result-ball.show {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    .controls {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 12px;
-      padding: 0 18px 0;
-      margin-top: 6px;
-    }
-
-    button {
-      appearance: none;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      padding: 16px 18px;
-      border-radius: 18px;
-      font-size: 15px;
-      font-weight: 900;
-      letter-spacing: -.02em;
-      transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease;
-      min-height: 54px;
-    }
-
-    button:active { transform: scale(.985); }
-    button:disabled { opacity: .46; cursor: not-allowed; box-shadow: none; transform: none; }
-
-    .primary {
-      color: white;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 12px 30px rgba(73,112,255,.35);
-    }
-
-    .secondary {
-      color: white;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(12px);
-    }
-
-    .status {
-      text-align: center;
-      padding: 14px 18px 2px;
-      min-height: 42px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: -.02em;
-    }
-
-    .sound-state {
-      text-align: center;
-      color: rgba(255,255,255,.42);
-      font-size: 12px;
-      padding-bottom: 10px;
-      letter-spacing: .02em;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 14px;
-      padding: 8px 18px 18px;
-    }
-
-    .info-card {
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      border-radius: 22px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
-
-    .value {
-      font-size: 18px;
-      font-weight: 900;
-      line-height: 1.55;
-      letter-spacing: -.03em;
-    }
-
-    .luck-color-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-    }
-
-    .swatch {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,.28);
-      box-shadow: 0 0 0 4px rgba(255,255,255,.04);
-    }
-
-    .footer-sign {
-      text-align: center;
-      padding: 2px 18px 18px;
-      color: rgba(255,255,255,.40);
-      font-size: 12px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .drop-ball {
-      position: fixed;
-      z-index: 999;
-      pointer-events: none;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 18px;
-      box-shadow:
-        inset -8px -10px 14px rgba(0,0,0,.22),
-        inset 8px 10px 14px rgba(255,255,255,.18),
-        0 8px 18px rgba(0,0,0,.28);
-      border: 1px solid rgba(255,255,255,.45);
-      transition: left .72s cubic-bezier(.22,.9,.2,1), top .72s cubic-bezier(.22,.9,.2,1), transform .72s cubic-bezier(.22,.9,.2,1), opacity .18s ease;
-    }
-
-    .install-tip {
-      position: fixed;
-      left: 50%;
-      bottom: calc(16px + var(--safe-bottom));
-      transform: translateX(-50%);
-      width: min(92vw, 460px);
-      padding: 14px 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(8,12,24,.86);
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-      color: #eaf0ff;
-      font-size: 13px;
-      line-height: 1.55;
-      display: none;
-      z-index: 9999;
-    }
-
-    .install-tip.show { display: block; }
-    .install-tip strong { display: block; margin-bottom: 6px; font-size: 14px; }
-
-    @media (max-width: 900px) {
-      .info-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 760px) {
-      .machine-zone { min-height: 590px; }
-      .machine { height: 540px; }
-      .support { width: 340px; bottom: 66px; }
-      .rail-wrap { width: 360px; bottom: 22px; }
-      .tray { width: 320px; gap: 10px; }
-      .controls { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 520px) {
-      .wrap { padding-left: 12px; padding-right: 12px; }
-      .stage-card { border-radius: 26px; }
-      .machine-zone { min-height: 520px; }
-      .machine { height: 486px; }
-      .sphere-wrap { width: min(82vw, 390px); height: min(82vw, 390px); }
-      .ball { width: 46px; height: 46px; font-size: 16px; }
-      .support { width: 280px; bottom: 60px; }
-      .columns { width: 180px; height: 98px; }
-      .columns span { width: 13px; }
-      .rail-wrap { width: 300px; height: 160px; bottom: 16px; }
-      .rail { width: 220px; }
-      .tray { width: 286px; min-height: 76px; padding: 12px; gap: 8px; }
-      .result-ball { width: 44px; height: 44px; font-size: 15px; }
-    }
-  </style>
+.brand{
+  margin-top:20px;
+  opacity:.4;
+}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="hero">
-      <div class="badge"><span class="dot"></span> HI-END LOTTO + LUCK APP</div>
-      <h1>LUCK SPHERE</h1>
-      <p class="subtitle">유리 구체 안에서 회전하는 로또 볼이 하나씩 추첨되며, 5개의 행운 번호와 오늘의 행운 메시지, 컬러, 레벨을 보여주는 조군 전용 하이엔드 로또 앱</p>
-      <div class="brand-line">INSTAGRAM · @soowan_jogun</div>
-    </div>
 
-    <section class="stage-card">
-      <div class="machine-zone">
-        <div class="machine">
-          <div class="glow-back"></div>
+<h1>LUCK SPHERE</h1>
+<div class="sub">AI 로또 추첨기 · by JOGUN</div>
 
-          <div class="sphere-wrap" id="sphereWrap">
-            <div class="sphere"></div>
-            <div class="axis"></div>
-            <div class="sensor"></div>
-            <div class="orbiter medium" id="orbiter"></div>
-          </div>
+<div id="machineWrap">
+<canvas id="canvas" width="500" height="500"></canvas>
+</div>
 
-          <div class="support">
-            <div class="columns">
-              <span></span><span></span><span></span><span></span><span></span><span></span>
-            </div>
-          </div>
+<div id="controls">
+<button class="start" onclick="startDraw()">추첨 시작</button>
+<button class="reset" onclick="resetDraw()">리셋</button>
+</div>
 
-          <div class="rail-wrap">
-            <div class="rail"></div>
-            <div class="tray" id="tray">
-              <div class="result-ball"></div>
-              <div class="result-ball"></div>
-              <div class="result-ball"></div>
-              <div class="result-ball"></div>
-              <div class="result-ball"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+<div id="results"></div>
+<div id="fortune"></div>
 
-      <div class="controls">
-        <button class="primary" id="startBtn">추첨 시작</button>
-        <button class="secondary" id="resetBtn">다시 추첨</button>
-        <button class="secondary" id="installBtn">홈화면 추가 안내</button>
-      </div>
+<div class="brand">@soowan_jogun</div>
 
-      <div class="status" id="statusText">버튼을 누르면 로또 볼이 고속 회전 후 5개 번호가 하나씩 추첨됩니다.</div>
-      <div class="sound-state" id="soundState">사운드: ON</div>
+<script>
+const canvas=document.getElementById('canvas')
+const ctx=canvas.getContext('2d')
 
-      <div class="info-grid">
-        <div class="info-card">
-          <div class="label">오늘의 행운 메시지</div>
-          <div class="value" id="luckMessage">아직 추첨 전입니다.</div>
-        </div>
-        <div class="info-card">
-          <div class="label">행운 컬러</div>
-          <div class="value">
-            <span class="luck-color-chip">
-              <span class="swatch" id="luckSwatch" style="background:#7a5cff;"></span>
-              <span id="luckColorName">준비 중</span>
-            </span>
-          </div>
-        </div>
-        <div class="info-card">
-          <div class="label">행운 레벨</div>
-          <div class="value" id="luckLevel">대기 중</div>
-        </div>
-      </div>
+let balls=[]
+let gravity=0.25
+let friction=0.995
+let running=true
+let selected=[]
 
-      <div class="footer-sign">Designed for JOGUN · soowan_jogun · PWA Ready</div>
-    </section>
-  </div>
+function randomColor(){
+  const colors=["#ffd84d","#54a8ff","#ff5f7a","#fff"]
+  return colors[Math.floor(Math.random()*colors.length)]
+}
 
-  <div class="install-tip" id="installTip">
-    <strong>아이폰 홈화면 추가 방법</strong>
-    Safari에서 이 페이지를 연 뒤 하단 공유 버튼을 누르고 <b>홈 화면에 추가</b>를 선택하세요. 그러면 앱처럼 바로 실행할 수 있습니다.
-  </div>
+function Ball(x,y,r,n){
+  this.x=x
+  this.y=y
+  this.r=r
+  this.number=n
+  this.vx=(Math.random()*4-2)
+  this.vy=(Math.random()*4-2)
+  this.color=randomColor()
+}
 
-  <script>
-    const orbiter = document.getElementById('orbiter');
-    const sphereWrap = document.getElementById('sphereWrap');
-    const tray = document.getElementById('tray');
-    const resultBalls = Array.from(document.querySelectorAll('.result-ball'));
-    const startBtn = document.getElementById('startBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const installBtn = document.getElementById('installBtn');
-    const installTip = document.getElementById('installTip');
-    const statusText = document.getElementById('statusText');
-    const luckMessage = document.getElementById('luckMessage');
-    const luckColorName = document.getElementById('luckColorName');
-    const luckSwatch = document.getElementById('luckSwatch');
-    const luckLevel = document.getElementById('luckLevel');
-    const soundState = document.getElementById('soundState');
+Ball.prototype.update=function(){
 
-    const luckMessages = [
-      '오늘은 망설이던 일을 가볍게 시작해보면 흐름이 좋습니다.',
-      '예상 밖의 연락이나 제안이 들어올 수 있는 날입니다.',
-      '작은 선택 하나가 생각보다 큰 기회를 만들 수 있습니다.',
-      '지금 준비 중인 일이 있다면 끝까지 밀어붙이기 좋은 날입니다.',
-      '조용히 집중하는 시간 속에서 좋은 아이디어가 떠오를 가능성이 큽니다.',
-      '사소한 행운이 연달아 이어질 수 있으니 리듬을 놓치지 마세요.',
-      '오늘의 포인트는 속도보다 타이밍입니다. 서두르지 말고 정확하게 가세요.',
-      '눈앞의 결과보다 분위기의 흐름을 읽으면 더 좋은 선택이 가능합니다.'
-    ];
+this.vy+=gravity
+this.x+=this.vx
+this.y+=this.vy
 
-    const luckColors = [
-      { name: '네온 바이올렛', hex: '#7a5cff' },
-      { name: '일렉트릭 블루', hex: '#00d6ff' },
-      { name: '럭키 골드', hex: '#ffd84d' },
-      { name: '에너지 레드', hex: '#ff5f7a' },
-      { name: '민트 글로우', hex: '#6cffb8' },
-      { name: '코스믹 화이트', hex: '#f7f9ff' }
-    ];
+this.vx*=friction
+this.vy*=friction
 
-    const levels = ['GOOD', 'VERY GOOD', 'HOT', 'ULTRA LUCK', 'PREMIUM DAY'];
+const center=250
+const radius=220
 
-    let drawnNumbers = [];
-    let isDrawing = false;
-    let audioCtx = null;
-    let soundEnabled = true;
+let dx=this.x-center
+let dy=this.y-center
+let dist=Math.sqrt(dx*dx+dy*dy)
 
-    function wait(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
+if(dist+this.r>radius){
 
-    function formatNum(num) {
-      return String(num).padStart(2, '0');
-    }
+let angle=Math.atan2(dy,dx)
 
-    function shuffle(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
+this.x=center+Math.cos(angle)*(radius-this.r)
+this.y=center+Math.sin(angle)*(radius-this.r)
 
-    function getBallColorType(num) {
-      if (num <= 10) return 'yellow';
-      if (num <= 20) return 'blue';
-      if (num <= 30) return 'red';
-      return 'black';
-    }
+let nx=Math.cos(angle)
+let ny=Math.sin(angle)
 
-    function getBallStyle(num) {
-      const type = getBallColorType(num);
-      if (type === 'yellow') return { bg: 'radial-gradient(circle at 30% 28%, #fff7b7, #ffd84d 48%, #f0a900 100%)', color: '#111' };
-      if (type === 'blue') return { bg: 'radial-gradient(circle at 30% 28%, #cde8ff, #54a8ff 50%, #1568d8 100%)', color: '#fff' };
-      if (type === 'red') return { bg: 'radial-gradient(circle at 30% 28%, #ffc0cb, #ff5f7a 50%, #d61c4e 100%)', color: '#fff' };
-      return { bg: 'radial-gradient(circle at 30% 28%, #7d7d7d, #2b2b35 55%, #05050b 100%)', color: '#ffe96b' };
-    }
+let dot=this.vx*nx+this.vy*ny
 
-    function createFloatingBalls() {
-      orbiter.innerHTML = '';
-      const numbers = shuffle(Array.from({ length: 40 }, (_, i) => i + 1)).slice(0, 16);
-      const size = orbiter.clientWidth;
-      const center = size / 2;
-      const radius = Math.min(180, center - 36);
+this.vx-=2*dot*nx
+this.vy-=2*dot*ny
 
-      numbers.forEach((num, idx) => {
-        const angle = (Math.PI * 2 / numbers.length) * idx;
-        const jitter = Math.random() * 40 - 20;
-        const x = Math.cos(angle) * (radius - 20 + jitter);
-        const y = Math.sin(angle) * (radius - 20 + jitter);
-        const ball = document.createElement('div');
-        ball.className = `ball ${getBallColorType(num)} floaty`;
-        ball.textContent = formatNum(num);
-        ball.style.left = `${center + x - 27}px`;
-        ball.style.top = `${center + y - 27}px`;
-        ball.style.animationDelay = `${Math.random() * 1.2}s`;
-        orbiter.appendChild(ball);
-      });
-    }
+}
 
-    function resetResultBalls() {
-      resultBalls.forEach(ball => {
-        ball.className = 'result-ball';
-        ball.textContent = '';
-        ball.style.background = 'transparent';
-        ball.style.color = '#111';
-      });
-    }
+}
 
-    function resetApp() {
-      drawnNumbers = [];
-      isDrawing = false;
-      startBtn.disabled = false;
-      resetBtn.disabled = false;
-      saveBtn.disabled = true;
-      shareBtn.disabled = true;
-      orbiter.classList.remove('fast');
-      orbiter.classList.add('medium');
-      statusText.textContent = '버튼을 누르면 로또 볼이 고속 회전 후 5개 번호가 하나씩 추첨됩니다.';
-      luckMessage.textContent = '아직 추첨 전입니다.';
-      luckColorName.textContent = '준비 중';
-      luckSwatch.style.background = '#7a5cff';
-      luckLevel.textContent = '대기 중';
-      resetResultBalls();
-      createFloatingBalls();
-    }
+Ball.prototype.draw=function(){
+ctx.beginPath()
+ctx.fillStyle=this.color
+ctx.arc(this.x,this.y,this.r,0,Math.PI*2)
+ctx.fill()
 
-    function initAudio() {
-      if (audioCtx) return;
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) {
-        soundEnabled = false;
-        soundState.textContent = '사운드: 미지원 브라우저';
-        return;
-      }
-      audioCtx = new Ctx();
-    }
+ctx.fillStyle="#111"
+ctx.font="bold 16px sans-serif"
+ctx.textAlign="center"
+ctx.textBaseline="middle"
+ctx.fillText(this.number,this.x,this.y)
+}
 
-    function playTone({ freq = 440, duration = 0.08, type = 'sine', gain = 0.04, rampDown = true }) {
-      if (!soundEnabled) return;
-      initAudio();
-      if (!audioCtx) return;
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const amp = audioCtx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, now);
-      amp.gain.setValueAtTime(0.0001, now);
-      amp.gain.exponentialRampToValueAtTime(gain, now + 0.01);
-      if (rampDown) amp.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-      osc.connect(amp).connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + duration + 0.02);
-    }
+function initBalls(){
+balls=[]
+for(let i=1;i<=30;i++){
+balls.push(new Ball(250,250,18,i))
+}
+}
 
-    function playStartSound() {
-      playTone({ freq: 320, duration: 0.08, type: 'triangle', gain: 0.035 });
-      setTimeout(() => playTone({ freq: 520, duration: 0.08, type: 'triangle', gain: 0.035 }), 90);
-      setTimeout(() => playTone({ freq: 760, duration: 0.12, type: 'sine', gain: 0.03 }), 180);
-    }
+function animate(){
+ctx.clearRect(0,0,500,500)
 
-    function playDropSound(index) {
-      const notes = [520, 620, 700, 820, 960];
-      playTone({ freq: notes[index] || 520, duration: 0.09, type: 'square', gain: 0.03 });
-    }
+for(let b of balls){
+b.update()
+b.draw()
+}
 
-    function playFinishSound() {
-      playTone({ freq: 660, duration: 0.12, type: 'triangle', gain: 0.03 });
-      setTimeout(() => playTone({ freq: 880, duration: 0.16, type: 'triangle', gain: 0.035 }), 110);
-      setTimeout(() => playTone({ freq: 1100, duration: 0.2, type: 'sine', gain: 0.03 }), 230);
-    }
+if(running) requestAnimationFrame(animate)
+}
 
-    function pickFiveNumbers() {
-      return shuffle(Array.from({ length: 40 }, (_, i) => i + 1)).slice(0, 5).sort((a, b) => a - b);
-    }
+function startDraw(){
+if(selected.length>0)return
 
-    async function animateDropToSlot(num, slotIndex) {
-      const trayRect = tray.getBoundingClientRect();
-      const sphereRect = sphereWrap.getBoundingClientRect();
-      const startX = sphereRect.left + sphereRect.width / 2 - 26;
-      const startY = sphereRect.top + sphereRect.height / 2 - 26;
-      const styleInfo = getBallStyle(num);
-      const flying = document.createElement('div');
-      flying.className = 'drop-ball';
-      flying.textContent = formatNum(num);
-      flying.style.left = `${startX}px`;
-      flying.style.top = `${startY}px`;
-      flying.style.background = styleInfo.bg;
-      flying.style.color = styleInfo.color;
-      document.body.appendChild(flying);
+let pool=[...balls]
 
-      const slots = Array.from(tray.children);
-      const targetRect = slots[slotIndex].getBoundingClientRect();
-      await wait(40);
-      flying.style.left = `${targetRect.left}px`;
-      flying.style.top = `${targetRect.top}px`;
-      flying.style.transform = 'translateY(0) scale(1)';
-      playDropSound(slotIndex);
-      await wait(720);
+for(let i=0;i<5;i++){
+let pick=pool[Math.floor(Math.random()*pool.length)]
+selected.push(pick.number)
+pool=pool.filter(b=>b.number!==pick.number)
+}
 
-      const target = resultBalls[slotIndex];
-      target.textContent = formatNum(num);
-      target.style.background = styleInfo.bg;
-      target.style.color = styleInfo.color;
-      target.classList.add('show');
-      flying.style.opacity = '0';
-      await wait(150);
-      flying.remove();
-    }
+showResults()
+}
 
-    async function startDraw() {
-      if (isDrawing) return;
-      isDrawing = true;
-      startBtn.disabled = true;
-      resetBtn.disabled = true;
-      installBtn.disabled = true;
-      saveBtn.disabled = true;
-      shareBtn.disabled = true;
-      resetResultBalls();
-      initAudio();
-      if (audioCtx && audioCtx.state === 'suspended') {
-        try { await audioCtx.resume(); } catch (_) {}
-      }
-      statusText.textContent = '추첨기가 고속 회전 중입니다...';
-      orbiter.classList.remove('medium');
-      orbiter.classList.add('fast');
-      playStartSound();
-      await wait(1800);
-      drawnNumbers = pickFiveNumbers();
-      for (let i = 0; i < drawnNumbers.length; i++) {
-        statusText.textContent = `${i + 1}번째 볼 추첨 중...`;
-        await wait(260);
-        await animateDropToSlot(drawnNumbers[i], i);
-        await wait(220);
-      }
-      orbiter.classList.remove('fast');
-      orbiter.classList.add('medium');
-      const msg = luckMessages[Math.floor(Math.random() * luckMessages.length)];
-      const color = luckColors[Math.floor(Math.random() * luckColors.length)];
-      const level = levels[Math.floor(Math.random() * levels.length)];
-      luckMessage.textContent = msg;
-      luckColorName.textContent = `${color.name} (${color.hex})`;
-      luckSwatch.style.background = color.hex;
-      luckLevel.textContent = level;
-      statusText.textContent = `추첨 완료 · 오늘의 번호 ${drawnNumbers.map(formatNum).join(' / ')}`;
-      playFinishSound();
-      isDrawing = false;
-      resetBtn.disabled = false;
-      installBtn.disabled = false;
-      saveBtn.disabled = false;
-      shareBtn.disabled = false;
-    }
+function showResults(){
+const container=document.getElementById('results')
+container.innerHTML=""
 
-    function showInstallGuide() {
-      installTip.classList.add('show');
-      clearTimeout(showInstallGuide._timer);
-      showInstallGuide._timer = setTimeout(() => installTip.classList.remove('show'), 4200);
-    }
+selected.sort((a,b)=>a-b)
 
-    function renderHistory() {
-      if (!savedHistory.length) {
-        historyList.innerHTML = '<div class="history-empty">아직 저장된 결과가 없습니다.</div>';
-        return;
-      }
-      historyList.innerHTML = savedHistory.map(item => `
-        <div class="history-item">
-          <div>
-            <div>${item.date}</div>
-            <strong>${item.numbers}</strong>
-          </div>
-          <div>${item.level}</div>
-        </div>
-      `).join('');
-    }
+selected.forEach(n=>{
+let div=document.createElement('div')
+div.className='ballResult'
+div.innerText=n
+container.appendChild(div)
+})
 
-    function loadHistory() {
-      try {
-        const raw = localStorage.getItem('luck-sphere-history');
-        savedHistory = raw ? JSON.parse(raw) : [];
-      } catch (_) {
-        savedHistory = [];
-      }
-      renderHistory();
-    }
+const fortunes=[
+"오늘은 새로운 기회가 찾아올 수 있는 날입니다.",
+"생각하지 못한 행운이 생길 가능성이 있습니다.",
+"작은 선택이 큰 결과로 이어질 수 있습니다.",
+"오늘은 직감을 믿어보세요.",
+"도전하면 좋은 흐름이 있습니다."
+]
 
-    function saveCurrentResult() {
-      if (!drawnNumbers.length) return;
-      const item = {
-        date: new Date().toLocaleString('ko-KR'),
-        numbers: drawnNumbers.map(formatNum).join(' / '),
-        level: luckLevel.textContent
-      };
-      savedHistory.unshift(item);
-      savedHistory = savedHistory.slice(0, 8);
-      localStorage.setItem('luck-sphere-history', JSON.stringify(savedHistory));
-      renderHistory();
-      statusText.textContent = '현재 추첨 결과를 저장했습니다.';
-      playTone({ freq: 780, duration: 0.08, type: 'triangle', gain: 0.03 });
-    }
+const msg=fortunes[Math.floor(Math.random()*fortunes.length)]
 
-    async function shareCurrentResult() {
-      if (!drawnNumbers.length) return;
-      const text = `LUCK SPHERE\n번호: ${drawnNumbers.map(formatNum).join(' / ')}\n행운 레벨: ${luckLevel.textContent}\n행운 메시지: ${luckMessage.textContent}\n@soowan_jogun`;
-      try {
-        if (navigator.share) {
-          await navigator.share({ title: 'LUCK SPHERE', text });
-          statusText.textContent = '결과 공유를 완료했습니다.';
-        } else {
-          await navigator.clipboard.writeText(text);
-          statusText.textContent = '공유 기능이 없어 텍스트를 클립보드에 복사했습니다.';
-        }
-      } catch (_) {
-        statusText.textContent = '공유가 취소되었거나 지원되지 않습니다.';
-      }
-    }
+document.getElementById('fortune').innerText=msg
+}
 
-    function showScreenshotGuide() {
-      flash.classList.add('show');
-      setTimeout(() => flash.classList.remove('show'), 180);
-      statusText.textContent = '아이폰에서는 측면 버튼 + 볼륨 업 버튼으로 화면을 캡처하세요.';
-    }
+function resetDraw(){
+selected=[]
+document.getElementById('results').innerHTML=""
+document.getElementById('fortune').innerHTML=""
+}
 
-    function tryRegisterSW() {
-      if (!('serviceWorker' in navigator)) return;
-      const swCode = `
-        const CACHE = 'luck-sphere-v1';
-        self.addEventListener('install', e => {
-          e.waitUntil(caches.open(CACHE).then(cache => cache.addAll(['./'])));
-          self.skipWaiting();
-        });
-        self.addEventListener('activate', e => {
-          e.waitUntil(self.clients.claim());
-        });
-        self.addEventListener('fetch', e => {
-          e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
-        });
-      `;
-      const blob = new Blob([swCode], { type: 'text/javascript' });
-      const swUrl = URL.createObjectURL(blob);
-      navigator.serviceWorker.register(swUrl).catch(() => {});
-    }
+initBalls()
+animate()
+</script>
 
-    function injectManifestIfNeeded() {
-      const manifest = {
-        name: 'Luck Sphere',
-        short_name: 'Luck Sphere',
-        start_url: '.',
-        display: 'standalone',
-        background_color: '#090d1a',
-        theme_color: '#090d1a',
-        icons: [
-          {
-            src: 'data:image/svg+xml;base64,' + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7a5cff"/><stop offset="1" stop-color="#00d6ff"/></linearGradient></defs><rect width="512" height="512" rx="120" fill="#090d1a"/><circle cx="256" cy="220" r="140" fill="none" stroke="url(#g)" stroke-width="20"/><circle cx="256" cy="220" r="120" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.18)" stroke-width="6"/><circle cx="210" cy="190" r="32" fill="#ffd84d"/><circle cx="288" cy="238" r="32" fill="#54a8ff"/><circle cx="242" cy="270" r="32" fill="#ff5f7a"/><rect x="126" y="374" width="260" height="48" rx="24" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.16)"/></svg>`),
-            sizes: '512x512',
-            type: 'image/svg+xml'
-          }
-        ]
-      };
-      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('link');
-      link.rel = 'manifest';
-      link.href = url;
-      document.head.appendChild(link);
-    }
-
-    startBtn.addEventListener('click', startDraw);
-    resetBtn.addEventListener('click', resetApp);
-    installBtn.addEventListener('click', showInstallGuide);
-    saveBtn.addEventListener('click', saveCurrentResult);
-    shareBtn.addEventListener('click', shareCurrentResult);
-    shotBtn.addEventListener('click', showScreenshotGuide);
-
-    window.addEventListener('resize', () => {
-      if (!isDrawing) createFloatingBalls();
-    });
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && audioCtx && audioCtx.state === 'running') {
-        // keep silent when backgrounded by simply not triggering new tones
-      }
-    });
-
-    injectManifestIfNeeded();
-    tryRegisterSW();
-    loadHistory();
-    resetApp();
-  </script>
 </body>
 </html>
