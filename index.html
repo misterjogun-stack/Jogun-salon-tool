@@ -3,532 +3,1189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>JOGUN LUCK SPHERE</title>
+  <meta name="theme-color" content="#0d1017" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="JOGUN LUCK LAB" />
+  <title>JOGUN LUCK LAB</title>
   <style>
     :root{
-      --bg1:#050814;
-      --bg2:#0b1124;
-      --bg3:#121a35;
-      --text:#f5f7ff;
-      --muted:rgba(255,255,255,.68);
-      --line:rgba(255,255,255,.12);
-      --panel:rgba(255,255,255,.05);
-      --accent:#7a5cff;
-      --accent2:#00d7ff;
-      --gold:#ffd84d;
-      --red:#ff5f7a;
-      --green:#69ffbe;
-      --shadow:0 24px 60px rgba(0,0,0,.42);
+      --bg:#0b0d12;
+      --bg2:#121620;
+      --bg3:#1a2030;
+      --panel:rgba(255,255,255,0.06);
+      --panel-2:rgba(255,255,255,0.04);
+      --stroke:rgba(255,255,255,0.10);
+      --text:#f5f7fb;
+      --muted:rgba(255,255,255,0.62);
+      --gold:#d9b36a;
+      --gold-deep:#8f6d35;
+      --silver:#dfe5ee;
+      --blue:#7cb2ff;
+      --green:#18c78b;
+      --red:#ff5a72;
+      --shadow:0 28px 70px rgba(0,0,0,0.44);
+      --radius-xl:30px;
+      --radius-lg:22px;
+      --radius-md:16px;
     }
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;min-height:100%}
-    body{
-      font-family:"Pretendard","Noto Sans KR",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
-      color:var(--text);
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Roboto,Arial,sans-serif;
       background:
-        radial-gradient(circle at 18% 10%, rgba(0,215,255,.13), transparent 24%),
-        radial-gradient(circle at 82% 14%, rgba(122,92,255,.18), transparent 28%),
-        radial-gradient(circle at 50% 86%, rgba(255,95,122,.10), transparent 26%),
-        linear-gradient(160deg,var(--bg1),var(--bg2) 55%,var(--bg3));
+        radial-gradient(circle at 10% 10%, rgba(217,179,106,.14), transparent 22%),
+        radial-gradient(circle at 88% 0%, rgba(124,178,255,.11), transparent 24%),
+        radial-gradient(circle at 90% 90%, rgba(255,255,255,.05), transparent 18%),
+        linear-gradient(160deg, #08090d 0%, #10131b 40%, #171c26 100%);
+      color:var(--text);
       overflow-x:hidden;
     }
-    body::before{
-      content:"";position:fixed;inset:0;pointer-events:none;opacity:.32;
-      background:
-        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-      background-size:34px 34px;
-      mask-image:radial-gradient(circle at center, black 36%, transparent 84%);
+
+    body{
+      display:flex;
+      justify-content:center;
+      padding:18px 14px 34px;
     }
-    .wrap{width:min(100%,1020px);margin:0 auto;padding:20px 14px 38px;position:relative;z-index:1}
-    .hero{text-align:center;margin-bottom:18px}
-    .badge{
-      display:inline-flex;align-items:center;gap:10px;padding:9px 14px;border-radius:999px;
-      border:1px solid var(--line);background:rgba(255,255,255,.05);backdrop-filter:blur(12px);
-      box-shadow:var(--shadow);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)
+
+    .glow{
+      position:fixed;
+      width:340px;
+      height:340px;
+      border-radius:50%;
+      filter:blur(82px);
+      pointer-events:none;
+      opacity:.34;
+      z-index:0;
+      animation:floaty 10s ease-in-out infinite alternate;
     }
-    .badge::before{
-      content:"";width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));
-      box-shadow:0 0 14px rgba(255,95,122,.85);animation:pulse 1.5s infinite
+    .glow.a{left:-120px;top:-100px;background:rgba(217,179,106,.18)}
+    .glow.b{right:-120px;bottom:-120px;background:rgba(124,178,255,.14);animation-duration:13s}
+
+    @keyframes floaty{
+      from{transform:translate(0,0) scale(1)}
+      to{transform:translate(40px,28px) scale(1.12)}
     }
-    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.45)}}
-    h1{
-      margin:16px 0 0;font-size:clamp(34px,7vw,66px);line-height:.98;letter-spacing:-.05em;font-weight:900;
-      background:linear-gradient(135deg,#fff,#c7d4ff 34%,#7a5cff 66%,#00d7ff 100%);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent
-    }
-    .subtitle{max-width:720px;margin:14px auto 0;color:var(--muted);font-size:15px;line-height:1.7}
-    .brand-line{margin-top:10px;color:rgba(255,255,255,.48);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
 
     .app{
-      border:1px solid var(--line);border-radius:30px;overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
-      backdrop-filter:blur(18px);box-shadow:var(--shadow);position:relative
+      width:100%;
+      max-width:470px;
+      position:relative;
+      z-index:1;
     }
-    .app::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 0%, rgba(255,255,255,.09), transparent 44%)}
 
-    .machine-zone{position:relative;min-height:720px;display:flex;justify-content:center;align-items:center;padding:20px 10px 8px}
-    .live-badge{
-      position:absolute;left:20px;top:20px;z-index:5;padding:8px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);background:rgba(8,12,24,.5);backdrop-filter:blur(12px);
-      color:#dbe7ff;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:8px
+    .shell{
+      position:relative;
+      background:linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+      border:1px solid var(--stroke);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      overflow:hidden;
     }
-    .live-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#ff4b61;box-shadow:0 0 12px rgba(255,75,97,.9)}
 
-    .machine{position:relative;width:min(94vw,760px);height:660px;display:flex;justify-content:center;align-items:center}
-    .glow{position:absolute;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle, rgba(0,215,255,.13), rgba(122,92,255,.14) 40%, transparent 72%);filter:blur(28px);transform:translateY(-20px)}
-
-    .dome-wrap{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:min(84vw,520px);height:min(84vw,520px)}
-    #machineCanvas{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;z-index:3}
-    .glass{
-      position:absolute;inset:0;border-radius:50%;z-index:4;pointer-events:none;
-      border:2px solid rgba(255,255,255,.18);
-      background:radial-gradient(circle at 36% 28%, rgba(255,255,255,.22), rgba(255,255,255,.05) 28%, rgba(255,255,255,.02) 54%, rgba(255,255,255,.06) 76%, rgba(255,255,255,.03) 100%);
-      box-shadow:inset 0 18px 42px rgba(255,255,255,.10), inset 0 -28px 38px rgba(0,0,0,.15), 0 24px 44px rgba(0,0,0,.35), 0 0 70px rgba(122,92,255,.10)
+    .shell::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), transparent 18%);
+      pointer-events:none;
     }
-    .glass::before{
-      content:"";position:absolute;top:8%;left:10%;width:40%;height:22%;border-radius:50%;
-      background:linear-gradient(180deg, rgba(255,255,255,.40), rgba(255,255,255,.08));transform:rotate(-18deg);filter:blur(8px)
+
+    .top{
+      padding:18px 18px 8px;
+      text-align:center;
     }
-    .glass::after{content:"";position:absolute;inset:14px;border-radius:50%;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 42px rgba(255,255,255,.04)}
-    .axis{position:absolute;left:50%;top:18px;transform:translateX(-50%);width:12px;height:calc(100% - 36px);border-radius:999px;z-index:5;background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.05));box-shadow:inset 0 0 14px rgba(255,255,255,.08)}
-    .sensor{position:absolute;left:50%;top:24px;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;z-index:6;background:#ff3b30;box-shadow:0 0 14px rgba(255,59,48,.9);animation:pulse 1.5s infinite}
 
-    .support{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);width:420px;height:200px;z-index:2;pointer-events:none}
-    .support-bars{position:absolute;left:50%;top:0;transform:translateX(-50%);width:260px;height:126px;display:flex;justify-content:space-between;padding:0 8px}
-    .support-bars span{width:16px;height:100%;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.22));box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);opacity:.76}
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      font-size:.76rem;
+      font-weight:800;
+      color:rgba(255,255,255,.76);
+      letter-spacing:.45px;
+    }
 
-    .rail-wrap{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);width:470px;height:190px;z-index:7;pointer-events:none}
-    .chute{position:absolute;left:50%;bottom:92px;transform:translateX(-50%) rotate(-8deg);width:300px;height:22px;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 0 16px rgba(255,255,255,.08)}
-    .tray{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:388px;min-height:86px;border-radius:26px;background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 0 30px rgba(255,255,255,.04);display:flex;justify-content:center;align-items:center;gap:12px;padding:14px}
-    .result-ball{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;opacity:0;transform:translateY(-22px) scale(.82);transition:all .4s ease;border:1px solid rgba(255,255,255,.45);box-shadow:inset -8px -10px 14px rgba(0,0,0,.22), inset 8px 10px 14px rgba(255,255,255,.18), 0 8px 18px rgba(0,0,0,.25)}
-    .result-ball.show{opacity:1;transform:translateY(0) scale(1)}
+    .brand{
+      padding:8px 18px 6px;
+      text-align:center;
+    }
 
-    .controls,.extras{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0 18px}
-    .extras{padding-top:8px;padding-bottom:18px}
-    button{appearance:none;border:none;outline:none;cursor:pointer;padding:16px 18px;border-radius:18px;font-size:15px;font-weight:900;letter-spacing:-.02em;min-height:54px;transition:transform .18s ease,opacity .18s ease,box-shadow .18s ease}
-    button:active{transform:scale(.985)} button:disabled{opacity:.46;cursor:not-allowed;box-shadow:none;transform:none}
-    .primary{color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 12px 30px rgba(73,112,255,.35)}
-    .secondary{color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px)}
+    .brand h1{
+      margin:8px 0 8px;
+      font-size:2rem;
+      line-height:1.05;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
 
-    .status{text-align:center;padding:14px 18px 2px;min-height:42px;color:var(--muted);font-size:14px;font-weight:700}
-    .substate{text-align:center;color:rgba(255,255,255,.42);font-size:12px;padding-bottom:8px;letter-spacing:.02em}
+    .brand p{
+      margin:0 auto;
+      max-width:330px;
+      font-size:.94rem;
+      line-height:1.55;
+      color:var(--muted);
+    }
 
-    .info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:8px 18px 18px}
-    .info-card{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
-    .label{color:var(--muted);font-size:13px;margin-bottom:10px;font-weight:700}
-    .value{font-size:18px;font-weight:900;line-height:1.55;letter-spacing:-.03em}
-    .chip{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05)}
-    .swatch{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.28);box-shadow:0 0 0 4px rgba(255,255,255,.04)}
+    .machine-box{
+      margin:18px;
+      padding:18px 16px 22px;
+      border-radius:26px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+      border:1px solid rgba(255,255,255,0.08);
+      position:relative;
+      overflow:hidden;
+    }
 
-    .history-list{display:grid;gap:10px;margin-top:12px}
-    .history-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);color:#eef3ff;font-size:13px}
-    .history-item strong{font-size:15px;letter-spacing:.02em}
-    .history-empty{color:rgba(255,255,255,.38);font-size:13px}
-    .footer-sign{text-align:center;padding:2px 18px 18px;color:rgba(255,255,255,.40);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+    .machine-box::before{
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:rgba(217,179,106,.08);
+      filter:blur(36px);
+      top:-30px;
+      left:-20px;
+    }
 
-    .particle,.flying-ball{position:fixed;pointer-events:none;z-index:1200}
-    .particle{width:8px;height:8px;border-radius:50%;opacity:1;transform:translate(-50%,-50%)}
-    .flying-ball{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;border:1px solid rgba(255,255,255,.45);box-shadow:inset -8px -10px 14px rgba(0,0,0,.22), inset 8px 10px 14px rgba(255,255,255,.18), 0 8px 18px rgba(0,0,0,.28)}
+    .machine-wrap{
+      position:relative;
+      width:226px;
+      height:258px;
+      margin:0 auto 16px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
 
-    .tip{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);width:min(92vw,460px);padding:14px 16px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(8,12,24,.86);backdrop-filter:blur(18px);box-shadow:var(--shadow);color:#eaf0ff;font-size:13px;line-height:1.55;display:none;z-index:9999}
-    .tip.show{display:block}.tip strong{display:block;margin-bottom:6px;font-size:14px}
-    .flash{position:fixed;inset:0;background:white;opacity:0;pointer-events:none;z-index:20000;transition:opacity .28s ease}.flash.show{opacity:.92}
+    .machine-base{
+      position:absolute;
+      bottom:18px;
+      width:130px;
+      height:24px;
+      border-radius:999px;
+      background:linear-gradient(180deg,#424958,#12151d);
+      box-shadow:0 12px 24px rgba(0,0,0,.42);
+      z-index:1;
+    }
 
-    @media (max-width:900px){.info-grid{grid-template-columns:1fr}}
-    @media (max-width:760px){.machine-zone{min-height:650px}.machine{height:600px}.support{width:340px}.rail-wrap{width:360px;bottom:22px}.tray{width:320px;gap:10px}.controls,.extras{grid-template-columns:1fr}}
-    @media (max-width:520px){.wrap{padding-left:12px;padding-right:12px}.app{border-radius:26px}.machine-zone{min-height:560px}.machine{height:520px}.dome-wrap{width:min(86vw,410px);height:min(86vw,410px)}.support{width:280px;bottom:86px}.support-bars{width:180px;height:98px}.support-bars span{width:13px}.rail-wrap{width:300px;height:160px;bottom:18px}.chute{width:220px;bottom:72px}.tray{width:286px;min-height:76px;padding:12px;gap:8px}.result-ball{width:44px;height:44px;font-size:15px}}
+    .machine-stand{
+      position:absolute;
+      bottom:38px;
+      width:34px;
+      height:42px;
+      border-radius:10px;
+      background:linear-gradient(180deg,#727a88,#2a303a);
+      z-index:1;
+    }
+
+    .sphere{
+      width:190px;
+      height:190px;
+      border-radius:50%;
+      position:absolute;
+      top:0;
+      z-index:3;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.84), rgba(255,255,255,.19) 20%, rgba(255,255,255,.08) 33%, rgba(0,0,0,.18) 72%),
+        linear-gradient(145deg, #f1f4f9 0%, #8d96a8 35%, #495062 68%, #d4b06b 100%);
+      box-shadow:
+        inset 10px 10px 22px rgba(255,255,255,.18),
+        inset -15px -16px 28px rgba(0,0,0,.28),
+        0 0 30px rgba(217,179,106,.18),
+        0 26px 42px rgba(0,0,0,.35);
+      overflow:hidden;
+    }
+
+    .sphere::before,.sphere::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      background:rgba(255,255,255,.07);
+    }
+    .sphere::before{width:110px;height:110px;top:18px;left:18px}
+    .sphere::after{width:56px;height:56px;right:18px;bottom:18px}
+
+    .core{
+      position:absolute;
+      top:27px;
+      width:136px;
+      height:136px;
+      border-radius:50%;
+      z-index:4;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.11);
+      background:radial-gradient(circle, rgba(255,255,255,.10), rgba(255,255,255,.03));
+      box-shadow:inset 0 0 26px rgba(255,255,255,.06);
+    }
+
+    .core-text{
+      font-size:1rem;
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      text-align:center;
+      color:#fff;
+      text-shadow:0 4px 16px rgba(0,0,0,.24);
+    }
+
+    .chamber-balls{
+      position:absolute;
+      top:16px;
+      width:176px;
+      height:176px;
+      z-index:3;
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .mini-ball{
+      position:absolute;
+      width:22px;
+      height:22px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.62rem;
+      font-weight:900;
+      color:#fff;
+      box-shadow:
+        inset 3px 3px 6px rgba(255,255,255,.18),
+        inset -3px -3px 6px rgba(0,0,0,.2);
+    }
+
+    .mini-ball:nth-child(1){left:18px;top:76px;background:linear-gradient(145deg,#ffcf5a,#ee9b00)}
+    .mini-ball:nth-child(2){left:52px;top:32px;background:linear-gradient(145deg,#77c8ff,#3a79ff)}
+    .mini-ball:nth-child(3){right:40px;top:42px;background:linear-gradient(145deg,#f3f5f9,#7e8796);color:#111}
+    .mini-ball:nth-child(4){right:20px;top:86px;background:linear-gradient(145deg,#3ce7aa,#0d9a6b)}
+    .mini-ball:nth-child(5){left:64px;bottom:26px;background:linear-gradient(145deg,#ff7c87,#ff4264)}
+
+    .slot{
+      position:absolute;
+      top:188px;
+      width:120px;
+      height:18px;
+      border-radius:999px;
+      background:linear-gradient(180deg,#1f2430,#0d1017);
+      border:1px solid rgba(255,255,255,.06);
+      z-index:2;
+      box-shadow:inset 0 3px 8px rgba(255,255,255,.04), 0 10px 18px rgba(0,0,0,.24);
+    }
+
+    .drop-lane{
+      position:absolute;
+      top:202px;
+      width:180px;
+      height:38px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      gap:8px;
+      z-index:2;
+      pointer-events:none;
+    }
+
+    .drop-ball{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      opacity:0;
+      transform:translateY(-40px) scale(.65);
+      animation:dropOut .42s cubic-bezier(.2,.9,.2,1.1) forwards;
+      box-shadow:
+        inset 4px 4px 7px rgba(255,255,255,.2),
+        inset -4px -4px 7px rgba(0,0,0,.22),
+        0 8px 12px rgba(0,0,0,.22);
+    }
+
+    @keyframes dropOut{
+      0%{opacity:0;transform:translateY(-38px) scale(.65)}
+      60%{opacity:1;transform:translateY(4px) scale(1.04)}
+      100%{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    .spin .sphere{animation:spin 1.12s linear infinite}
+    .spin .core{animation:pulse 1.05s ease-in-out infinite}
+    .spin .mini-ball{animation:orbit 1.2s linear infinite}
+
+    @keyframes spin{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes pulse{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.04)}
+    }
+
+    @keyframes orbit{
+      0%{transform:translateY(0) scale(1)}
+      50%{transform:translateY(-4px) scale(1.04)}
+      100%{transform:translateY(0) scale(1)}
+    }
+
+    .status{
+      min-height:20px;
+      text-align:center;
+      color:rgba(255,255,255,.72);
+      font-size:.84rem;
+      letter-spacing:.2px;
+    }
+
+    .balls{
+      min-height:72px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+      padding:2px 18px 0;
+    }
+
+    .ball{
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.03rem;
+      font-weight:900;
+      color:#fff;
+      opacity:0;
+      transform:scale(.28) translateY(16px);
+      animation:pop .42s cubic-bezier(.2,.9,.2,1.1) forwards;
+      box-shadow:
+        inset 8px 8px 14px rgba(255,255,255,.24),
+        inset -10px -10px 16px rgba(0,0,0,.22),
+        0 10px 18px rgba(0,0,0,.26);
+    }
+
+    .c1{background:linear-gradient(145deg,#ffcf5a,#ee9b00)}
+    .c2{background:linear-gradient(145deg,#77c8ff,#3a79ff)}
+    .c3{background:linear-gradient(145deg,#f3f5f9,#7e8796); color:#111}
+    .c4{background:linear-gradient(145deg,#3ce7aa,#0d9a6b)}
+    .c5{background:linear-gradient(145deg,#ff7c87,#ff4264)}
+
+    @keyframes pop{
+      0%{opacity:0;transform:scale(.25) translateY(18px)}
+      65%{opacity:1;transform:scale(1.07) translateY(-4px)}
+      100%{opacity:1;transform:scale(1) translateY(0)}
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      padding:16px 18px 0;
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:22px;
+      padding:14px 14px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card.full{grid-column:1 / -1}
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), transparent 28%);
+      pointer-events:none;
+    }
+
+    .label{
+      display:block;
+      font-size:.76rem;
+      color:rgba(255,255,255,.54);
+      margin-bottom:7px;
+      letter-spacing:.3px;
+    }
+
+    .value{
+      font-size:1rem;
+      font-weight:800;
+      line-height:1.45;
+      word-break:keep-all;
+    }
+
+    .actions{
+      padding:16px 18px 8px;
+    }
+
+    .row{
+      display:grid;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .row.two{grid-template-columns:1fr 1fr}
+    .row.three{grid-template-columns:1fr 1fr 1fr}
+
+    button{
+      appearance:none;
+      border:none;
+      border-radius:18px;
+      padding:15px 14px;
+      cursor:pointer;
+      color:#fff;
+      font-size:.94rem;
+      font-weight:900;
+      letter-spacing:.15px;
+      transition:transform .16s ease, opacity .16s ease, filter .16s ease, box-shadow .16s ease;
+    }
+
+    button:active{transform:scale(.976)}
+    button:disabled{opacity:.58;cursor:not-allowed}
+
+    .primary{
+      background:linear-gradient(135deg,#d9b36a,#8b6d3c);
+      box-shadow:0 14px 26px rgba(155,122,63,.28);
+      color:#111;
+    }
+
+    .secondary{
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,.09);
+    }
+
+    .accent{
+      background:linear-gradient(135deg,#8aa6d9,#5b6f94);
+    }
+
+    .mini{
+      padding:13px 12px;
+      font-size:.83rem;
+      border-radius:15px;
+    }
+
+    .result-card-wrap{
+      padding:8px 18px 8px;
+    }
+
+    .result-card{
+      border-radius:28px;
+      overflow:hidden;
+      padding:18px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(217,179,106,.14), transparent 30%),
+        radial-gradient(circle at 100% 100%, rgba(124,178,255,.10), transparent 28%),
+        linear-gradient(145deg,#0f1218 0%, #171c26 50%, #11151d 100%);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 18px 42px rgba(0,0,0,.32);
+    }
+
+    .result-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .result-title{
+      margin:0 0 5px;
+      font-size:1.1rem;
+      font-weight:900;
+    }
+
+    .result-sub{
+      margin:0;
+      font-size:.81rem;
+      line-height:1.45;
+      color:rgba(255,255,255,.64);
+    }
+
+    .tag{
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:.72rem;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .card-balls{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .card-ball{
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.94rem;
+      font-weight:900;
+      color:#fff;
+      box-shadow:
+        inset 6px 6px 12px rgba(255,255,255,.22),
+        inset -8px -8px 12px rgba(0,0,0,.22),
+        0 8px 14px rgba(0,0,0,.24);
+    }
+
+    .meta{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .meta-box,.message-box{
+      border-radius:18px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      padding:12px 13px;
+    }
+
+    .meta-label{
+      font-size:.72rem;
+      color:rgba(255,255,255,.55);
+      margin-bottom:6px;
+    }
+
+    .meta-value{
+      font-size:.94rem;
+      font-weight:800;
+      line-height:1.4;
+    }
+
+    .message-box{
+      font-size:.91rem;
+      line-height:1.6;
+      color:rgba(255,255,255,.9);
+    }
+
+    .history{
+      padding:12px 18px 18px;
+    }
+
+    .history-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+      gap:12px;
+    }
+
+    .history-head h3{
+      margin:0;
+      font-size:.98rem;
+      font-weight:900;
+    }
+
+    .text-btn{
+      background:none;
+      border:none;
+      padding:0;
+      color:rgba(255,255,255,.58);
+      font-size:.78rem;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .history-list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .history-item{
+      padding:13px 14px;
+      border-radius:16px;
+      background:var(--panel-2);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:.87rem;
+      line-height:1.55;
+      color:rgba(255,255,255,.84);
+    }
+
+    .history-top{
+      font-weight:900;
+      margin-bottom:4px;
+      letter-spacing:.18px;
+    }
+
+    .footer{
+      padding:0 18px 18px;
+      text-align:center;
+      color:rgba(255,255,255,.46);
+      font-size:.79rem;
+      line-height:1.5;
+    }
+
+    .footer .id{
+      display:block;
+      margin-top:4px;
+      color:rgba(255,255,255,.66);
+      font-weight:800;
+      letter-spacing:.4px;
+    }
+
+    .capture-mode .top,
+    .capture-mode .brand p,
+    .capture-mode .machine-box,
+    .capture-mode .info-grid,
+    .capture-mode .actions,
+    .capture-mode .history,
+    .capture-mode .footer{
+      display:none;
+    }
+
+    .capture-mode .brand{
+      padding-top:18px;
+      padding-bottom:2px;
+    }
+
+    .capture-mode .result-card-wrap{
+      padding:14px 16px 18px;
+    }
+
+    .capture-mode .result-card{
+      min-height:76vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%) translateY(16px);
+      padding:12px 16px;
+      border-radius:999px;
+      background:rgba(10,12,18,.88);
+      border:1px solid rgba(255,255,255,.10);
+      color:#fff;
+      font-size:.83rem;
+      font-weight:800;
+      opacity:0;
+      pointer-events:none;
+      transition:all .24s ease;
+      z-index:99;
+      box-shadow:0 16px 32px rgba(0,0,0,.35);
+      backdrop-filter:blur(8px);
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    @media (max-width:420px){
+      .brand h1{font-size:1.78rem}
+      .machine-wrap{width:210px;height:246px}
+      .sphere{width:176px;height:176px}
+      .core{width:130px;height:130px;top:23px}
+      .chamber-balls{width:162px;height:162px;top:14px}
+      .slot{top:176px}
+      .drop-lane{top:190px}
+      .row.three{grid-template-columns:1fr 1fr}
+      .row.three button:last-child{grid-column:1 / -1}
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="hero">
-      <div class="badge">High-End Physics Lotto Machine</div>
-      <h1>LUCK SPHERE</h1>
-      <p class="subtitle">이상했던 부분을 정리하고 다시 잡았습니다. HTML 파일 하나 안에서 공들이 자연스럽게 섞이고, 선택된 번호는 레일을 타고 결과 트레이로 들어옵니다.</p>
-      <div class="brand-line">INSTAGRAM · @soowan_jogun</div>
-    </div>
+  <div class="glow a"></div>
+  <div class="glow b"></div>
 
-    <section class="app">
-      <div class="machine-zone">
-        <div class="live-badge">Lucky Draw Live</div>
-        <div class="machine">
-          <div class="glow"></div>
-          <div class="dome-wrap" id="domeWrap">
-            <canvas id="machineCanvas" width="520" height="520"></canvas>
-            <div class="glass"></div>
-            <div class="axis"></div>
-            <div class="sensor"></div>
+  <div class="app">
+    <div class="shell" id="shell">
+      <div class="top">
+        <div class="chip">PREMIUM FORTUNE RANDOMIZER</div>
+      </div>
+
+      <div class="brand">
+        <h1>JOGUN LUCK LAB</h1>
+        <p>로또 번호와 오늘의 행운 흐름을 한 번에 확인하는 프리미엄 럭 시스템</p>
+      </div>
+
+      <div class="machine-box">
+        <div class="machine-wrap" id="machineWrap">
+          <div class="machine-base"></div>
+          <div class="machine-stand"></div>
+
+          <div class="sphere"></div>
+
+          <div class="chamber-balls">
+            <div class="mini-ball">7</div>
+            <div class="mini-ball">2</div>
+            <div class="mini-ball">9</div>
+            <div class="mini-ball">4</div>
+            <div class="mini-ball">1</div>
           </div>
-          <div class="support"><div class="support-bars"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
-          <div class="rail-wrap">
-            <div class="chute"></div>
-            <div class="tray" id="tray">
-              <div class="result-ball"></div>
-              <div class="result-ball"></div>
-              <div class="result-ball"></div>
-              <div class="result-ball"></div>
-              <div class="result-ball"></div>
-            </div>
-          </div>
+
+          <div class="core"><div class="core-text" id="coreText">LUCK READY</div></div>
+
+          <div class="slot"></div>
+          <div class="drop-lane" id="dropLane"></div>
         </div>
+        <div class="status" id="status">버튼을 누르면 오늘의 럭 조합이 시작됩니다</div>
       </div>
 
-      <div class="controls">
-        <button class="primary" id="startBtn">추첨 시작</button>
-        <button class="secondary" id="resetBtn">다시 추첨</button>
-        <button class="secondary" id="installBtn">홈화면 추가 안내</button>
-      </div>
-      <div class="status" id="statusText">버튼을 누르면 공들이 더 빠르게 섞인 뒤, 5개 번호가 순서대로 추첨됩니다.</div>
-      <div class="substate" id="subState">사운드 ON · Single HTML · Smooth Physics</div>
-
-      <div class="extras">
-        <button class="secondary" id="saveBtn">결과 저장</button>
-        <button class="secondary" id="shareBtn">결과 공유</button>
-        <button class="secondary" id="shotBtn">스크린샷 안내</button>
-      </div>
+      <div class="balls" id="balls"></div>
 
       <div class="info-grid">
-        <div class="info-card"><div class="label">오늘의 행운 메시지</div><div class="value" id="luckMessage">아직 추첨 전입니다.</div></div>
-        <div class="info-card"><div class="label">행운 컬러</div><div class="value"><span class="chip"><span class="swatch" id="luckSwatch" style="background:#7a5cff"></span><span id="luckColorName">준비 중</span></span></div></div>
-        <div class="info-card"><div class="label">행운 레벨</div><div class="value" id="luckLevel">대기 중</div></div>
-      </div>
-
-      <div class="info-grid" style="padding-top:0">
-        <div class="info-card" style="grid-column:1 / -1">
-          <div class="label">저장된 추첨 기록</div>
-          <div id="historyList" class="history-list"><div class="history-empty">아직 저장된 결과가 없습니다.</div></div>
+        <div class="card">
+          <span class="label">오늘의 행운 컬러</span>
+          <div class="value" id="luckyColor">준비중</div>
+        </div>
+        <div class="card">
+          <span class="label">행운 시간</span>
+          <div class="value" id="luckyTime">준비중</div>
+        </div>
+        <div class="card full">
+          <span class="label">오늘의 메시지</span>
+          <div class="value" id="fortuneMessage">행운 추첨을 시작해 오늘의 흐름을 확인하세요</div>
         </div>
       </div>
 
-      <div class="footer-sign">Designed for JOGUN · soowan_jogun · Clean Luxury Edition</div>
-    </section>
+      <div class="actions">
+        <div class="row two">
+          <button class="primary" id="drawBtn">행운 추첨 시작</button>
+          <button class="secondary" id="resetBtn">초기화</button>
+        </div>
+        <div class="row three">
+          <button class="secondary mini" id="copyBtn">결과 복사</button>
+          <button class="accent mini" id="shareBtn">공유하기</button>
+          <button class="secondary mini" id="captureBtn">카드 모드</button>
+        </div>
+      </div>
+
+      <div class="result-card-wrap">
+        <div class="result-card">
+          <div class="result-head">
+            <div>
+              <h2 class="result-title">오늘의 럭 카드</h2>
+              <p class="result-sub">스토리 캡처와 공유에 어울리도록 정리된 결과 카드</p>
+            </div>
+            <div class="tag">JOGUN EDITION</div>
+          </div>
+
+          <div class="card-balls" id="cardBalls">
+            <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+            <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+            <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+            <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+            <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+          </div>
+
+          <div class="meta">
+            <div class="meta-box">
+              <div class="meta-label">행운 컬러</div>
+              <div class="meta-value" id="cardColor">준비중</div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">행운 시간</div>
+              <div class="meta-value" id="cardTime">준비중</div>
+            </div>
+          </div>
+
+          <div class="message-box" id="cardMessage">결과가 아직 없습니다. 추첨을 시작해 주세요.</div>
+        </div>
+      </div>
+
+      <div class="history">
+        <div class="history-head">
+          <h3>최근 결과</h3>
+          <button class="text-btn" id="clearHistoryBtn">기록 삭제</button>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+
+      <div class="footer">
+        Created by JOGUN
+        <span class="id">soowan_jogun</span>
+      </div>
+    </div>
   </div>
 
-  <div class="flash" id="flash"></div>
-  <div class="tip" id="tip"><strong>아이폰 홈화면 추가 방법</strong>Safari에서 이 페이지를 연 뒤 하단 공유 버튼을 누르고 <b>홈 화면에 추가</b>를 선택하세요.</div>
+  <div class="toast" id="toast"></div>
 
   <script>
-    const canvas = document.getElementById('machineCanvas');
-    const ctx = canvas.getContext('2d');
-    const domeWrap = document.getElementById('domeWrap');
-    const tray = document.getElementById('tray');
-    const resultBalls = Array.from(document.querySelectorAll('.result-ball'));
-    const startBtn = document.getElementById('startBtn');
+    const shell = document.getElementById('shell');
+    const machineWrap = document.getElementById('machineWrap');
+    const coreText = document.getElementById('coreText');
+    const statusEl = document.getElementById('status');
+    const ballsEl = document.getElementById('balls');
+    const dropLane = document.getElementById('dropLane');
+
+    const luckyColorEl = document.getElementById('luckyColor');
+    const luckyTimeEl = document.getElementById('luckyTime');
+    const fortuneMessageEl = document.getElementById('fortuneMessage');
+
+    const cardBallsEl = document.getElementById('cardBalls');
+    const cardColorEl = document.getElementById('cardColor');
+    const cardTimeEl = document.getElementById('cardTime');
+    const cardMessageEl = document.getElementById('cardMessage');
+
+    const drawBtn = document.getElementById('drawBtn');
     const resetBtn = document.getElementById('resetBtn');
-    const installBtn = document.getElementById('installBtn');
-    const saveBtn = document.getElementById('saveBtn');
+    const copyBtn = document.getElementById('copyBtn');
     const shareBtn = document.getElementById('shareBtn');
-    const shotBtn = document.getElementById('shotBtn');
-    const statusText = document.getElementById('statusText');
-    const luckMessage = document.getElementById('luckMessage');
-    const luckColorName = document.getElementById('luckColorName');
-    const luckSwatch = document.getElementById('luckSwatch');
-    const luckLevel = document.getElementById('luckLevel');
+    const captureBtn = document.getElementById('captureBtn');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
     const historyList = document.getElementById('historyList');
-    const tip = document.getElementById('tip');
-    const flash = document.getElementById('flash');
+    const toast = document.getElementById('toast');
 
-    const CENTER = 260;
-    const DOME_RADIUS = 208;
-    const BALL_R = 14;
-    const COUNT = 40;
-    const FRICTION = 0.997;
-    const WALL_BOUNCE = 0.985;
-    const COLLISION_BOUNCE = 0.985;
+    const HISTORY_KEY = 'jogun_luck_lab_ultra_history';
 
-    let balls = [];
-    let agitation = 1;
-    let drawnNumbers = [];
+    const luckyColors = [
+      'Gold', 'Silver', 'Midnight Blue', 'Emerald', 'Ivory',
+      'Graphite', 'Royal Purple', 'Champagne', 'Sky Blue', 'Black'
+    ];
+
+    const luckyTimes = [
+      '07:07', '09:21', '11:11', '13:33', '15:15',
+      '17:27', '19:00', '20:22', '21:45', '23:09'
+    ];
+
+    const fortuneMessages = [
+      '오늘은 타이밍이 중요한 하루입니다. 서두르기보다 흐름을 보세요.',
+      '가벼운 선택이 생각보다 좋은 연결로 이어질 수 있습니다.',
+      '오늘의 행운은 크게 오기보다 조용히 들어오는 편입니다.',
+      '무리하지 않는 판단이 오히려 가장 강한 선택이 됩니다.',
+      '조금 늦게 시작해도 결과는 충분히 따라옵니다.',
+      '오늘은 사람보다 순서와 리듬을 맞추는 것이 더 중요합니다.',
+      '사소한 우연이 기분 좋은 결과로 연결될 수 있습니다.',
+      '직감이 평소보다 선명하게 작동하는 하루입니다.',
+      '한 번 더 시도한 선택에서 좋은 흐름이 열릴 수 있습니다.',
+      '오늘은 과감함보다 정교함이 더 잘 먹히는 날입니다.'
+    ];
+
+    let currentResult = null;
     let isDrawing = false;
-    let history = [];
-    let audioCtx = null;
+    let captureMode = false;
 
-    const luckMessages = [
-      '오늘은 망설이던 일을 가볍게 시작해보면 흐름이 좋습니다.',
-      '예상 밖의 연락이나 제안이 들어올 수 있는 날입니다.',
-      '작은 선택 하나가 생각보다 큰 기회를 만들 수 있습니다.',
-      '지금 준비 중인 일이 있다면 끝까지 밀어붙이기 좋은 날입니다.',
-      '조용히 집중하는 시간 속에서 좋은 아이디어가 떠오를 가능성이 큽니다.',
-      '사소한 행운이 연달아 이어질 수 있으니 리듬을 놓치지 마세요.'
-    ];
-    const luckColors = [
-      { name:'네온 바이올렛', hex:'#7a5cff' },
-      { name:'일렉트릭 블루', hex:'#00d7ff' },
-      { name:'럭키 골드', hex:'#ffd84d' },
-      { name:'에너지 레드', hex:'#ff5f7a' },
-      { name:'민트 글로우', hex:'#69ffbe' }
-    ];
-    const levels = ['GOOD','VERY GOOD','HOT','ULTRA LUCK','PREMIUM DAY'];
-
-    function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
-    function rand(min,max){ return Math.random() * (max - min) + min; }
-    function formatNum(n){ return String(n).padStart(2,'0'); }
-    function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-    function getType(n){ if(n<=10) return 'yellow'; if(n<=20) return 'blue'; if(n<=30) return 'red'; return 'black'; }
-    function getStyle(n){
-      const t = getType(n);
-      if(t==='yellow') return { bg:'radial-gradient(circle at 30% 28%, #fff7b7, #ffd84d 48%, #f0a900 100%)', fill1:'#fff7b7', fill2:'#ffd84d', fill3:'#f0a900', text:'#111' };
-      if(t==='blue') return { bg:'radial-gradient(circle at 30% 28%, #cde8ff, #54a8ff 50%, #1568d8 100%)', fill1:'#cde8ff', fill2:'#54a8ff', fill3:'#1568d8', text:'#fff' };
-      if(t==='red') return { bg:'radial-gradient(circle at 30% 28%, #ffc0cb, #ff5f7a 50%, #d61c4e 100%)', fill1:'#ffc0cb', fill2:'#ff5f7a', fill3:'#d61c4e', text:'#fff' };
-      return { bg:'radial-gradient(circle at 30% 28%, #7d7d7d, #2b2b35 55%, #05050b 100%)', fill1:'#7d7d7d', fill2:'#2b2b35', fill3:'#05050b', text:'#ffe96b' };
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 1800);
     }
 
-    function initAudio(){
-      if(audioCtx) return;
+    function delay(ms){
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function randomItem(arr){
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function generateNumbers(){
+      const nums = [];
+      while(nums.length < 5){
+        const n = Math.floor(Math.random() * 45) + 1;
+        if(!nums.includes(n)) nums.push(n);
+      }
+      return nums.sort((a,b) => a - b);
+    }
+
+    function fmt(n){
+      return String(n).padStart(2, '0');
+    }
+
+    function ballClass(i){
+      return ['c1','c2','c3','c4','c5'][i % 5];
+    }
+
+    function ballHTML(num, idx){
+      return `<div class="ball ${ballClass(idx)}">${fmt(num)}</div>`;
+    }
+
+    function cardBallHTML(num, idx){
+      const styles = [
+        'linear-gradient(145deg,#ffcf5a,#ee9b00)',
+        'linear-gradient(145deg,#77c8ff,#3a79ff)',
+        'linear-gradient(145deg,#f3f5f9,#7e8796);color:#111',
+        'linear-gradient(145deg,#3ce7aa,#0d9a6b)',
+        'linear-gradient(145deg,#ff7c87,#ff4264)'
+      ];
+      const style = styles[idx % 5];
+      return `<div class="card-ball" style="background:${style}">${fmt(num)}</div>`;
+    }
+
+    function dropBallHTML(idx){
+      return `<div class="drop-ball ${ballClass(idx)}"></div>`;
+    }
+
+    function getAudioContext(){
       const Ctx = window.AudioContext || window.webkitAudioContext;
-      if(!Ctx) return;
-      audioCtx = new Ctx();
+      if(!Ctx) return null;
+      if(!getAudioContext.ctx) getAudioContext.ctx = new Ctx();
+      return getAudioContext.ctx;
     }
-    function tone(freq, duration=.08, type='sine', gain=.035){
-      if(!audioCtx) return;
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
+
+    function beep({freq=440,duration=0.08,type='sine',volume=0.03}={}){
+      const ctx = getAudioContext();
+      if(!ctx) return;
+      if(ctx.state === 'suspended') ctx.resume();
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
       osc.type = type;
-      osc.frequency.setValueAtTime(freq, now);
-      g.gain.setValueAtTime(0.0001, now);
-      g.gain.exponentialRampToValueAtTime(gain, now + 0.01);
-      g.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-      osc.connect(g).connect(audioCtx.destination);
-      osc.start(now); osc.stop(now + duration + 0.02);
-    }
-    function playStart(){ tone(320,.08,'triangle'); setTimeout(()=>tone(520,.08,'triangle'),90); setTimeout(()=>tone(760,.12,'sine',.03),180); }
-    function playDrop(i){ [520,620,700,820,960][i] && tone([520,620,700,820,960][i],.09,'square',.03); }
-    function playFinish(){ tone(660,.12,'triangle',.03); setTimeout(()=>tone(880,.16,'triangle',.035),110); setTimeout(()=>tone(1100,.2,'sine',.03),230); }
+      osc.frequency.value = freq;
+      gain.gain.value = volume;
 
-    function createBall(number){
-      const angle = Math.random() * Math.PI * 2;
-      const radius = Math.random() * (DOME_RADIUS - BALL_R - 16);
-      return {
-        number,
-        x: CENTER + Math.cos(angle) * radius,
-        y: CENTER + Math.sin(angle) * radius,
-        vx: rand(-1.7,1.7),
-        vy: rand(-1.7,1.7),
-        r: BALL_R,
-        style: getStyle(number)
-      };
-    }
-    function buildBalls(){
-      balls = [];
-      for(let i=1;i<=COUNT;i++) balls.push(createBall(i));
-      for(let i=0;i<120;i++) resolveAll();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      const now = ctx.currentTime;
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(volume, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      osc.start(now);
+      osc.stop(now + duration);
     }
 
-    function updateBall(b){
-      const dx = b.x - CENTER;
-      const dy = b.y - CENTER;
-      const dist = Math.hypot(dx,dy) || 1;
-      const tx = -dy / dist;
-      const ty = dx / dist;
-      const swirl = 0.014 * agitation;
-      b.vx += tx * swirl + rand(-0.004,0.004) * agitation;
-      b.vy += ty * swirl + rand(-0.004,0.004) * agitation;
-      b.vx += (-dx / dist) * 0.0014 * agitation;
-      b.vy += (-dy / dist) * 0.0014 * agitation;
-      b.x += b.vx; b.y += b.vy;
-      b.vx *= FRICTION; b.vy *= FRICTION;
-
-      const dx2 = b.x - CENTER;
-      const dy2 = b.y - CENTER;
-      const d2 = Math.hypot(dx2,dy2) || 1;
-      const max = DOME_RADIUS - b.r;
-      if(d2 > max){
-        const nx = dx2 / d2, ny = dy2 / d2;
-        b.x = CENTER + nx * max;
-        b.y = CENTER + ny * max;
-        const dot = b.vx * nx + b.vy * ny;
-        b.vx -= 2 * dot * nx;
-        b.vy -= 2 * dot * ny;
-        b.vx *= WALL_BOUNCE; b.vy *= WALL_BOUNCE;
-      }
+    function playStartSound(){
+      beep({freq:240,duration:0.09,type:'triangle',volume:0.026});
+      setTimeout(() => beep({freq:340,duration:0.10,type:'triangle',volume:0.026}), 80);
+      setTimeout(() => beep({freq:480,duration:0.12,type:'triangle',volume:0.028}), 170);
     }
-    function resolve(a,b){
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const dist = Math.hypot(dx,dy) || 0.0001;
-      const minDist = a.r + b.r;
-      if(dist >= minDist) return;
-      const nx = dx / dist, ny = dy / dist;
-      const overlap = minDist - dist;
-      a.x -= nx * overlap * .5; a.y -= ny * overlap * .5;
-      b.x += nx * overlap * .5; b.y += ny * overlap * .5;
 
-      const rvx = b.vx - a.vx, rvy = b.vy - a.vy;
-      const vel = rvx * nx + rvy * ny;
-      if(vel > 0) return;
-      const j = -(1 + COLLISION_BOUNCE) * vel / 2;
-      a.vx -= j * nx; a.vy -= j * ny;
-      b.vx += j * nx; b.vy += j * ny;
+    function playBallSound(i){
+      const seq = [520, 620, 720, 840, 960];
+      beep({freq:seq[i % seq.length],duration:0.075,type:'sine',volume:0.026});
     }
-    function resolveAll(){
-      for(let i=0;i<balls.length;i++){
-        for(let j=i+1;j<balls.length;j++) resolve(balls[i], balls[j]);
+
+    function playDoneSound(){
+      beep({freq:560,duration:0.10,type:'triangle',volume:0.028});
+      setTimeout(() => beep({freq:760,duration:0.12,type:'triangle',volume:0.03}), 90);
+      setTimeout(() => beep({freq:980,duration:0.14,type:'triangle',volume:0.03}), 190);
+    }
+
+    function resetCardPlaceholders(){
+      cardBallsEl.innerHTML = `
+        <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+        <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+        <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+        <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+        <div class="card-ball" style="background:linear-gradient(145deg,#5d6574,#343c4a)">--</div>
+      `;
+      cardColorEl.textContent = '준비중';
+      cardTimeEl.textContent = '준비중';
+      cardMessageEl.textContent = '결과가 아직 없습니다. 추첨을 시작해 주세요.';
+    }
+
+    function resetUI(){
+      ballsEl.innerHTML = '';
+      dropLane.innerHTML = '';
+      luckyColorEl.textContent = '준비중';
+      luckyTimeEl.textContent = '준비중';
+      fortuneMessageEl.textContent = '행운 추첨을 시작해 오늘의 흐름을 확인하세요';
+      statusEl.textContent = '버튼을 누르면 오늘의 럭 조합이 시작됩니다';
+      coreText.textContent = 'LUCK READY';
+      resetCardPlaceholders();
+      currentResult = null;
+    }
+
+    function updateCard(result){
+      cardBallsEl.innerHTML = result.numbers.map((n, i) => cardBallHTML(n, i)).join('');
+      cardColorEl.textContent = result.color;
+      cardTimeEl.textContent = result.time;
+      cardMessageEl.textContent = result.message;
+    }
+
+    function getHistory(){
+      try{
+        return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+      }catch(e){
+        return [];
       }
     }
 
-    function drawBall(b){
-      const g = ctx.createRadialGradient(b.x - b.r * .35, b.y - b.r * .42, b.r * .2, b.x, b.y, b.r);
-      g.addColorStop(0, b.style.fill1); g.addColorStop(.55, b.style.fill2); g.addColorStop(1, b.style.fill3);
-      ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fillStyle = g; ctx.fill();
-      ctx.beginPath(); ctx.arc(b.x - b.r*.28, b.y - b.r*.34, b.r*.34, 0, Math.PI*2); ctx.fillStyle='rgba(255,255,255,.3)'; ctx.fill();
-      ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.strokeStyle='rgba(255,255,255,.38)'; ctx.lineWidth=1.1; ctx.stroke();
-      ctx.fillStyle = b.style.text; ctx.font='900 12px system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(formatNum(b.number), b.x, b.y + .5);
-    }
-    function draw(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      const shadow = ctx.createRadialGradient(CENTER, CENTER+82, 8, CENTER, CENTER+82, 150);
-      shadow.addColorStop(0,'rgba(0,0,0,.34)'); shadow.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle = shadow; ctx.beginPath(); ctx.ellipse(CENTER, CENTER+82, 150, 54, 0, 0, Math.PI*2); ctx.fill();
-      balls.forEach(drawBall);
-    }
-    function loop(){
-      agitation += (1 - agitation) * 0.025;
-      for(const b of balls) updateBall(b);
-      resolveAll();
-      draw();
-      requestAnimationFrame(loop);
-    }
-
-    function resetResults(){
-      resultBalls.forEach(el => { el.className='result-ball'; el.textContent=''; el.style.background='transparent'; });
-    }
-    function resetApp(){
-      drawnNumbers = [];
-      isDrawing = false;
-      agitation = 1;
-      startBtn.disabled = false; resetBtn.disabled = false; saveBtn.disabled = true; shareBtn.disabled = true;
-      statusText.textContent = '버튼을 누르면 공들이 더 빠르게 섞인 뒤, 5개 번호가 순서대로 추첨됩니다.';
-      luckMessage.textContent = '아직 추첨 전입니다.';
-      luckColorName.textContent = '준비 중'; luckSwatch.style.background = '#7a5cff'; luckLevel.textContent = '대기 중';
-      resetResults(); buildBalls(); draw();
-    }
-
-    function particles(x,y,style){
-      for(let i=0;i<14;i++){
-        const p = document.createElement('div'); p.className='particle'; p.style.left = x+'px'; p.style.top = y+'px';
-        p.style.background = i%2 ? style.fill2 : style.fill1; p.style.boxShadow = `0 0 14px ${style.fill2}`; document.body.appendChild(p);
-        const a = Math.random() * Math.PI * 2, d = rand(24,58);
-        requestAnimationFrame(()=>{ p.style.transition='transform .58s cubic-bezier(.22,.9,.2,1), opacity .58s ease'; p.style.transform = `translate(${Math.cos(a)*d}px, ${Math.sin(a)*d}px) scale(.3)`; p.style.opacity='0'; });
-        setTimeout(()=>p.remove(),600);
-      }
-    }
-
-    function pickFive(){ return shuffle(Array.from({length:COUNT},(_,i)=>i+1)).slice(0,5).sort((a,b)=>a-b); }
-
-    async function animateBall(num, index){
-      const sourceRect = domeWrap.getBoundingClientRect();
-      const startX = sourceRect.left + sourceRect.width * 0.56 - 26;
-      const startY = sourceRect.top + sourceRect.height * 0.60 - 26;
-      const style = getStyle(num);
-      const fly = document.createElement('div');
-      fly.className = 'flying-ball';
-      fly.textContent = formatNum(num);
-      fly.style.left = startX + 'px'; fly.style.top = startY + 'px';
-      fly.style.background = style.bg; fly.style.color = style.text;
-      document.body.appendChild(fly);
-
-      const trayRect = tray.getBoundingClientRect();
-      await wait(30);
-      fly.style.transition = 'left .42s cubic-bezier(.22,.9,.2,1), top .42s cubic-bezier(.22,.9,.2,1), transform .42s cubic-bezier(.22,.9,.2,1), opacity .2s ease';
-      fly.style.left = (trayRect.left + 24) + 'px';
-      fly.style.top = (trayRect.top - 52) + 'px';
-      playDrop(index);
-      await wait(430);
-
-      let current = trayRect.left + 24;
-      const targetX = trayRect.left + 24 + index * (window.innerWidth <= 520 ? 52 : 64);
-      const top = trayRect.top + 10;
-      fly.style.transition = 'none';
-      fly.style.left = current + 'px'; fly.style.top = top + 'px';
-      let rot = 0;
-      await new Promise(resolve => {
-        function roll(){
-          current += (targetX - current) * 0.18; rot += 15;
-          fly.style.left = current + 'px';
-          fly.style.transform = `rotate(${rot}deg)`;
-          if(Math.abs(targetX - current) < 1.2){ fly.style.left = targetX + 'px'; resolve(); return; }
-          requestAnimationFrame(roll);
-        }
-        roll();
-      });
-
-      const target = resultBalls[index];
-      target.textContent = formatNum(num);
-      target.style.background = style.bg;
-      target.style.color = style.text;
-      target.classList.add('show');
-      const r = target.getBoundingClientRect();
-      particles(r.left + r.width/2, r.top + r.height/2, style);
-      fly.style.opacity = '0';
-      await wait(120);
-      fly.remove();
-    }
-
-    async function startDraw(){
-      if(isDrawing) return;
-      isDrawing = true;
-      startBtn.disabled = true; resetBtn.disabled = true; installBtn.disabled = true; saveBtn.disabled = true; shareBtn.disabled = true;
-      initAudio(); if(audioCtx && audioCtx.state === 'suspended'){ try{ await audioCtx.resume(); }catch(_){} }
-      resetResults();
-      statusText.textContent = '추첨기 회전 속도 상승...';
-      agitation = 4.2;
-      playStart();
-      await wait(1800);
-
-      drawnNumbers = pickFive();
-      for(let i=0;i<drawnNumbers.length;i++){
-        statusText.textContent = `${i+1}번째 볼 추첨 중...`;
-        agitation = 3.4 - i * 0.35;
-        await wait(220);
-        await animateBall(drawnNumbers[i], i);
-        await wait(180);
-      }
-      agitation = 1.1;
-      const msg = luckMessages[Math.floor(Math.random()*luckMessages.length)];
-      const color = luckColors[Math.floor(Math.random()*luckColors.length)];
-      const level = levels[Math.floor(Math.random()*levels.length)];
-      luckMessage.textContent = msg; luckColorName.textContent = `${color.name} (${color.hex})`; luckSwatch.style.background = color.hex; luckLevel.textContent = level;
-      statusText.textContent = `추첨 완료 · 오늘의 번호 ${drawnNumbers.map(formatNum).join(' / ')}`;
-      playFinish();
-      isDrawing = false; resetBtn.disabled = false; installBtn.disabled = false; saveBtn.disabled = false; shareBtn.disabled = false;
+    function saveHistory(item){
+      const list = getHistory();
+      list.unshift(item);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, 6)));
+      renderHistory();
     }
 
     function renderHistory(){
-      if(!history.length){ historyList.innerHTML = '<div class="history-empty">아직 저장된 결과가 없습니다.</div>'; return; }
-      historyList.innerHTML = history.map(item => `<div class="history-item"><div><div>${item.date}</div><strong>${item.numbers}</strong></div><div>${item.level}</div></div>`).join('');
-    }
-    function loadHistory(){ try{ history = JSON.parse(localStorage.getItem('luck-sphere-history') || '[]'); }catch(_){ history = []; } renderHistory(); }
-    function saveCurrent(){
-      if(!drawnNumbers.length) return;
-      history.unshift({ date:new Date().toLocaleString('ko-KR'), numbers:drawnNumbers.map(formatNum).join(' / '), level:luckLevel.textContent });
-      history = history.slice(0,8); localStorage.setItem('luck-sphere-history', JSON.stringify(history)); renderHistory(); statusText.textContent = '현재 추첨 결과를 저장했습니다.';
-    }
-    async function shareCurrent(){
-      if(!drawnNumbers.length) return;
-      const text = `LUCK SPHERE\n번호: ${drawnNumbers.map(formatNum).join(' / ')}\n행운 레벨: ${luckLevel.textContent}\n행운 메시지: ${luckMessage.textContent}\n@soowan_jogun`;
-      try{ if(navigator.share){ await navigator.share({ title:'LUCK SPHERE', text }); statusText.textContent='결과 공유를 완료했습니다.'; } else { await navigator.clipboard.writeText(text); statusText.textContent='공유 기능이 없어 텍스트를 복사했습니다.'; } }catch(_){ statusText.textContent='공유가 취소되었거나 지원되지 않습니다.'; }
-    }
-    function showShotGuide(){ flash.classList.add('show'); setTimeout(()=>flash.classList.remove('show'),180); statusText.textContent = '아이폰에서는 측면 버튼 + 볼륨 업 버튼으로 화면을 캡처하세요.'; }
-    function showInstallGuide(){ tip.classList.add('show'); clearTimeout(showInstallGuide._timer); showInstallGuide._timer = setTimeout(()=>tip.classList.remove('show'),4200); }
+      const list = getHistory();
+      historyList.innerHTML = '';
+      if(!list.length){
+        historyList.innerHTML = `<div class="history-item">아직 저장된 결과가 없습니다.</div>`;
+        return;
+      }
 
-    function injectManifest(){
-      const manifest = { name:'Luck Sphere', short_name:'Luck Sphere', start_url:'.', display:'standalone', background_color:'#090d1a', theme_color:'#090d1a' };
-      const blob = new Blob([JSON.stringify(manifest)], { type:'application/json' });
-      const url = URL.createObjectURL(blob); const link = document.createElement('link'); link.rel='manifest'; link.href=url; document.head.appendChild(link);
+      list.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+          <div class="history-top">${item.numbers.map(fmt).join(' · ')}</div>
+          <div>${item.color} / ${item.time}</div>
+          <div>${item.message}</div>
+        `;
+        historyList.appendChild(div);
+      });
     }
 
-    startBtn.addEventListener('click', startDraw);
-    resetBtn.addEventListener('click', resetApp);
-    installBtn.addEventListener('click', showInstallGuide);
-    saveBtn.addEventListener('click', saveCurrent);
-    shareBtn.addEventListener('click', shareCurrent);
-    shotBtn.addEventListener('click', showShotGuide);
+    function getResultText(){
+      if(!currentResult) return '아직 결과가 없습니다.';
+      return [
+        'JOGUN LUCK LAB',
+        `번호: ${currentResult.numbers.map(fmt).join(' ')}`,
+        `행운 컬러: ${currentResult.color}`,
+        `행운 시간: ${currentResult.time}`,
+        `메시지: ${currentResult.message}`,
+        'by soowan_jogun'
+      ].join('\n');
+    }
 
-    injectManifest();
-    loadHistory();
-    resetApp();
-    loop();
+    async function copyResult(){
+      if(!currentResult){
+        showToast('먼저 추첨을 진행해 주세요');
+        return;
+      }
+      const text = getResultText();
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast('결과를 복사했습니다');
+      }catch(e){
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast('결과를 복사했습니다');
+      }
+    }
+
+    async function shareResult(){
+      if(!currentResult){
+        showToast('먼저 추첨을 진행해 주세요');
+        return;
+      }
+      const text = getResultText();
+      if(navigator.share){
+        try{
+          await navigator.share({ title:'JOGUN LUCK LAB', text });
+        }catch(e){}
+      }else{
+        copyResult();
+      }
+    }
+
+    function toggleCaptureMode(){
+      captureMode = !captureMode;
+      shell.classList.toggle('capture-mode', captureMode);
+      captureBtn.textContent = captureMode ? '기본 모드' : '카드 모드';
+      showToast(captureMode ? '결과 카드 모드로 전환했습니다' : '기본 화면으로 돌아왔습니다');
+    }
+
+    async function showDropEffect(idx){
+      const wrap = document.createElement('div');
+      wrap.innerHTML = dropBallHTML(idx);
+      dropLane.appendChild(wrap.firstElementChild);
+      await delay(120);
+    }
+
+    async function drawLuck(){
+      if(isDrawing) return;
+      isDrawing = true;
+      drawBtn.disabled = true;
+
+      ballsEl.innerHTML = '';
+      dropLane.innerHTML = '';
+      luckyColorEl.textContent = '추첨중...';
+      luckyTimeEl.textContent = '추첨중...';
+      fortuneMessageEl.textContent = '행운 흐름을 분석중입니다...';
+      statusEl.textContent = '추첨기가 회전하는 중입니다';
+      coreText.textContent = 'DRAWING';
+      machineWrap.classList.add('spin');
+
+      playStartSound();
+      await delay(1450);
+
+      const numbers = generateNumbers();
+      const color = randomItem(luckyColors);
+      const time = randomItem(luckyTimes);
+      const message = randomItem(fortuneMessages);
+
+      ballsEl.innerHTML = '';
+      dropLane.innerHTML = '';
+
+      for(let i = 0; i < numbers.length; i++){
+        await showDropEffect(i);
+        const wrap = document.createElement('div');
+        wrap.innerHTML = ballHTML(numbers[i], i);
+        ballsEl.appendChild(wrap.firstElementChild);
+        playBallSound(i);
+        statusEl.textContent = `${i + 1}번째 번호가 등장했습니다`;
+        await delay(230);
+      }
+
+      luckyColorEl.textContent = color;
+      luckyTimeEl.textContent = time;
+      fortuneMessageEl.textContent = message;
+
+      currentResult = {
+        numbers,
+        color,
+        time,
+        message,
+        createdAt: Date.now()
+      };
+
+      updateCard(currentResult);
+      saveHistory(currentResult);
+
+      machineWrap.classList.remove('spin');
+      coreText.textContent = 'LUCK OPEN';
+      statusEl.textContent = '오늘의 럭 조합이 완성되었습니다';
+      playDoneSound();
+
+      drawBtn.disabled = false;
+      isDrawing = false;
+    }
+
+    drawBtn.addEventListener('click', drawLuck);
+
+    resetBtn.addEventListener('click', () => {
+      if(isDrawing) return;
+      resetUI();
+      showToast('화면을 초기화했습니다');
+    });
+
+    copyBtn.addEventListener('click', copyResult);
+    shareBtn.addEventListener('click', shareResult);
+    captureBtn.addEventListener('click', toggleCaptureMode);
+
+    clearHistoryBtn.addEventListener('click', () => {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+      showToast('최근 결과를 삭제했습니다');
+    });
+
+    renderHistory();
+    resetUI();
   </script>
 </body>
 </html>
