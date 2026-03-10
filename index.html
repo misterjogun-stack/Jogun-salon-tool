@@ -1,4 +1,4 @@
-<!-- file path: /jogun_lotto_mobile.html -->
+<!-- file path: /index.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -8,21 +8,24 @@
     content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
   />
   <meta name="theme-color" content="#0f172a" />
-  <meta
-    name="description"
-    content="모바일에 최적화된 로또 번호 추첨기 - jogun edition"
-  />
-  <title>jogun 로또번호 추첨기</title>
+  <meta name="description" content="jogun 로또번호 추첨기" />
+
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="jogun lotto" />
+
+  <title>jogun lotto</title>
+
   <style>
     :root {
       --bg: #020617;
-      --bg-soft: rgba(15, 23, 42, 0.72);
-      --card: rgba(15, 23, 42, 0.9);
+      --bg-soft: rgba(15, 23, 42, 0.78);
+      --card: rgba(15, 23, 42, 0.92);
       --text: #e5eefb;
       --muted: #94a3b8;
       --line: rgba(148, 163, 184, 0.14);
-      --accent: #38bdf8;
-      --accent-2: #22c55e;
       --shadow: 0 20px 40px rgba(0, 0, 0, 0.34);
       --radius-xl: 28px;
       --radius-lg: 20px;
@@ -43,8 +46,8 @@
       margin: 0;
       min-height: 100%;
       background:
-        radial-gradient(circle at top, rgba(56, 189, 248, 0.22), transparent 30%),
-        radial-gradient(circle at bottom, rgba(34, 197, 94, 0.18), transparent 30%),
+        radial-gradient(circle at top, rgba(56, 189, 248, 0.18), transparent 28%),
+        radial-gradient(circle at bottom, rgba(34, 197, 94, 0.16), transparent 28%),
         linear-gradient(180deg, #020617 0%, #08111f 100%);
       color: var(--text);
       font-family:
@@ -68,7 +71,6 @@
     }
 
     button,
-    input,
     select {
       font: inherit;
     }
@@ -93,7 +95,7 @@
       border-radius: var(--radius-xl);
       padding: 22px 18px 18px;
       background:
-        linear-gradient(145deg, rgba(56, 189, 248, 0.18), rgba(34, 197, 94, 0.12)),
+        linear-gradient(145deg, rgba(56, 189, 248, 0.16), rgba(34, 197, 94, 0.1)),
         var(--card);
     }
 
@@ -102,9 +104,9 @@
       content: "";
       position: absolute;
       border-radius: 50%;
-      filter: blur(8px);
-      opacity: 0.7;
       pointer-events: none;
+      opacity: 0.65;
+      filter: blur(8px);
     }
 
     .hero::before {
@@ -112,7 +114,7 @@
       height: 120px;
       top: -36px;
       right: -30px;
-      background: rgba(56, 189, 248, 0.25);
+      background: rgba(56, 189, 248, 0.24);
     }
 
     .hero::after {
@@ -120,10 +122,10 @@
       height: 88px;
       bottom: -24px;
       left: -18px;
-      background: rgba(34, 197, 94, 0.22);
+      background: rgba(34, 197, 94, 0.2);
     }
 
-    .eyebrow {
+    .brand {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -132,40 +134,47 @@
       color: #dbeafe;
       background: rgba(255, 255, 255, 0.06);
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.04em;
     }
 
     .hero h1 {
-      margin: 14px 0 8px;
-      font-size: clamp(28px, 7vw, 38px);
-      line-height: 1.08;
-      letter-spacing: -0.04em;
+      margin: 14px 0 6px;
+      font-size: clamp(30px, 8vw, 40px);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
     }
 
-    .hero p {
-      margin: 0;
+    .hero .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
       color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
+      font-size: 13px;
     }
 
-    .panel {
+    .panel,
+    .result-card {
       border-radius: var(--radius-xl);
       padding: 16px;
     }
 
-    .panel-header {
+    .panel-header,
+    .result-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
       margin-bottom: 14px;
+      flex-wrap: wrap;
     }
 
     .panel-title {
       font-size: 17px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: -0.03em;
     }
 
@@ -188,7 +197,7 @@
     .field label {
       font-size: 13px;
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .select {
@@ -203,16 +212,15 @@
         #0f172a;
       color: var(--text);
       outline: none;
-      transition: border-color 0.2s ease, transform 0.2s ease;
     }
 
     .select:focus {
-      border-color: rgba(56, 189, 248, 0.7);
+      border-color: rgba(56, 189, 248, 0.72);
     }
 
     .button-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 10px;
       margin-top: 12px;
     }
@@ -221,14 +229,11 @@
       min-height: 54px;
       border: 0;
       border-radius: 18px;
-      padding: 0 16px;
-      font-weight: 800;
+      padding: 0 14px;
+      font-weight: 900;
       letter-spacing: -0.02em;
       cursor: pointer;
-      transition:
-        transform 0.16s ease,
-        filter 0.16s ease,
-        opacity 0.16s ease;
+      transition: transform 0.16s ease, opacity 0.16s ease, filter 0.16s ease;
       touch-action: manipulation;
       user-select: none;
     }
@@ -239,8 +244,7 @@
 
     .btn-primary {
       color: #001018;
-      background:
-        linear-gradient(135deg, #67e8f9, #38bdf8 52%, #22c55e);
+      background: linear-gradient(135deg, #67e8f9, #38bdf8 52%, #22c55e);
       box-shadow: 0 16px 32px rgba(34, 197, 94, 0.16);
     }
 
@@ -250,26 +254,21 @@
       border: 1px solid var(--line);
     }
 
+    .btn-install {
+      color: #d8fef0;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.24);
+    }
+
+    .btn[hidden] {
+      display: none;
+    }
+
     .status {
       margin-top: 12px;
-      min-height: 22px;
+      min-height: 20px;
       color: var(--muted);
       font-size: 13px;
-    }
-
-    .result-card {
-      border-radius: var(--radius-xl);
-      padding: 16px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .result-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
     }
 
     .badge {
@@ -281,90 +280,12 @@
       background: rgba(56, 189, 248, 0.1);
       color: #bfe8ff;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
     .result-meta {
       color: var(--muted);
       font-size: 12px;
-    }
-
-    .balls {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .ball {
-      position: relative;
-      display: grid;
-      place-items: center;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      font-weight: 900;
-      font-size: clamp(24px, 8vw, 30px);
-      letter-spacing: -0.04em;
-      color: white;
-      box-shadow:
-        inset 0 -10px 20px rgba(0, 0, 0, 0.18),
-        inset 0 8px 12px rgba(255, 255, 255, 0.16),
-        0 14px 28px rgba(0, 0, 0, 0.28);
-      transform: translateY(8px) scale(0.92);
-      opacity: 0;
-      animation: pop-in 0.6s forwards;
-    }
-
-    .ball::after {
-      content: "";
-      position: absolute;
-      top: 14%;
-      left: 18%;
-      width: 34%;
-      height: 20%;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.22);
-      transform: rotate(-20deg);
-      filter: blur(1px);
-    }
-
-    .ball[data-range="1"] { background: linear-gradient(145deg, #f59e0b, #d97706); }
-    .ball[data-range="2"] { background: linear-gradient(145deg, #3b82f6, #1d4ed8); }
-    .ball[data-range="3"] { background: linear-gradient(145deg, #ef4444, #b91c1c); }
-    .ball[data-range="4"] { background: linear-gradient(145deg, #64748b, #334155); }
-    .ball[data-range="5"] { background: linear-gradient(145deg, #22c55e, #15803d); }
-
-    .ball:nth-child(1) { animation-delay: 0.03s; }
-    .ball:nth-child(2) { animation-delay: 0.08s; }
-    .ball:nth-child(3) { animation-delay: 0.13s; }
-    .ball:nth-child(4) { animation-delay: 0.18s; }
-    .ball:nth-child(5) { animation-delay: 0.23s; }
-    .ball:nth-child(6) { animation-delay: 0.28s; }
-
-    .insight {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .mini {
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--line);
-    }
-
-    .mini strong {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .mini span {
-      display: block;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
     }
 
     .history {
@@ -388,6 +309,104 @@
       gap: 10px;
       font-size: 12px;
       color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .balls {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .ball {
+      position: relative;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      font-weight: 900;
+      font-size: clamp(24px, 8vw, 30px);
+      letter-spacing: -0.04em;
+      color: #fff;
+      box-shadow:
+        inset 0 -10px 20px rgba(0, 0, 0, 0.18),
+        inset 0 8px 12px rgba(255, 255, 255, 0.16),
+        0 14px 28px rgba(0, 0, 0, 0.28);
+      transform: translateY(8px) scale(0.92);
+      opacity: 0;
+      animation: pop-in 0.6s forwards;
+    }
+
+    .ball::after {
+      content: "";
+      position: absolute;
+      top: 14%;
+      left: 18%;
+      width: 34%;
+      height: 20%;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      transform: rotate(-20deg);
+      filter: blur(1px);
+    }
+
+    .ball[data-range="1"],
+    .chip[data-range="1"] {
+      background: linear-gradient(145deg, #f59e0b, #d97706);
+    }
+
+    .ball[data-range="2"],
+    .chip[data-range="2"] {
+      background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+    }
+
+    .ball[data-range="3"],
+    .chip[data-range="3"] {
+      background: linear-gradient(145deg, #ef4444, #b91c1c);
+    }
+
+    .ball[data-range="4"],
+    .chip[data-range="4"] {
+      background: linear-gradient(145deg, #64748b, #334155);
+    }
+
+    .ball[data-range="5"],
+    .chip[data-range="5"] {
+      background: linear-gradient(145deg, #22c55e, #15803d);
+    }
+
+    .ball:nth-child(1) { animation-delay: 0.03s; }
+    .ball:nth-child(2) { animation-delay: 0.08s; }
+    .ball:nth-child(3) { animation-delay: 0.13s; }
+    .ball:nth-child(4) { animation-delay: 0.18s; }
+    .ball:nth-child(5) { animation-delay: 0.23s; }
+    .ball:nth-child(6) { animation-delay: 0.28s; }
+
+    .insight {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .mini {
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+    }
+
+    .mini strong {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .mini span {
+      display: block;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
     }
 
     .history-balls {
@@ -406,21 +425,23 @@
       justify-content: center;
       font-size: 14px;
       font-weight: 900;
-      color: white;
+      color: #fff;
       box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.18);
     }
 
-    .chip[data-range="1"] { background: linear-gradient(145deg, #f59e0b, #d97706); }
-    .chip[data-range="2"] { background: linear-gradient(145deg, #3b82f6, #1d4ed8); }
-    .chip[data-range="3"] { background: linear-gradient(145deg, #ef4444, #b91c1c); }
-    .chip[data-range="4"] { background: linear-gradient(145deg, #64748b, #334155); }
-    .chip[data-range="5"] { background: linear-gradient(145deg, #22c55e, #15803d); }
-
-    .footer-note {
+    .footer {
+      display: grid;
+      gap: 6px;
+      padding-bottom: 4px;
       text-align: center;
       color: var(--muted);
       font-size: 12px;
-      padding-bottom: 4px;
+    }
+
+    .footer a {
+      color: #bfe8ff;
+      text-decoration: none;
+      font-weight: 800;
     }
 
     @keyframes pop-in {
@@ -438,15 +459,11 @@
       }
     }
 
-    @media (max-width: 360px) {
+    @media (max-width: 390px) {
       .controls,
-      .button-row,
-      .insight {
+      .insight,
+      .button-row {
         grid-template-columns: 1fr;
-      }
-
-      .balls {
-        gap: 10px;
       }
     }
 
@@ -469,29 +486,29 @@
 <body>
   <main class="app" aria-label="jogun 로또번호 추첨기">
     <section class="hero glass">
-      <span class="eyebrow">✨ jogun edition · Mobile First</span>
-      <h1>세상에 하나뿐인<br />로또번호 추첨기</h1>
-      <p>
-        손가락 한 번으로 끝나는 초고속 추첨. 모바일 화면, 터치 조작,
-        가독성, 애니메이션, 저장까지 한 파일에 담았습니다.
-      </p>
+      <span class="brand">jogun lotto</span>
+      <h1>로또번호<br />추첨기</h1>
+      <div class="meta">
+        <span>@soowan_jg</span>
+        <span id="installGuideText">모바일 홈 화면 설치 지원</span>
+      </div>
     </section>
 
     <section class="panel glass" aria-labelledby="controls-title">
       <div class="panel-header">
         <div>
-          <div id="controls-title" class="panel-title">추첨 설정</div>
-          <div class="subtle">국내 로또 스타일 · 1~45 중 6개 중복 없이 추첨</div>
+          <div id="controls-title" class="panel-title">추첨</div>
+          <div class="subtle">1~45 / 6개 / 중복 없음</div>
         </div>
       </div>
 
       <div class="controls">
         <div class="field">
-          <label for="mode">추천 방식</label>
+          <label for="mode">방식</label>
           <select id="mode" class="select" aria-label="추천 방식">
-            <option value="random">완전 랜덤</option>
-            <option value="balanced">균형형 추천</option>
-            <option value="spread">분산형 추천</option>
+            <option value="random">랜덤</option>
+            <option value="balanced">균형형</option>
+            <option value="spread">분산형</option>
           </select>
         </div>
 
@@ -508,22 +525,21 @@
       </div>
 
       <div class="button-row">
-        <button id="drawBtn" class="btn btn-primary" type="button">번호 뽑기</button>
-        <button id="shuffleBtn" class="btn btn-secondary" type="button">다시 섞기</button>
+        <button id="drawBtn" class="btn btn-primary" type="button">추첨</button>
+        <button id="shuffleBtn" class="btn btn-secondary" type="button">다시</button>
+        <button id="installBtn" class="btn btn-install" type="button" hidden>설치</button>
       </div>
 
-      <div id="status" class="status" aria-live="polite">
-        준비 완료. 버튼을 눌러 최고의 번호 조합을 받아보세요.
-      </div>
+      <div id="status" class="status" aria-live="polite">준비 완료</div>
     </section>
 
     <section class="result-card glass" aria-labelledby="result-title">
       <div class="result-top">
         <div>
-          <div id="result-title" class="panel-title">이번 추천 번호</div>
-          <div id="drawTime" class="result-meta">아직 추첨하지 않았습니다.</div>
+          <div id="result-title" class="panel-title">결과</div>
+          <div id="drawTime" class="result-meta">대기 중</div>
         </div>
-        <span class="badge" id="resultBadge">대기 중</span>
+        <span class="badge" id="resultBadge">ready</span>
       </div>
 
       <div id="resultsContainer" class="history" aria-live="polite"></div>
@@ -538,7 +554,7 @@
           <span id="oddEvenValue">-</span>
         </div>
         <div class="mini">
-          <strong>번호 간격</strong>
+          <strong>간격</strong>
           <span id="gapValue">-</span>
         </div>
       </div>
@@ -547,34 +563,30 @@
     <section class="panel glass" aria-labelledby="history-title">
       <div class="panel-header">
         <div>
-          <div id="history-title" class="panel-title">최근 추첨 기록</div>
-          <div class="subtle">기기 안에 최대 10개까지 저장됩니다.</div>
+          <div id="history-title" class="panel-title">기록</div>
+          <div class="subtle">최대 10개</div>
         </div>
-        <button
-          id="clearBtn"
-          class="btn btn-secondary"
-          type="button"
-          style="min-height: 42px; padding: 0 14px;"
-        >
-          기록 삭제
+        <button id="clearBtn" class="btn btn-secondary" type="button" style="min-height: 42px; padding: 0 14px;">
+          삭제
         </button>
       </div>
       <div id="historyList" class="history"></div>
     </section>
 
-    <div class="footer-note">
-      결과는 재미용 추천입니다. 실제 당첨을 보장하지 않습니다.
+    <div class="footer">
+      <div><a href="https://www.instagram.com/soowan_jg/" target="_blank" rel="noopener noreferrer">@soowan_jg</a></div>
+      <div id="iosHint">iPhone: Safari 공유 → 홈 화면에 추가</div>
     </div>
   </main>
 
   <script>
-    const STORAGE_KEY = "jogun-lotto-history-v1";
-
+    const STORAGE_KEY = "jogun-lotto-history-v2";
     const modeEl = document.getElementById("mode");
     const setsEl = document.getElementById("sets");
     const drawBtn = document.getElementById("drawBtn");
     const shuffleBtn = document.getElementById("shuffleBtn");
     const clearBtn = document.getElementById("clearBtn");
+    const installBtn = document.getElementById("installBtn");
     const statusEl = document.getElementById("status");
     const drawTimeEl = document.getElementById("drawTime");
     const resultBadgeEl = document.getElementById("resultBadge");
@@ -583,6 +595,10 @@
     const sumValueEl = document.getElementById("sumValue");
     const oddEvenValueEl = document.getElementById("oddEvenValue");
     const gapValueEl = document.getElementById("gapValue");
+    const iosHintEl = document.getElementById("iosHint");
+    const installGuideTextEl = document.getElementById("installGuideText");
+
+    let deferredPrompt = null;
 
     function getRangeBucket(value) {
       if (value <= 10) return "1";
@@ -611,18 +627,18 @@
       }
     }
 
-    function uniqueRandomNumbers(count = 6, min = 1, max = 45) {
+    function randomInteger(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function uniqueRandomNumbers() {
       const values = new Set();
 
-      while (values.size < count) {
-        values.add(Math.floor(Math.random() * (max - min + 1)) + min);
+      while (values.size < 6) {
+        values.add(randomInteger(1, 45));
       }
 
       return [...values].sort((a, b) => a - b);
-    }
-
-    function pickFromRange(start, end) {
-      return Math.floor(Math.random() * (end - start + 1)) + start;
     }
 
     function createBalancedNumbers() {
@@ -637,13 +653,13 @@
       const values = new Set();
 
       for (const [start, end] of ranges) {
-        let number = pickFromRange(start, end);
+        let value = randomInteger(start, end);
 
-        while (values.has(number)) {
-          number = pickFromRange(start, end);
+        while (values.has(value)) {
+          value = randomInteger(start, end);
         }
 
-        values.add(number);
+        values.add(value);
       }
 
       return [...values].sort((a, b) => a - b);
@@ -656,13 +672,13 @@
       for (const anchor of anchors) {
         const min = Math.max(1, anchor - 3);
         const max = Math.min(45, anchor + 3);
-        let number = pickFromRange(min, max);
+        let value = randomInteger(min, max);
 
-        while (values.has(number)) {
-          number = pickFromRange(min, max);
+        while (values.has(value)) {
+          value = randomInteger(min, max);
         }
 
-        values.add(number);
+        values.add(value);
       }
 
       return [...values].sort((a, b) => a - b);
@@ -699,7 +715,7 @@
       const element = document.createElement("div");
       element.className = "ball";
       element.dataset.range = getRangeBucket(number);
-      element.textContent = number;
+      element.textContent = String(number);
       element.setAttribute("aria-label", `${number}번`);
       return element;
     }
@@ -708,9 +724,15 @@
       const element = document.createElement("span");
       element.className = "chip";
       element.dataset.range = getRangeBucket(number);
-      element.textContent = number;
+      element.textContent = String(number);
       element.setAttribute("aria-label", `${number}번`);
       return element;
+    }
+
+    function getModeLabel(mode) {
+      if (mode === "balanced") return "균형형";
+      if (mode === "spread") return "분산형";
+      return "랜덤";
     }
 
     function renderCurrentResults(games) {
@@ -723,7 +745,7 @@
         const header = document.createElement("div");
         header.className = "history-head";
         header.innerHTML = `
-          <strong style="color: var(--text); font-size: 14px;">게임 ${index + 1}</strong>
+          <strong style="color: var(--text); font-size: 14px;">G${index + 1}</strong>
           <span>${numbers.join(" · ")}</span>
         `;
 
@@ -750,7 +772,7 @@
       if (history.length === 0) {
         historyListEl.innerHTML = `
           <div class="history-item">
-            <div class="subtle">아직 저장된 기록이 없습니다. 첫 추첨을 시작해보세요.</div>
+            <div class="subtle">기록 없음</div>
           </div>
         `;
         return;
@@ -798,12 +820,6 @@
       });
     }
 
-    function getModeLabel(mode) {
-      if (mode === "balanced") return "균형형";
-      if (mode === "spread") return "분산형";
-      return "완전 랜덤";
-    }
-
     function drawNumbers() {
       const mode = modeEl.value;
       const sets = Number(setsEl.value);
@@ -811,9 +827,9 @@
       const createdAt = formatDate();
 
       renderCurrentResults(games);
-      drawTimeEl.textContent = `${createdAt} 추첨 완료`;
-      resultBadgeEl.textContent = `${getModeLabel(mode)} · ${sets}게임`;
-      statusEl.textContent = `최고의 조합 ${sets}게임을 생성했습니다.`;
+      drawTimeEl.textContent = createdAt;
+      resultBadgeEl.textContent = `${getModeLabel(mode)} · ${sets}`;
+      statusEl.textContent = "추첨 완료";
 
       const history = loadHistory();
       history.unshift({
@@ -831,21 +847,92 @@
       }
     }
 
+    function isIos() {
+      return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+    }
+
+    function isInStandaloneMode() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
+
+    function setupInstallUI() {
+      if (isInStandaloneMode()) {
+        installGuideTextEl.textContent = "설치 완료";
+        iosHintEl.textContent = "홈 화면에서 바로 실행할 수 있습니다";
+        return;
+      }
+
+      if (isIos()) {
+        iosHintEl.textContent = "iPhone: Safari 공유 → 홈 화면에 추가";
+      } else {
+        iosHintEl.textContent = "Android: 설치 버튼 또는 브라우저 메뉴 사용";
+      }
+    }
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      installBtn.hidden = false;
+      installGuideTextEl.textContent = "설치 가능";
+      statusEl.textContent = "설치 버튼이 준비되었습니다";
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) {
+        statusEl.textContent = isIos()
+          ? "Safari 공유 메뉴에서 홈 화면에 추가하세요"
+          : "브라우저 메뉴에서 설치를 선택하세요";
+        return;
+      }
+
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+
+      if (choice.outcome === "accepted") {
+        statusEl.textContent = "설치가 시작되었습니다";
+      } else {
+        statusEl.textContent = "설치가 취소되었습니다";
+      }
+
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    });
+
+    window.addEventListener("appinstalled", () => {
+      deferredPrompt = null;
+      installBtn.hidden = true;
+      installGuideTextEl.textContent = "설치 완료";
+      statusEl.textContent = "앱이 설치되었습니다";
+    });
+
     drawBtn.addEventListener("click", drawNumbers);
     shuffleBtn.addEventListener("click", drawNumbers);
 
     clearBtn.addEventListener("click", () => {
       localStorage.removeItem(STORAGE_KEY);
       renderHistory();
-      statusEl.textContent = "최근 추첨 기록을 모두 삭제했습니다.";
+      statusEl.textContent = "기록 삭제 완료";
     });
 
-    window.addEventListener("load", () => {
+    async function registerServiceWorker() {
+      if (!("serviceWorker" in navigator)) {
+        return;
+      }
+
+      try {
+        await navigator.serviceWorker.register("./service-worker.js");
+      } catch {
+        statusEl.textContent = "서비스 워커 등록 실패";
+      }
+    }
+
+    window.addEventListener("load", async () => {
       renderHistory();
-      const initial = [generateNumbers("random")];
-      renderCurrentResults(initial);
-      drawTimeEl.textContent = "기본 미리보기 표시 중";
-      resultBadgeEl.textContent = "미리보기";
+      renderCurrentResults([generateNumbers("random")]);
+      drawTimeEl.textContent = "ready";
+      resultBadgeEl.textContent = "preview";
+      setupInstallUI();
+      await registerServiceWorker();
     });
   </script>
 </body>
