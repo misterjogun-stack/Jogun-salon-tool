@@ -6,20 +6,22 @@
     <title>로또 추첨기</title>
     <style>
       :root {
-        --bg-1: #07111f;
-        --bg-2: #0f172a;
-        --bg-3: #1e293b;
-        --card: rgba(8, 15, 30, 0.8);
-        --card-soft: rgba(255, 255, 255, 0.04);
-        --text: #e2e8f0;
-        --muted: #94a3b8;
-        --accent: #38bdf8;
-        --accent-2: #2563eb;
+        --bg-1: #050816;
+        --bg-2: #0b1020;
+        --bg-3: #1a1333;
+        --card: rgba(10, 14, 28, 0.82);
+        --card-soft: rgba(255, 255, 255, 0.045);
+        --text: #f8fafc;
+        --muted: #b6bfd3;
+        --accent: #d4af37;
+        --accent-2: #f5d56b;
+        --accent-3: #8b5cf6;
         --success: #22c55e;
-        --border: rgba(148, 163, 184, 0.16);
-        --shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
-        --radius-xl: 28px;
-        --radius-lg: 22px;
+        --border: rgba(212, 175, 55, 0.18);
+        --gold-line: rgba(245, 213, 107, 0.42);
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+        --radius-xl: 30px;
+        --radius-lg: 24px;
         --radius-md: 18px;
       }
 
@@ -38,9 +40,9 @@
         font-family: Inter, "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: var(--text);
         background:
-          radial-gradient(circle at top, rgba(56, 189, 248, 0.18), transparent 26%),
-          radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.18), transparent 24%),
-          linear-gradient(180deg, var(--bg-1), var(--bg-2) 45%, var(--bg-3));
+          radial-gradient(circle at top, rgba(245, 213, 107, 0.18), transparent 24%),
+          radial-gradient(circle at right, rgba(139, 92, 246, 0.14), transparent 26%),
+          linear-gradient(180deg, #04060f, var(--bg-1) 24%, var(--bg-2) 62%, var(--bg-3));
         padding: max(16px, env(safe-area-inset-top)) 14px max(28px, env(safe-area-inset-bottom));
       }
 
@@ -55,11 +57,32 @@
       }
 
       .card {
-        background: var(--card);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01)),
+          var(--card);
         border: 1px solid var(--border);
         border-radius: var(--radius-xl);
         box-shadow: var(--shadow);
         backdrop-filter: blur(20px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(135deg, rgba(245, 213, 107, 0.08), transparent 22%, transparent 78%, rgba(245, 213, 107, 0.05));
+      }
+
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 1px;
+        border-radius: inherit;
+        pointer-events: none;
+        border: 1px solid rgba(255, 255, 255, 0.04);
       }
 
       .hero {
@@ -78,6 +101,29 @@
       .title-copy {
         display: grid;
         gap: 6px;
+      }
+
+      .luxury-title {
+        position: relative;
+        display: inline-block;
+        background: linear-gradient(135deg, #fff8d6 0%, #f5d56b 30%, #fff3bf 52%, #c89a2b 76%, #fff8d6 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 18px rgba(245, 213, 107, 0.08);
+      }
+
+      .luxury-title::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -30%;
+        width: 28%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.72), transparent);
+        transform: skewX(-20deg);
+        animation: titleShine 3.6s ease-in-out infinite;
+        filter: blur(1px);
       }
 
       h1 {
@@ -99,14 +145,15 @@
         justify-content: center;
         gap: 8px;
         min-height: 42px;
-        padding: 10px 14px;
+        padding: 10px 16px;
         border-radius: 999px;
-        background: rgba(56, 189, 248, 0.12);
-        border: 1px solid rgba(56, 189, 248, 0.22);
-        color: #d7f3ff;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.16), rgba(245, 213, 107, 0.12));
+        border: 1px solid rgba(245, 213, 107, 0.32);
+        color: #fff5c6;
         font-size: 0.92rem;
         font-weight: 800;
         white-space: nowrap;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 22px rgba(212, 175, 55, 0.12);
       }
 
       .controls {
@@ -133,20 +180,21 @@
       input {
         width: 100%;
         min-height: 48px;
-        border: 1px solid rgba(148, 163, 184, 0.22);
+        border: 1px solid rgba(245, 213, 107, 0.16);
         border-radius: 14px;
         padding: 12px 14px;
-        background: rgba(2, 6, 23, 0.72);
+        background: rgba(2, 6, 23, 0.78);
         color: var(--text);
         font-size: 16px;
         outline: none;
         appearance: none;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
       }
 
       select:focus,
       input:focus {
-        border-color: rgba(56, 189, 248, 0.55);
-        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+        border-color: rgba(245, 213, 107, 0.5);
+        box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
       }
 
       .actions {
@@ -175,15 +223,15 @@
       }
 
       .primary {
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        color: white;
-        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.34);
+        background: linear-gradient(135deg, #c89a2b, #f5d56b 55%, #b7821f);
+        color: #23180a;
+        box-shadow: 0 14px 30px rgba(200, 154, 43, 0.28);
       }
 
       .secondary {
-        background: rgba(148, 163, 184, 0.12);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
         color: var(--text);
-        border: 1px solid rgba(148, 163, 184, 0.18);
+        border: 1px solid rgba(245, 213, 107, 0.12);
       }
 
       .result-card,
@@ -209,11 +257,11 @@
       .machine-glow {
         position: absolute;
         inset: auto 50% 18px auto;
-        width: 220px;
-        height: 40px;
+        width: 240px;
+        height: 52px;
         transform: translateX(50%);
-        background: radial-gradient(circle, rgba(56, 189, 248, 0.28), transparent 70%);
-        filter: blur(10px);
+        background: radial-gradient(circle, rgba(245, 213, 107, 0.26), transparent 70%);
+        filter: blur(12px);
       }
 
       .machine {
@@ -370,8 +418,8 @@
       }
 
       .machine-light.active {
-        background: #67e8f9;
-        box-shadow: 0 0 16px rgba(103, 232, 249, 0.8);
+        background: #f5d56b;
+        box-shadow: 0 0 16px rgba(245, 213, 107, 0.9);
       }
 
       .machine-ball-tray {
@@ -381,10 +429,50 @@
         height: 62px;
         border-radius: 18px;
         background: linear-gradient(180deg, rgba(2, 6, 23, 0.95), rgba(30, 41, 59, 0.9));
-        border: 1px solid rgba(148, 163, 184, 0.14);
+        border: 1px solid rgba(245, 213, 107, 0.18);
         display: grid;
         place-items: center;
         overflow: hidden;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      }
+
+      .led-board {
+        width: min(320px, 88vw);
+        border-radius: 18px;
+        padding: 14px 16px;
+        background: linear-gradient(180deg, rgba(8, 11, 18, 0.96), rgba(15, 23, 42, 0.92));
+        border: 1px solid rgba(245, 213, 107, 0.2);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 28px rgba(0, 0, 0, 0.26);
+      }
+
+      .led-screen {
+        border-radius: 12px;
+        min-height: 58px;
+        padding: 10px 12px;
+        background:
+          radial-gradient(circle at center, rgba(245, 213, 107, 0.12), transparent 60%),
+          repeating-linear-gradient(90deg, rgba(255, 214, 102, 0.06) 0 2px, transparent 2px 8px),
+          linear-gradient(180deg, #130f08, #05070d);
+        border: 1px solid rgba(245, 213, 107, 0.14);
+        display: grid;
+        gap: 6px;
+        align-items: center;
+        text-align: center;
+      }
+
+      .led-label {
+        color: rgba(245, 213, 107, 0.72);
+        font-size: 0.74rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .led-text {
+        color: #ffe8a3;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        text-shadow: 0 0 10px rgba(245, 213, 107, 0.28), 0 0 22px rgba(245, 213, 107, 0.16);
+        font-size: 0.96rem;
       }
 
       .output-ball {
@@ -461,11 +549,11 @@
       .ball:nth-child(5) { animation-delay: 0.26s; }
       .ball:nth-child(6) { animation-delay: 0.32s; }
 
-      .range-1 { background: linear-gradient(135deg, #f59e0b, #f97316); }
-      .range-2 { background: linear-gradient(135deg, #38bdf8, #2563eb); }
-      .range-3 { background: linear-gradient(135deg, #f43f5e, #e11d48); }
-      .range-4 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-      .range-5 { background: linear-gradient(135deg, #22c55e, #16a34a); }
+      .range-1 { background: linear-gradient(135deg, #f6c453, #d8871e); }
+      .range-2 { background: linear-gradient(135deg, #6fd7ff, #2563eb); }
+      .range-3 { background: linear-gradient(135deg, #ff6687, #d61f69); }
+      .range-4 { background: linear-gradient(135deg, #b88cff, #7c3aed); }
+      .range-5 { background: linear-gradient(135deg, #5ce1a1, #1f9a62); }
 
       .meta {
         display: flex;
@@ -533,14 +621,37 @@
         justify-content: center;
         gap: 10px;
         flex-wrap: wrap;
-        color: var(--muted);
+        color: #d7dded;
         font-size: 0.92rem;
+        padding: 14px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(245, 213, 107, 0.14);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
       }
 
       .insta {
         display: inline-flex;
         align-items: center;
         gap: 6px;
+      }
+
+      @keyframes titleShine {
+        0% {
+          left: -30%;
+          opacity: 0;
+        }
+        8% {
+          opacity: 0.9;
+        }
+        24% {
+          left: 110%;
+          opacity: 0;
+        }
+        100% {
+          left: 110%;
+          opacity: 0;
+        }
       }
 
       @keyframes bowlFloat {
@@ -685,10 +796,10 @@
         <section class="card hero">
           <div class="title-wrap">
             <div class="title-copy">
-              <h1>✨ 로또 추첨기</h1>
-              <p class="subtitle">모바일에 맞춘 리얼 추첨 애니메이션</p>
+              <h1 class="luxury-title">✨ 로또 추첨기</h1>
+              <p class="subtitle">프리미엄 골드 에디션 · 모바일 최적화</p>
             </div>
-            <div class="badge">🎲 Real Draw Mode</div>
+            <div class="badge">👑 Luxury Draw</div>
           </div>
 
           <div class="controls">
@@ -758,6 +869,12 @@
                 </div>
               </div>
               <div id="machineCaption" class="machine-caption">추첨 버튼을 누르면 공이 내려오고 번호가 한 개씩 공개됩니다.</div>
+              <div class="led-board" aria-live="polite">
+                <div class="led-screen">
+                  <div class="led-label">PREMIUM DRAW STATUS</div>
+                  <div id="ledText" class="led-text">READY FOR LUXURY DRAW</div>
+                </div>
+              </div>
             </div>
             <div id="resultSets" class="result-grid"></div>
           </div>
@@ -776,7 +893,7 @@
 
       <footer class="footer">
         <div class="credit">
-          <span>만든사람: jogun</span>
+          <span>만든사람: JOGUN</span>
           <span class="insta">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
               <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 2A3.75 3.75 0 0 0 4 7.75v8.5A3.75 3.75 0 0 0 7.75 20h8.5A3.75 3.75 0 0 0 20 16.25v-8.5A3.75 3.75 0 0 0 16.25 4h-8.5Zm9.25 1.75a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/>
@@ -799,6 +916,7 @@
       const outputBall = document.getElementById("outputBall");
       const machineCaption = document.getElementById("machineCaption");
       const machineLights = Array.from(document.querySelectorAll("[data-light]"));
+      const ledText = document.getElementById("ledText");
 
       let drawRevealTimer = null;
       let machineLightTimer = null;
@@ -909,6 +1027,10 @@
         outputBall.textContent = "";
       }
 
+      function setLedText(message) {
+        ledText.textContent = message;
+      }
+
       function showOutputBall(number) {
         resetOutputBall();
         outputBall.textContent = number;
@@ -947,6 +1069,7 @@
         resetOutputBall();
         startMachineLights();
         machineCaption.textContent = "공이 회전 중입니다...";
+        setLedText("MIXING GOLD BALLS...");
         renderResult(sets, maxNumber, excludedCount, revealCount);
 
         drawRevealTimer = setInterval(() => {
@@ -959,12 +1082,14 @@
           revealCount += 1;
           renderResult(sets, maxNumber, excludedCount, revealCount);
           machineCaption.textContent = `${revealCount}번째 공이 나왔습니다.`;
+          setLedText(`BALL ${revealCount}: ${nextNumber}`);
 
           if (revealCount >= 6) {
             clearInterval(drawRevealTimer);
             drawRevealTimer = null;
             stopMachineLights();
             machineCaption.textContent = "추첨 완료. 아래 번호를 확인해보세요.";
+            setLedText("DRAW COMPLETE");
           }
         }, 680);
       }
@@ -1043,6 +1168,7 @@
         drawHistory = [];
         resetOutputBall();
         machineCaption.textContent = "추첨 버튼을 누르면 공이 내려오고 번호가 한 개씩 공개됩니다.";
+        setLedText("READY FOR LUXURY DRAW");
         renderResult([], activeSetMeta.maxNumber, activeSetMeta.excludedCount);
         renderHistory();
       }
