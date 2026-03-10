@@ -1,1284 +1,482 @@
-<!-- file path: /index.html -->
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
-  />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="description" content="jogun 로또번호 추첨기" />
-
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="./icon-192.png" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="jogun lotto" />
-
-  <title>jogun lotto</title>
-
-  <style>
-    :root {
-      --bg: #020617;
-      --bg-soft: rgba(15, 23, 42, 0.8);
-      --card: rgba(15, 23, 42, 0.92);
-      --text: #e5eefb;
-      --muted: #94a3b8;
-      --line: rgba(148, 163, 184, 0.14);
-      --accent: #38bdf8;
-      --accent-2: #22c55e;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --shadow: 0 20px 40px rgba(0, 0, 0, 0.34);
-      --radius-xl: 28px;
-      --radius-lg: 20px;
-      --radius-md: 16px;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-right: env(safe-area-inset-right, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --safe-left: env(safe-area-inset-left, 0px);
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-      background:
-        radial-gradient(circle at top, rgba(56, 189, 248, 0.18), transparent 28%),
-        radial-gradient(circle at bottom, rgba(34, 197, 94, 0.16), transparent 28%),
-        linear-gradient(180deg, #020617 0%, #08111f 100%);
-      color: var(--text);
-      font-family:
-        "Pretendard Variable",
-        "Pretendard",
-        "Apple SD Gothic Neo",
-        "Noto Sans KR",
-        "Segoe UI",
-        sans-serif;
-      overscroll-behavior: none;
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-      padding:
-        calc(14px + var(--safe-top))
-        calc(14px + var(--safe-right))
-        calc(18px + var(--safe-bottom))
-        calc(14px + var(--safe-left));
-    }
-
-    button,
-    select {
-      font: inherit;
-    }
-
-    .app {
-      width: min(100%, 480px);
-      display: grid;
-      gap: 14px;
-    }
-
-    .glass {
-      background: var(--bg-soft);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--radius-xl);
-      padding: 22px 18px 18px;
-      background:
-        linear-gradient(145deg, rgba(56, 189, 248, 0.16), rgba(34, 197, 94, 0.1)),
-        var(--card);
-    }
-
-    .hero::before,
-    .hero::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      opacity: 0.65;
-      filter: blur(8px);
-    }
-
-    .hero::before {
-      width: 120px;
-      height: 120px;
-      top: -36px;
-      right: -30px;
-      background: rgba(56, 189, 248, 0.24);
-    }
-
-    .hero::after {
-      width: 88px;
-      height: 88px;
-      bottom: -24px;
-      left: -18px;
-      background: rgba(34, 197, 94, 0.2);
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      color: #dbeafe;
-      background: rgba(255, 255, 255, 0.06);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-    }
-
-    .hero h1 {
-      margin: 14px 0 6px;
-      font-size: clamp(30px, 8vw, 40px);
-      line-height: 1.02;
-      letter-spacing: -0.05em;
-    }
-
-    .hero .meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .panel,
-    .result-card {
-      border-radius: var(--radius-xl);
-      padding: 16px;
-    }
-
-    .panel-header,
-    .result-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-
-    .panel-title {
-      font-size: 17px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-    }
-
-    .subtle {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .field {
-      display: grid;
-      gap: 8px;
-    }
-
-    .field label {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    .select {
-      appearance: none;
-      width: 100%;
-      min-height: 52px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      padding: 0 14px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
-        #0f172a;
-      color: var(--text);
-      outline: none;
-    }
-
-    .select:focus {
-      border-color: rgba(56, 189, 248, 0.72);
-    }
-
-    .button-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .btn {
-      min-height: 54px;
-      border: 0;
-      border-radius: 18px;
-      padding: 0 14px;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      cursor: pointer;
-      transition: transform 0.16s ease, opacity 0.16s ease, filter 0.16s ease;
-      touch-action: manipulation;
-      user-select: none;
-    }
-
-    .btn:active {
-      transform: scale(0.98);
-    }
-
-    .btn:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    .btn-primary {
-      color: #001018;
-      background: linear-gradient(135deg, #67e8f9, #38bdf8 52%, #22c55e);
-      box-shadow: 0 16px 32px rgba(34, 197, 94, 0.16);
-    }
-
-    .btn-secondary {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--line);
-    }
-
-    .btn-install {
-      color: #d8fef0;
-      background: rgba(34, 197, 94, 0.12);
-      border: 1px solid rgba(34, 197, 94, 0.24);
-    }
-
-    .btn[hidden] {
-      display: none;
-    }
-
-    .status {
-      margin-top: 12px;
-      min-height: 20px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.1);
-      color: #bfe8ff;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .result-meta {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .history {
-      display: grid;
-      gap: 10px;
-    }
-
-    .history-item {
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.03);
-      padding: 12px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .history-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      font-size: 12px;
-      color: var(--muted);
-      flex-wrap: wrap;
-    }
-
-    .balls {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .ball {
-      position: relative;
-      display: grid;
-      place-items: center;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      font-weight: 900;
-      font-size: clamp(24px, 8vw, 30px);
-      letter-spacing: -0.04em;
-      color: #fff;
-      box-shadow:
-        inset 0 -10px 20px rgba(0, 0, 0, 0.18),
-        inset 0 8px 12px rgba(255, 255, 255, 0.16),
-        0 14px 28px rgba(0, 0, 0, 0.28);
-      overflow: hidden;
-    }
-
-    .ball::after {
-      content: "";
-      position: absolute;
-      top: 14%;
-      left: 18%;
-      width: 34%;
-      height: 20%;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.22);
-      transform: rotate(-20deg);
-      filter: blur(1px);
-    }
-
-    .ball[data-range="1"],
-    .chip[data-range="1"] {
-      background: linear-gradient(145deg, #f59e0b, #d97706);
-    }
-
-    .ball[data-range="2"],
-    .chip[data-range="2"] {
-      background: linear-gradient(145deg, #3b82f6, #1d4ed8);
-    }
-
-    .ball[data-range="3"],
-    .chip[data-range="3"] {
-      background: linear-gradient(145deg, #ef4444, #b91c1c);
-    }
-
-    .ball[data-range="4"],
-    .chip[data-range="4"] {
-      background: linear-gradient(145deg, #64748b, #334155);
-    }
-
-    .ball[data-range="5"],
-    .chip[data-range="5"] {
-      background: linear-gradient(145deg, #22c55e, #15803d);
-    }
-
-    .ball.pending {
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 28%),
-        linear-gradient(145deg, #0f172a, #1e293b);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.82);
-    }
-
-    .ball.pending span {
-      animation: spin-number 0.12s linear infinite;
-    }
-
-    .ball.revealed {
-      animation: ball-pop 0.46s ease;
-    }
-
-    .ball.final-reveal {
-      animation: final-hit 0.75s ease;
-      box-shadow:
-        0 0 0 2px rgba(255, 255, 255, 0.08),
-        0 0 30px rgba(56, 189, 248, 0.3),
-        0 0 50px rgba(34, 197, 94, 0.22),
-        inset 0 -10px 20px rgba(0, 0, 0, 0.18),
-        inset 0 8px 12px rgba(255, 255, 255, 0.16);
-    }
-
-    .insight {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .mini {
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--line);
-    }
-
-    .mini strong {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .mini span {
-      display: block;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-    }
-
-    .history-balls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .chip {
-      min-width: 36px;
-      height: 36px;
-      padding: 0 10px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 900;
-      color: #fff;
-      box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.18);
-    }
-
-    .footer {
-      display: grid;
-      gap: 6px;
-      padding-bottom: 4px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .footer a {
-      color: #bfe8ff;
-      text-decoration: none;
-      font-weight: 800;
-    }
-
-    .draw-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding:
-        calc(18px + var(--safe-top))
-        calc(18px + var(--safe-right))
-        calc(18px + var(--safe-bottom))
-        calc(18px + var(--safe-left));
-      background:
-        radial-gradient(circle at center, rgba(56, 189, 248, 0.08), transparent 35%),
-        rgba(2, 6, 23, 0.82);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .draw-overlay.show {
-      display: flex;
-      animation: overlay-fade 0.25s ease;
-    }
-
-    .draw-box {
-      width: min(100%, 420px);
-      padding: 24px 18px;
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(145deg, rgba(56, 189, 248, 0.08), rgba(34, 197, 94, 0.06)),
-        rgba(15, 23, 42, 0.88);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-      text-align: center;
-    }
-
-    .draw-stage {
-      display: grid;
-      gap: 10px;
-    }
-
-    .draw-stage-label {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .draw-stage-value {
-      font-size: clamp(44px, 18vw, 82px);
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: -0.08em;
-    }
-
-    .draw-stage-text {
-      color: #dbeafe;
-      font-size: 15px;
-      font-weight: 700;
-    }
-
-    .draw-bar {
-      margin-top: 10px;
-      height: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-
-    .draw-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #38bdf8, #22c55e);
-      transition: width 0.18s ease;
-    }
-
-    @keyframes overlay-fade {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes spin-number {
-      from { transform: translateY(-1px) scale(1); opacity: 0.6; }
-      to { transform: translateY(1px) scale(1.03); opacity: 1; }
-    }
-
-    @keyframes ball-pop {
-      0% { transform: scale(0.7) rotate(-10deg); opacity: 0.4; }
-      60% { transform: scale(1.08) rotate(3deg); opacity: 1; }
-      100% { transform: scale(1) rotate(0); }
-    }
-
-    @keyframes final-hit {
-      0% { transform: scale(0.65) rotate(-12deg); filter: brightness(1); }
-      40% { transform: scale(1.12) rotate(3deg); filter: brightness(1.2); }
-      100% { transform: scale(1) rotate(0); filter: brightness(1); }
-    }
-
-    @media (max-width: 390px) {
-      .controls,
-      .insight,
-      .button-row {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-      }
-    }
-  </style>
-</head>
-<body>
-  <main class="app" aria-label="jogun 로또번호 추첨기">
-    <section class="hero glass">
-      <span class="brand">jogun lotto</span>
-      <h1>로또번호<br />추첨기</h1>
-      <div class="meta">
-        <span>@soowan_jg</span>
-        <span id="installGuideText">모바일 홈 화면 설치 지원</span>
-      </div>
-    </section>
-
-    <section class="panel glass" aria-labelledby="controls-title">
-      <div class="panel-header">
-        <div>
-          <div id="controls-title" class="panel-title">추첨</div>
-          <div class="subtle">1~45 / 6개 / 중복 없음</div>
-        </div>
-      </div>
-
-      <div class="controls">
-        <div class="field">
-          <label for="mode">방식</label>
-          <select id="mode" class="select" aria-label="추천 방식">
-            <option value="random">랜덤</option>
-            <option value="balanced">균형형</option>
-            <option value="spread">분산형</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="sets">게임 수</label>
-          <select id="sets" class="select" aria-label="게임 수">
-            <option value="1">1게임</option>
-            <option value="2">2게임</option>
-            <option value="3" selected>3게임</option>
-            <option value="4">4게임</option>
-            <option value="5">5게임</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="button-row">
-        <button id="drawBtn" class="btn btn-primary" type="button">추첨 시작</button>
-        <button id="shuffleBtn" class="btn btn-secondary" type="button">빠른 재추첨</button>
-        <button id="installBtn" class="btn btn-install" type="button" hidden>설치</button>
-      </div>
-
-      <div id="status" class="status" aria-live="polite">준비 완료</div>
-    </section>
-
-    <section class="result-card glass" aria-labelledby="result-title">
-      <div class="result-top">
-        <div>
-          <div id="result-title" class="panel-title">결과</div>
-          <div id="drawTime" class="result-meta">대기 중</div>
-        </div>
-        <span class="badge" id="resultBadge">ready</span>
-      </div>
-
-      <div id="resultsContainer" class="history" aria-live="polite"></div>
-
-      <div class="insight">
-        <div class="mini">
-          <strong>합계</strong>
-          <span id="sumValue">-</span>
-        </div>
-        <div class="mini">
-          <strong>홀/짝</strong>
-          <span id="oddEvenValue">-</span>
-        </div>
-        <div class="mini">
-          <strong>간격</strong>
-          <span id="gapValue">-</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel glass" aria-labelledby="history-title">
-      <div class="panel-header">
-        <div>
-          <div id="history-title" class="panel-title">기록</div>
-          <div class="subtle">최대 10개</div>
-        </div>
-        <button id="clearBtn" class="btn btn-secondary" type="button" style="min-height: 42px; padding: 0 14px;">
-          삭제
-        </button>
-      </div>
-      <div id="historyList" class="history"></div>
-    </section>
-
-    <div class="footer">
-      <div><a href="https://www.instagram.com/soowan_jg/" target="_blank" rel="noopener noreferrer">@soowan_jg</a></div>
-      <div id="iosHint">iPhone: Safari 공유 → 홈 화면에 추가</div>
+import { useState, useEffect, useRef } from "react";
+
+const JOGUN_SPECIAL_NUMBERS = [7, 13, 24, 33, 38, 42]; // JoGUN's lucky seeds
+
+function Ball({ number, color = "red", delay = 0, visible = false }) {
+  const colors = {
+    red: { bg: "#e63329", shadow: "rgba(230,51,41,0.8)" },
+    gold: { bg: "#c9a84c", shadow: "rgba(201,168,76,0.8)" },
+    white: { bg: "#f0f0f0", shadow: "rgba(255,255,255,0.5)" },
+  };
+  const c = colors[color] || colors.red;
+  return (
+    <div
+      style={{
+        width: 72,
+        height: 72,
+        borderRadius: "50%",
+        background: visible
+          ? `radial-gradient(circle at 35% 30%, ${c.bg}dd, ${c.bg})`
+          : "#1a1a1a",
+        border: visible ? `2px solid ${c.bg}` : "2px solid #333",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 26,
+        fontWeight: 900,
+        color: color === "white" ? "#111" : "#fff",
+        fontFamily: "'Bebas Neue', cursive",
+        boxShadow: visible
+          ? `0 0 24px ${c.shadow}, 0 0 8px ${c.shadow}, inset 0 2px 4px rgba(255,255,255,0.2)`
+          : "none",
+        transform: visible ? "scale(1)" : "scale(0.7)",
+        opacity: visible ? 1 : 0.2,
+        transition: `all 0.5s cubic-bezier(0.34,1.56,0.64,1) ${delay}s`,
+        letterSpacing: 1,
+        cursor: "default",
+        userSelect: "none",
+      }}
+    >
+      {visible ? number : "?"}
     </div>
-  </main>
+  );
+}
 
-  <div id="drawOverlay" class="draw-overlay" aria-hidden="true">
-    <div class="draw-box">
-      <div class="draw-stage">
-        <div class="draw-stage-label">drawing</div>
-        <div id="overlayValue" class="draw-stage-value">3</div>
-        <div id="overlayText" class="draw-stage-text">행운의 숫자를 준비 중</div>
-      </div>
-      <div class="draw-bar">
-        <div id="overlayBarFill" class="draw-bar-fill"></div>
-      </div>
-    </div>
-  </div>
+function DigitRoller({ target, rolling }) {
+  const [display, setDisplay] = useState(target);
+  const intervalRef = useRef(null);
 
-  <script>
-    const STORAGE_KEY = "jogun-lotto-history-v3";
-    const modeEl = document.getElementById("mode");
-    const setsEl = document.getElementById("sets");
-    const drawBtn = document.getElementById("drawBtn");
-    const shuffleBtn = document.getElementById("shuffleBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const installBtn = document.getElementById("installBtn");
-    const statusEl = document.getElementById("status");
-    const drawTimeEl = document.getElementById("drawTime");
-    const resultBadgeEl = document.getElementById("resultBadge");
-    const resultsContainerEl = document.getElementById("resultsContainer");
-    const historyListEl = document.getElementById("historyList");
-    const sumValueEl = document.getElementById("sumValue");
-    const oddEvenValueEl = document.getElementById("oddEvenValue");
-    const gapValueEl = document.getElementById("gapValue");
-    const iosHintEl = document.getElementById("iosHint");
-    const installGuideTextEl = document.getElementById("installGuideText");
-    const drawOverlayEl = document.getElementById("drawOverlay");
-    const overlayValueEl = document.getElementById("overlayValue");
-    const overlayTextEl = document.getElementById("overlayText");
-    const overlayBarFillEl = document.getElementById("overlayBarFill");
+  useEffect(() => {
+    if (rolling) {
+      intervalRef.current = setInterval(() => {
+        setDisplay(Math.floor(Math.random() * 45) + 1);
+      }, 60);
+    } else {
+      clearInterval(intervalRef.current);
+      setDisplay(target);
+    }
+    return () => clearInterval(intervalRef.current);
+  }, [rolling, target]);
 
-    let deferredPrompt = null;
-    let isDrawing = false;
-    let audioContext = null;
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        minWidth: 28,
+        textAlign: "center",
+        color: rolling ? "#e63329" : "#fff",
+        transition: "color 0.3s",
+      }}
+    >
+      {display}
+    </span>
+  );
+}
 
-    function sleep(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
+export default function JogunLotto() {
+  const [numbers, setNumbers] = useState([]);
+  const [bonusNum, setBonusNum] = useState(null);
+  const [phase, setPhase] = useState("idle"); // idle | rolling | revealing | done
+  const [rollingNums, setRollingNums] = useState([]);
+  const [particles, setParticles] = useState([]);
+  const [drawCount, setDrawCount] = useState(0);
+  const [glitch, setGlitch] = useState(false);
+
+  const getBallColor = (index) => {
+    if (index < 2) return "red";
+    if (index < 4) return "white";
+    return "gold";
+  };
+
+  const generateNumbers = () => {
+    if (phase !== "idle" && phase !== "done") return;
+
+    // JoGUN special algorithm
+    const pool = Array.from({ length: 45 }, (_, i) => i + 1);
+    const picked = [];
+
+    // Seed with JoGUN's lucky numbers (weighted)
+    const jogunSeed = JOGUN_SPECIAL_NUMBERS[drawCount % JOGUN_SPECIAL_NUMBERS.length];
+    let rng = (jogunSeed * 9301 + 49297) % 233280;
+
+    while (picked.length < 6) {
+      rng = (rng * 9301 + 49297) % 233280;
+      const idx = Math.floor((rng / 233280) * pool.length);
+      picked.push(pool.splice(idx, 1)[0]);
     }
 
-    function setButtonsDisabled(disabled) {
-      drawBtn.disabled = disabled;
-      shuffleBtn.disabled = disabled;
-      clearBtn.disabled = disabled;
-      modeEl.disabled = disabled;
-      setsEl.disabled = disabled;
-    }
+    const sorted = picked.slice(0, 5).sort((a, b) => a - b);
+    const bonus = picked[5];
 
-    function getRangeBucket(value) {
-      if (value <= 10) return "1";
-      if (value <= 20) return "2";
-      if (value <= 30) return "3";
-      if (value <= 40) return "4";
-      return "5";
-    }
+    setNumbers([]);
+    setBonusNum(null);
+    setPhase("rolling");
+    setRollingNums(sorted);
 
-    function formatDate(date = new Date()) {
-      return new Intl.DateTimeFormat("ko-KR", {
-        dateStyle: "medium",
-        timeStyle: "short"
-      }).format(date);
-    }
+    // Glitch effect on start
+    setGlitch(true);
+    setTimeout(() => setGlitch(false), 400);
 
-    function saveHistory(history) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(0, 10)));
-    }
-
-    function loadHistory() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      } catch {
-        return [];
-      }
-    }
-
-    function randomInteger(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function uniqueRandomNumbers() {
-      const values = new Set();
-      while (values.size < 6) {
-        values.add(randomInteger(1, 45));
-      }
-      return [...values].sort((a, b) => a - b);
-    }
-
-    function createBalancedNumbers() {
-      const ranges = [
-        [1, 9],
-        [10, 17],
-        [18, 25],
-        [26, 33],
-        [34, 41],
-        [42, 45]
-      ];
-      const values = new Set();
-
-      for (const [start, end] of ranges) {
-        let value = randomInteger(start, end);
-        while (values.has(value)) {
-          value = randomInteger(start, end);
+    // Reveal balls one by one
+    sorted.forEach((num, i) => {
+      setTimeout(() => {
+        setNumbers((prev) => [...prev, num]);
+        if (i === 4) {
+          setTimeout(() => {
+            setBonusNum(bonus);
+            setPhase("done");
+            setDrawCount((c) => c + 1);
+            spawnParticles();
+          }, 600);
         }
-        values.add(value);
-      }
+      }, 800 + i * 500);
+    });
+  };
 
-      return [...values].sort((a, b) => a - b);
-    }
+  const spawnParticles = () => {
+    const pts = Array.from({ length: 28 }, (_, i) => ({
+      id: i,
+      x: 35 + Math.random() * 30,
+      y: 30 + Math.random() * 40,
+      vx: (Math.random() - 0.5) * 6,
+      vy: -(Math.random() * 5 + 2),
+      color: ["#e63329", "#fff", "#c9a84c"][Math.floor(Math.random() * 3)],
+      size: Math.random() * 6 + 3,
+    }));
+    setParticles(pts);
+    setTimeout(() => setParticles([]), 2000);
+  };
 
-    function createSpreadNumbers() {
-      const anchors = [3, 11, 19, 27, 35, 43];
-      const values = new Set();
+  const reset = () => {
+    setNumbers([]);
+    setBonusNum(null);
+    setPhase("idle");
+  };
 
-      for (const anchor of anchors) {
-        const min = Math.max(1, anchor - 3);
-        const max = Math.min(45, anchor + 3);
-        let value = randomInteger(min, max);
-        while (values.has(value)) {
-          value = randomInteger(min, max);
+  const isSpecial = numbers.some((n) => JOGUN_SPECIAL_NUMBERS.includes(n));
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#000",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "'Bebas Neue', cursive",
+        position: "relative",
+        overflow: "hidden",
+        padding: "20px",
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;700;900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000; }
+        
+        @keyframes scanline {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100vh); }
         }
-        values.add(value);
-      }
+        @keyframes pulse-red {
+          0%, 100% { box-shadow: 0 0 20px rgba(230,51,41,0.3); }
+          50% { box-shadow: 0 0 50px rgba(230,51,41,0.8), 0 0 100px rgba(230,51,41,0.3); }
+        }
+        @keyframes glitch {
+          0% { transform: translate(0); }
+          20% { transform: translate(-3px, 2px); }
+          40% { transform: translate(3px, -2px); }
+          60% { transform: translate(-2px, 1px); }
+          80% { transform: translate(2px, -1px); }
+          100% { transform: translate(0); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes particle-fall {
+          0% { opacity: 1; transform: translate(0, 0) scale(1); }
+          100% { opacity: 0; transform: translate(var(--px), var(--py)) scale(0); }
+        }
+        @keyframes border-flow {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .btn-main {
+          background: #e63329;
+          border: none;
+          color: #fff;
+          font-family: 'Bebas Neue', cursive;
+          font-size: 28px;
+          letter-spacing: 4px;
+          padding: 18px 60px;
+          cursor: pointer;
+          position: relative;
+          clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+          transition: all 0.2s;
+          animation: pulse-red 2s infinite;
+        }
+        .btn-main:hover {
+          background: #ff4038;
+          transform: scale(1.05);
+          box-shadow: 0 0 40px rgba(230,51,41,0.9);
+        }
+        .btn-main:active { transform: scale(0.97); }
+        .btn-main:disabled {
+          background: #333;
+          cursor: not-allowed;
+          animation: none;
+          box-shadow: none;
+        }
+        .btn-reset {
+          background: transparent;
+          border: 1px solid #444;
+          color: #666;
+          font-family: 'Bebas Neue', cursive;
+          font-size: 16px;
+          letter-spacing: 3px;
+          padding: 10px 30px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .btn-reset:hover { border-color: #e63329; color: #e63329; }
+      `}</style>
 
-      return [...values].sort((a, b) => a - b);
-    }
+      {/* Scanline overlay */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+        background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)",
+        pointerEvents: "none", zIndex: 999,
+      }} />
 
-    function generateNumbers(mode) {
-      switch (mode) {
-        case "balanced":
-          return createBalancedNumbers();
-        case "spread":
-          return createSpreadNumbers();
-        default:
-          return uniqueRandomNumbers();
-      }
-    }
+      {/* Background grid */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+        backgroundImage: "linear-gradient(rgba(230,51,41,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(230,51,41,0.03) 1px, transparent 1px)",
+        backgroundSize: "60px 60px",
+        pointerEvents: "none",
+      }} />
 
-    function calculateInsight(numbers) {
-      const sum = numbers.reduce((accumulator, current) => accumulator + current, 0);
-      const odd = numbers.filter((number) => number % 2 !== 0).length;
-      const even = numbers.length - odd;
-      const gaps = numbers.slice(1).map((number, index) => number - numbers[index]);
-      const averageGap = gaps.length
-        ? (gaps.reduce((accumulator, current) => accumulator + current, 0) / gaps.length).toFixed(1)
-        : "0.0";
+      {/* Corner decorations */}
+      {["top-left", "top-right", "bottom-left", "bottom-right"].map((pos) => (
+        <div key={pos} style={{
+          position: "fixed",
+          top: pos.includes("top") ? 20 : "auto",
+          bottom: pos.includes("bottom") ? 20 : "auto",
+          left: pos.includes("left") ? 20 : "auto",
+          right: pos.includes("right") ? 20 : "auto",
+          width: 40, height: 40,
+          borderTop: pos.includes("top") ? "2px solid rgba(230,51,41,0.5)" : "none",
+          borderBottom: pos.includes("bottom") ? "2px solid rgba(230,51,41,0.5)" : "none",
+          borderLeft: pos.includes("left") ? "2px solid rgba(230,51,41,0.5)" : "none",
+          borderRight: pos.includes("right") ? "2px solid rgba(230,51,41,0.5)" : "none",
+          pointerEvents: "none",
+        }} />
+      ))}
 
-      return {
-        sum,
-        oddEven: `${odd}:${even}`,
-        averageGap
-      };
-    }
+      {/* Particles */}
+      {particles.map((p) => (
+        <div key={p.id} style={{
+          position: "fixed",
+          left: `${p.x}%`, top: `${p.y}%`,
+          width: p.size, height: p.size,
+          borderRadius: "50%",
+          background: p.color,
+          "--px": `${p.vx * 40}px`,
+          "--py": `${p.vy * 40}px`,
+          animation: "particle-fall 1.5s forwards",
+          pointerEvents: "none",
+          zIndex: 100,
+        }} />
+      ))}
 
-    function createBall(number = "?") {
-      const element = document.createElement("div");
-      const inner = document.createElement("span");
-      element.className = "ball pending";
-      inner.textContent = String(number);
-      element.appendChild(inner);
-      return element;
-    }
+      {/* Main container */}
+      <div style={{
+        width: "100%", maxWidth: 600,
+        animation: glitch ? "glitch 0.3s ease" : "none",
+      }}>
 
-    function createRevealedBall(number, isFinal = false) {
-      const element = document.createElement("div");
-      element.className = `ball revealed${isFinal ? " final-reveal" : ""}`;
-      element.dataset.range = getRangeBucket(number);
-      element.textContent = String(number);
-      element.setAttribute("aria-label", `${number}번`);
-      return element;
-    }
-
-    function createChip(number) {
-      const element = document.createElement("span");
-      element.className = "chip";
-      element.dataset.range = getRangeBucket(number);
-      element.textContent = String(number);
-      element.setAttribute("aria-label", `${number}번`);
-      return element;
-    }
-
-    function getModeLabel(mode) {
-      if (mode === "balanced") return "균형형";
-      if (mode === "spread") return "분산형";
-      return "랜덤";
-    }
-
-    function renderHistory() {
-      const history = loadHistory();
-
-      if (history.length === 0) {
-        historyListEl.innerHTML = `
-          <div class="history-item">
-            <div class="subtle">기록 없음</div>
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
+          <div style={{
+            fontSize: 11, letterSpacing: 8, color: "#e63329",
+            fontFamily: "'Noto Sans KR', sans-serif", fontWeight: 300,
+            marginBottom: 8,
+          }}>
+            ✦ WORLD'S ONLY ✦
           </div>
-        `;
-        return;
-      }
-
-      historyListEl.innerHTML = "";
-
-      history.forEach((entry) => {
-        const item = document.createElement("article");
-        item.className = "history-item";
-
-        const head = document.createElement("div");
-        head.className = "history-head";
-        head.innerHTML = `
-          <span>${entry.modeLabel} · ${entry.games.length}게임</span>
-          <span>${entry.createdAt}</span>
-        `;
-
-        const content = document.createElement("div");
-        content.className = "history";
-
-        entry.games.forEach((numbers, index) => {
-          const row = document.createElement("div");
-          row.className = "history-balls";
-          row.setAttribute("aria-label", `최근 기록 게임 ${index + 1}`);
-
-          const label = document.createElement("strong");
-          label.textContent = `G${index + 1}`;
-          label.style.minWidth = "26px";
-          label.style.display = "inline-flex";
-          label.style.alignItems = "center";
-          label.style.color = "var(--muted)";
-
-          row.appendChild(label);
-
-          numbers.forEach((number) => {
-            row.appendChild(createChip(number));
-          });
-
-          content.appendChild(row);
-        });
-
-        item.append(head, content);
-        historyListEl.appendChild(item);
-      });
-    }
-
-    function renderPreview() {
-      const preview = uniqueRandomNumbers();
-      resultsContainerEl.innerHTML = "";
-
-      const wrapper = document.createElement("article");
-      wrapper.className = "history-item";
-
-      const header = document.createElement("div");
-      header.className = "history-head";
-      header.innerHTML = `
-        <strong style="color: var(--text); font-size: 14px;">preview</strong>
-        <span>${preview.join(" · ")}</span>
-      `;
-
-      const balls = document.createElement("div");
-      balls.className = "balls";
-
-      preview.forEach((number) => {
-        balls.appendChild(createRevealedBall(number));
-      });
-
-      wrapper.append(header, balls);
-      resultsContainerEl.appendChild(wrapper);
-
-      const insight = calculateInsight(preview);
-      sumValueEl.textContent = String(insight.sum);
-      oddEvenValueEl.textContent = insight.oddEven;
-      gapValueEl.textContent = insight.averageGap;
-    }
-
-    function prepareGameShells(count) {
-      resultsContainerEl.innerHTML = "";
-      const gameElements = [];
-
-      for (let i = 0; i < count; i += 1) {
-        const wrapper = document.createElement("article");
-        wrapper.className = "history-item";
-
-        const header = document.createElement("div");
-        header.className = "history-head";
-        header.innerHTML = `
-          <strong style="color: var(--text); font-size: 14px;">G${i + 1}</strong>
-          <span>추첨 중...</span>
-        `;
-
-        const balls = document.createElement("div");
-        balls.className = "balls";
-
-        const ballElements = [];
-        for (let j = 0; j < 6; j += 1) {
-          const ball = createBall("?");
-          balls.appendChild(ball);
-          ballElements.push(ball);
-        }
-
-        wrapper.append(header, balls);
-        resultsContainerEl.appendChild(wrapper);
-        gameElements.push({ header, ballElements });
-      }
-
-      sumValueEl.textContent = "-";
-      oddEvenValueEl.textContent = "-";
-      gapValueEl.textContent = "-";
-
-      return gameElements;
-    }
-
-    function updateGameHeader(element, text) {
-      const span = element.querySelector("span");
-      if (span) {
-        span.textContent = text;
-      }
-    }
-
-    function ensureAudioContext() {
-      if (!window.AudioContext && !window.webkitAudioContext) {
-        return null;
-      }
-
-      if (!audioContext) {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        audioContext = new AudioCtx();
-      }
-
-      if (audioContext.state === "suspended") {
-        audioContext.resume().catch(() => {});
-      }
-
-      return audioContext;
-    }
-
-    function playTone(frequency, duration, type = "sine", gainValue = 0.02) {
-      const context = ensureAudioContext();
-      if (!context) {
-        return;
-      }
-
-      const oscillator = context.createOscillator();
-      const gain = context.createGain();
-
-      oscillator.type = type;
-      oscillator.frequency.value = frequency;
-      gain.gain.value = gainValue;
-
-      oscillator.connect(gain);
-      gain.connect(context.destination);
-
-      const now = context.currentTime;
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(gainValue, now + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-      oscillator.start(now);
-      oscillator.stop(now + duration + 0.02);
-    }
-
-    function vibrate(pattern) {
-      if (navigator.vibrate) {
-        navigator.vibrate(pattern);
-      }
-    }
-
-    async function showDrawOverlay() {
-      drawOverlayEl.classList.add("show");
-      drawOverlayEl.setAttribute("aria-hidden", "false");
-
-      const countdown = ["3", "2", "1", "GO"];
-      const texts = [
-        "행운을 준비 중",
-        "드럼 회전 중",
-        "숫자 잠금 직전",
-        "추첨 시작"
-      ];
-
-      for (let i = 0; i < countdown.length; i += 1) {
-        overlayValueEl.textContent = countdown[i];
-        overlayTextEl.textContent = texts[i];
-        overlayBarFillEl.style.width = `${((i + 1) / countdown.length) * 100}%`;
-
-        if (i < 3) {
-          playTone(320 + i * 70, 0.12, "triangle", 0.03);
-          vibrate([20]);
-          await sleep(520);
-        } else {
-          playTone(720, 0.2, "sawtooth", 0.04);
-          vibrate([40, 30, 40]);
-          await sleep(420);
-        }
-      }
-
-      drawOverlayEl.classList.remove("show");
-      drawOverlayEl.setAttribute("aria-hidden", "true");
-      overlayBarFillEl.style.width = "0%";
-    }
-
-    async function animateBallReveal(ballElement, finalNumber, isFinalBall) {
-      const inner = ballElement.querySelector("span");
-      const spinCount = isFinalBall ? 18 : 10;
-      const spinDelay = isFinalBall ? 70 : 55;
-
-      for (let i = 0; i < spinCount; i += 1) {
-        inner.textContent = String(randomInteger(1, 45));
-        playTone(200 + i * 10, 0.04, "square", 0.01);
-        await sleep(spinDelay);
-      }
-
-      const revealed = createRevealedBall(finalNumber, isFinalBall);
-      ballElement.replaceWith(revealed);
-
-      if (isFinalBall) {
-        playTone(880, 0.16, "triangle", 0.035);
-        playTone(1174, 0.22, "sine", 0.03);
-        vibrate([60, 40, 90]);
-      } else {
-        playTone(520, 0.08, "triangle", 0.02);
-        vibrate([20]);
-      }
-
-      return revealed;
-    }
-
-    async function animateGameDraw(gameElement, numbers, isFirstGame) {
-      updateGameHeader(gameElement.header, "드럼 회전 중");
-
-      for (let i = 0; i < numbers.length; i += 1) {
-        const isFinalBall = i === numbers.length - 1;
-
-        updateGameHeader(
-          gameElement.header,
-          isFinalBall ? "마지막 번호..." : `${i + 1}번째 번호 추첨 중`
-        );
-
-        await animateBallReveal(gameElement.ballElements[i], numbers[i], isFinalBall);
-
-        if (isFirstGame && i === numbers.length - 1) {
-          const insight = calculateInsight(numbers);
-          sumValueEl.textContent = String(insight.sum);
-          oddEvenValueEl.textContent = insight.oddEven;
-          gapValueEl.textContent = insight.averageGap;
-        }
-
-        await sleep(isFinalBall ? 350 : 180);
-      }
-
-      updateGameHeader(gameElement.header, numbers.join(" · "));
-    }
-
-    async function startDraw(animated = true) {
-      if (isDrawing) {
-        return;
-      }
-
-      isDrawing = true;
-      setButtonsDisabled(true);
-
-      try {
-        const mode = modeEl.value;
-        const sets = Number(setsEl.value);
-        const games = Array.from({ length: sets }, () => generateNumbers(mode));
-        const createdAt = formatDate();
-
-        resultBadgeEl.textContent = "drawing";
-        drawTimeEl.textContent = "추첨 중";
-        statusEl.textContent = "행운의 숫자를 섞는 중";
-        const gameElements = prepareGameShells(sets);
-
-        if (animated) {
-          await showDrawOverlay();
-        }
-
-        for (let i = 0; i < games.length; i += 1) {
-          statusEl.textContent =
-            i === games.length - 1
-              ? "마지막 게임 추첨 중"
-              : `${i + 1}번째 게임 공개 중`;
-
-          await animateGameDraw(gameElements[i], games[i], i === 0);
-          await sleep(i === games.length - 1 ? 120 : 260);
-        }
-
-        resultBadgeEl.textContent = `${getModeLabel(mode)} · ${sets}`;
-        drawTimeEl.textContent = createdAt;
-        statusEl.textContent = "추첨 완료";
-
-        const history = loadHistory();
-        history.unshift({
-          mode,
-          modeLabel: getModeLabel(mode),
-          games,
-          createdAt
-        });
-        saveHistory(history);
-        renderHistory();
-      } finally {
-        isDrawing = false;
-        setButtonsDisabled(false);
-      }
-    }
-
-    function isIos() {
-      return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-    }
-
-    function isInStandaloneMode() {
-      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-    }
-
-    function setupInstallUI() {
-      if (isInStandaloneMode()) {
-        installGuideTextEl.textContent = "설치 완료";
-        iosHintEl.textContent = "홈 화면에서 바로 실행할 수 있습니다";
-        return;
-      }
-
-      if (isIos()) {
-        iosHintEl.textContent = "iPhone: Safari 공유 → 홈 화면에 추가";
-      } else {
-        iosHintEl.textContent = "Android: 설치 버튼 또는 브라우저 메뉴 사용";
-      }
-    }
-
-    window.addEventListener("beforeinstallprompt", (event) => {
-      event.preventDefault();
-      deferredPrompt = event;
-      installBtn.hidden = false;
-      installGuideTextEl.textContent = "설치 가능";
-      statusEl.textContent = "설치 버튼 준비 완료";
-    });
-
-    installBtn.addEventListener("click", async () => {
-      if (!deferredPrompt) {
-        statusEl.textContent = isIos()
-          ? "Safari 공유 메뉴에서 홈 화면에 추가하세요"
-          : "브라우저 메뉴에서 설치를 선택하세요";
-        return;
-      }
-
-      deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
-
-      statusEl.textContent =
-        choice.outcome === "accepted" ? "설치 시작" : "설치 취소";
-
-      deferredPrompt = null;
-      installBtn.hidden = true;
-    });
-
-    window.addEventListener("appinstalled", () => {
-      deferredPrompt = null;
-      installBtn.hidden = true;
-      installGuideTextEl.textContent = "설치 완료";
-      statusEl.textContent = "앱이 설치되었습니다";
-    });
-
-    drawBtn.addEventListener("click", () => {
-      startDraw(true);
-    });
-
-    shuffleBtn.addEventListener("click", () => {
-      startDraw(false);
-    });
-
-    clearBtn.addEventListener("click", () => {
-      if (isDrawing) {
-        return;
-      }
-      localStorage.removeItem(STORAGE_KEY);
-      renderHistory();
-      statusEl.textContent = "기록 삭제 완료";
-    });
-
-    async function registerServiceWorker() {
-      if (!("serviceWorker" in navigator)) {
-        return;
-      }
-
-      try {
-        await navigator.serviceWorker.register("./service-worker.js");
-      } catch {
-        statusEl.textContent = "서비스 워커 등록 실패";
-      }
-    }
-
-    window.addEventListener("load", async () => {
-      renderHistory();
-      renderPreview();
-      drawTimeEl.textContent = "ready";
-      resultBadgeEl.textContent = "preview";
-      setupInstallUI();
-      await registerServiceWorker();
-    });
-  </script>
-</body>
-</html>
+          <h1 style={{
+            fontSize: "clamp(52px, 12vw, 88px)",
+            color: "#fff",
+            letterSpacing: 6,
+            lineHeight: 0.9,
+            animation: "float 3s ease-in-out infinite",
+          }}>
+            JoGUN
+          </h1>
+          <div style={{
+            fontSize: "clamp(20px, 5vw, 32px)",
+            color: "#e63329",
+            letterSpacing: 12,
+            marginTop: 4,
+          }}>
+            LOTTO
+          </div>
+          <div style={{
+            width: 80, height: 2,
+            background: "linear-gradient(90deg, transparent, #e63329, transparent)",
+            margin: "12px auto",
+          }} />
+          <div style={{
+            fontSize: 10, letterSpacing: 5, color: "#444",
+            fontFamily: "'Noto Sans KR', sans-serif",
+          }}>
+            아이롱펌 국가대표의 행운 번호 추첨기
+          </div>
+        </div>
+
+        {/* Draw count */}
+        <div style={{
+          display: "flex", justifyContent: "space-between",
+          alignItems: "center", marginBottom: 24,
+          padding: "8px 0",
+          borderTop: "1px solid #1a1a1a",
+          borderBottom: "1px solid #1a1a1a",
+        }}>
+          <span style={{ fontSize: 12, color: "#444", letterSpacing: 3, fontFamily: "'Noto Sans KR', sans-serif" }}>
+            DRAW COUNT
+          </span>
+          <span style={{ fontSize: 24, color: "#e63329" }}>
+            {String(drawCount).padStart(3, "0")}
+          </span>
+        </div>
+
+        {/* Balls display */}
+        <div style={{
+          background: "#080808",
+          border: "1px solid #1a1a1a",
+          padding: "32px 20px",
+          marginBottom: 24,
+          position: "relative",
+          clipPath: "polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))",
+        }}>
+          <div style={{
+            position: "absolute", top: 8, left: 12,
+            fontSize: 9, color: "#333", letterSpacing: 3,
+          }}>
+            MAIN NUMBERS
+          </div>
+
+          {/* Main balls */}
+          <div style={{
+            display: "flex", justifyContent: "center",
+            gap: "clamp(8px, 2vw, 16px)", marginBottom: 24,
+            flexWrap: "wrap",
+          }}>
+            {[0, 1, 2, 3, 4].map((i) => (
+              <Ball
+                key={i}
+                number={numbers[i]}
+                color={getBallColor(i)}
+                delay={i * 0.1}
+                visible={i < numbers.length}
+              />
+            ))}
+          </div>
+
+          {/* Divider */}
+          <div style={{
+            display: "flex", alignItems: "center", gap: 12, marginBottom: 20,
+          }}>
+            <div style={{ flex: 1, height: 1, background: "#1a1a1a" }} />
+            <div style={{ fontSize: 10, color: "#333", letterSpacing: 4 }}>BONUS</div>
+            <div style={{ flex: 1, height: 1, background: "#1a1a1a" }} />
+          </div>
+
+          {/* Bonus ball */}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Ball
+              number={bonusNum}
+              color="gold"
+              delay={0}
+              visible={bonusNum !== null}
+            />
+          </div>
+
+          {/* Special message */}
+          {isSpecial && phase === "done" && (
+            <div style={{
+              textAlign: "center", marginTop: 20,
+              fontSize: 13, color: "#e63329",
+              fontFamily: "'Noto Sans KR', sans-serif",
+              fontWeight: 700,
+              letterSpacing: 2,
+              animation: "pulse-red 1s infinite",
+            }}>
+              ✦ JoGUN 행운 번호 포함! ✦
+            </div>
+          )}
+        </div>
+
+        {/* Numbers display (text) */}
+        {numbers.length > 0 && (
+          <div style={{
+            textAlign: "center", marginBottom: 24,
+            fontSize: "clamp(18px, 4vw, 24px)",
+            color: "#555",
+            letterSpacing: 6,
+            fontFamily: "'Bebas Neue', cursive",
+          }}>
+            {numbers.map((n, i) => (
+              <span key={i}>
+                <span style={{ color: "#fff" }}>{String(n).padStart(2, "0")}</span>
+                {i < 4 && <span style={{ color: "#e63329", margin: "0 6px" }}>·</span>}
+              </span>
+            ))}
+            {bonusNum && (
+              <>
+                <span style={{ color: "#333", margin: "0 12px" }}>+</span>
+                <span style={{ color: "#c9a84c" }}>{String(bonusNum).padStart(2, "0")}</span>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Buttons */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+          <button
+            className="btn-main"
+            onClick={generateNumbers}
+            disabled={phase === "rolling" || phase === "revealing"}
+          >
+            {phase === "rolling" || phase === "revealing"
+              ? "DRAWING..."
+              : phase === "done"
+              ? "REDRAW"
+              : "DRAW NOW"}
+          </button>
+          {phase === "done" && (
+            <button className="btn-reset" onClick={reset}>
+              RESET
+            </button>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div style={{
+          textAlign: "center", marginTop: 40,
+          fontSize: 9, color: "#222", letterSpacing: 4,
+          fontFamily: "'Noto Sans KR', sans-serif",
+        }}>
+          DESIGNED FOR #아이롱펌국가대표 · JoGUN EXCLUSIVE
+        </div>
+      </div>
+    </div>
+  );
+}
