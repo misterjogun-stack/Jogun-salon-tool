@@ -1,811 +1,875 @@
-<!DOCTYPE html>
+로또생성기 완성본
+
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
-  />
-  <meta name="theme-color" content="#f3efe6" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="BRUTAL FLOW" />
-  <title>BRUTAL FLOW</title>
-  <style>
-    :root{
-      --bg:#f3efe6;
-      --panel:#fffdf8;
-      --ink:#111111;
-      --line:#111111;
-      --accent:#ff4d2d;
-      --accent2:#ffe100;
-      --muted:#5f5a52;
-      --success:#1f9d55;
-      --shadow:8px 8px 0 #111111;
-      --radius:0px;
-      --max:980px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JOGUN LOTTO UNIVERSE - 로또번호 생성기</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap');
 
-    *{
-      box-sizing:border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+  * { margin:0; padding:0; box-sizing:border-box; }
 
-    html,body{
-      margin:0;
-      padding:0;
-      background:var(--bg);
-      color:var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
-      "Pretendard", "Noto Sans KR", "Segoe UI", sans-serif;
-    }
+  :root {
+    --gold: #FFD700;
+    --gold-dark: #B8860B;
+    --red: #e63329;
+    --bg: #000000;
+    --surface: #0a0a0a;
+  }
 
-    body{
-      min-height:100vh;
-      overflow-x:hidden;
-    }
+  body {
+    background: var(--bg);
+    color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-    .wrap{
-      width:min(100%, var(--max));
-      margin:0 auto;
-      padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 28px);
-    }
+  /* === PARTICLE CANVAS === */
+  #particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
 
-    .hero{
-      border:4px solid var(--line);
-      background:var(--panel);
-      box-shadow:var(--shadow);
-      padding:18px;
-      margin-bottom:18px;
-      position:relative;
-    }
+  /* === AMBIENT GLOW === */
+  .ambient-glow {
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    filter: blur(200px);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-1 { background: var(--gold); top: -200px; left: -100px; }
+  .glow-2 { background: var(--red); bottom: -200px; right: -100px; }
+  .glow-3 { background: #4a00e0; top: 50%; left: 50%; transform: translate(-50%,-50%); opacity: 0.08; }
 
-    .badge{
-      display:inline-block;
-      border:3px solid var(--line);
-      background:var(--accent2);
-      font-weight:900;
-      letter-spacing:.5px;
-      padding:6px 10px;
-      margin-bottom:12px;
-      font-size:12px;
-    }
+  /* === MAIN CONTAINER === */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    h1{
-      margin:0;
-      font-size:clamp(30px, 7vw, 64px);
-      line-height:.95;
-      letter-spacing:-1.6px;
-      font-weight:1000;
-      text-transform:uppercase;
-    }
+  /* === HEADER === */
+  .logo {
+    text-align: center;
+    margin-bottom: 10px;
+    animation: fadeInDown 1s ease;
+  }
+  .logo-sub {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 12px;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+  .logo-main {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(36px, 8vw, 64px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold) 0%, #fff 40%, var(--gold) 60%, var(--gold-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(255,215,0,0.3));
+    line-height: 1.1;
+  }
+  .logo-tagline {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 8px;
+    letter-spacing: 2px;
+  }
 
-    .sub{
-      margin-top:14px;
-      font-size:14px;
-      line-height:1.55;
-      color:var(--muted);
-      font-weight:700;
-    }
+  /* === SEPARATOR === */
+  .separator {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 25px auto;
+    animation: fadeIn 1.5s ease;
+  }
 
-    .gridTop{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:16px;
-      margin-top:16px;
-    }
+  /* === BALL DISPLAY === */
+  .ball-stage {
+    perspective: 1000px;
+    margin: 20px 0 30px;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
 
-    .tabs{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin:16px 0 20px;
-    }
+  .balls-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 
-    .tabBtn{
-      border:4px solid var(--line);
-      background:#fff;
-      color:var(--ink);
-      padding:16px 12px;
-      font-size:14px;
-      font-weight:1000;
-      text-transform:uppercase;
-      box-shadow:5px 5px 0 var(--line);
-      cursor:pointer;
-    }
+  .ball-wrapper {
+    opacity: 0;
+    transform: translateY(80px) scale(0);
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .ball-wrapper.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .ball-wrapper.bounce {
+    animation: ballBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
 
-    .tabBtn.active{
-      background:var(--accent);
-      color:#fff;
-      transform:translate(2px,2px);
-      box-shadow:3px 3px 0 var(--line);
-    }
+  .ball {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: #fff;
+    position: relative;
+    cursor: default;
+    box-shadow:
+      inset -8px -8px 20px rgba(0,0,0,0.5),
+      inset 4px 4px 10px rgba(255,255,255,0.3),
+      0 8px 32px rgba(0,0,0,0.6),
+      0 0 20px var(--ball-glow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+  .ball::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 18px;
+    width: 20px;
+    height: 12px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    filter: blur(4px);
+    transform: rotate(-30deg);
+  }
+  .ball:hover {
+    transform: scale(1.15) rotateY(15deg);
+    box-shadow:
+      inset -8px -8px 20px rgba(0,0,0,0.5),
+      inset 4px 4px 10px rgba(255,255,255,0.3),
+      0 12px 48px rgba(0,0,0,0.6),
+      0 0 40px var(--ball-glow);
+  }
 
-    .panel{
-      display:none;
-      border:4px solid var(--line);
-      background:var(--panel);
-      box-shadow:var(--shadow);
-      padding:16px;
-    }
+  .ball.range-1 { background: linear-gradient(135deg, #FFD700, #FFA500); --ball-glow: rgba(255,215,0,0.5); }
+  .ball.range-2 { background: linear-gradient(135deg, #4facfe, #00f2fe); --ball-glow: rgba(79,172,254,0.5); }
+  .ball.range-3 { background: linear-gradient(135deg, #e63329, #ff6b6b); --ball-glow: rgba(230,51,41,0.5); }
+  .ball.range-4 { background: linear-gradient(135deg, #a855f7, #6366f1); --ball-glow: rgba(168,85,247,0.5); }
+  .ball.range-5 { background: linear-gradient(135deg, #22c55e, #10b981); --ball-glow: rgba(34,197,94,0.5); }
 
-    .panel.active{
-      display:block;
-      animation:pop .18s ease-out;
-    }
+  .plus-sign {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    color: var(--gold);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.4s ease 0.3s;
+    margin: 0 4px;
+  }
+  .plus-sign.visible {
+    opacity: 0.6;
+    transform: scale(1);
+  }
 
-    @keyframes pop{
-      from{transform:translateY(8px); opacity:.75;}
-      to{transform:translateY(0); opacity:1;}
-    }
+  .ball.bonus {
+    border: 3px solid var(--gold);
+    animation: bonusPulse 2s ease-in-out infinite;
+  }
 
-    .sectionTitle{
-      margin:0 0 12px;
-      font-size:20px;
-      font-weight:1000;
-      text-transform:uppercase;
-      letter-spacing:-.5px;
-    }
+  /* === PLACEHOLDER === */
+  .placeholder-balls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .placeholder-ball {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    border: 2px dashed rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+    color: rgba(255,255,255,0.15);
+  }
 
-    .sectionDesc{
-      margin:0 0 16px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.6;
-      font-weight:700;
-    }
+  /* === GENERATE BUTTON === */
+  .btn-generate {
+    position: relative;
+    padding: 18px 60px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #000;
+    background: linear-gradient(135deg, var(--gold) 0%, #fff 50%, var(--gold) 100%);
+    background-size: 200% 200%;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow:
+      0 4px 20px rgba(255,215,0,0.3),
+      0 0 60px rgba(255,215,0,0.1);
+    animation: shimmer 3s linear infinite, fadeInUp 1s ease 0.3s both;
+    margin-bottom: 20px;
+  }
+  .btn-generate:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow:
+      0 8px 40px rgba(255,215,0,0.5),
+      0 0 80px rgba(255,215,0,0.2);
+  }
+  .btn-generate:active {
+    transform: translateY(0) scale(0.98);
+  }
+  .btn-generate.spinning {
+    pointer-events: none;
+    animation: shimmer 0.5s linear infinite;
+  }
 
-    .formGrid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
+  /* === OPTIONS === */
+  .options-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    animation: fadeInUp 1s ease 0.5s both;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .option-btn {
+    padding: 10px 22px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+  }
+  .option-btn:hover {
+    color: var(--gold);
+    border-color: rgba(255,215,0,0.3);
+    background: rgba(255,215,0,0.05);
+  }
+  .option-btn.active {
+    color: #000;
+    background: linear-gradient(135deg, var(--gold), #FFA500);
+    border-color: transparent;
+    box-shadow: 0 0 20px rgba(255,215,0,0.3);
+  }
 
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
+  /* === HISTORY === */
+  .history-section {
+    width: 100%;
+    margin-top: 30px;
+    animation: fadeInUp 1s ease 0.7s both;
+  }
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  .history-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }
+  .history-clear {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: color 0.3s ease;
+    letter-spacing: 1px;
+  }
+  .history-clear:hover { color: var(--red); }
 
-    .label{
-      font-size:12px;
-      font-weight:1000;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+  .history-list::-webkit-scrollbar { width: 4px; }
+  .history-list::-webkit-scrollbar-track { background: transparent; }
+  .history-list::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.2); border-radius: 4px; }
 
-    input, textarea, select{
-      width:100%;
-      border:3px solid var(--line);
-      border-radius:0;
-      background:#fff;
-      color:var(--ink);
-      padding:13px 12px;
-      font-size:15px;
-      font-weight:700;
-      outline:none;
-      box-shadow:4px 4px 0 #11111110;
-    }
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    animation: slideIn 0.4s ease;
+  }
+  .history-item:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,215,0,0.1);
+  }
+  .history-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    min-width: 24px;
+  }
+  .history-balls {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+  .history-ball {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+  .history-ball.range-1 { background: linear-gradient(135deg, #FFD700, #FFA500); }
+  .history-ball.range-2 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+  .history-ball.range-3 { background: linear-gradient(135deg, #e63329, #ff6b6b); }
+  .history-ball.range-4 { background: linear-gradient(135deg, #a855f7, #6366f1); }
+  .history-ball.range-5 { background: linear-gradient(135deg, #22c55e, #10b981); }
+  .history-ball.bonus-border { box-shadow: 0 0 0 2px var(--gold); }
+  .history-plus {
+    color: rgba(255,215,0,0.4);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+  }
+  .history-time {
+    font-size: 10px;
+    color: rgba(255,255,255,0.15);
+    min-width: 50px;
+    text-align: right;
+  }
 
-    textarea{
-      min-height:104px;
-      resize:vertical;
-      line-height:1.55;
-    }
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: rgba(255,255,255,0.15);
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
 
-    input:focus, textarea:focus, select:focus{
-      background:#fffef5;
-      border-color:var(--accent);
-    }
+  /* === CONFETTI CANVAS === */
+  #confetti {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 10;
+  }
 
-    .controls{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:16px;
-    }
+  /* === SOUND TOGGLE === */
+  .sound-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.5);
+    color: rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+    font-size: 18px;
+  }
+  .sound-toggle:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
 
-    .btn{
-      border:4px solid var(--line);
-      background:#fff;
-      color:var(--ink);
-      padding:14px 12px;
-      font-size:14px;
-      font-weight:1000;
-      text-transform:uppercase;
-      box-shadow:5px 5px 0 var(--line);
-      cursor:pointer;
-    }
+  /* === ANIMATIONS === */
+  @keyframes fadeInDown {
+    from { opacity:0; transform:translateY(-30px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(30px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity:0; }
+    to { opacity:1; }
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  @keyframes ballBounce {
+    0% { transform: translateY(80px) scale(0) rotate(-180deg); }
+    60% { transform: translateY(-10px) scale(1.1) rotate(10deg); }
+    80% { transform: translateY(5px) scale(0.95) rotate(-5deg); }
+    100% { transform: translateY(0) scale(1) rotate(0deg); }
+  }
+  @keyframes bonusPulse {
+    0%, 100% { box-shadow: inset -8px -8px 20px rgba(0,0,0,0.5), inset 4px 4px 10px rgba(255,255,255,0.3), 0 8px 32px rgba(0,0,0,0.6), 0 0 20px var(--ball-glow), 0 0 0 0 rgba(255,215,0,0.4); }
+    50% { box-shadow: inset -8px -8px 20px rgba(0,0,0,0.5), inset 4px 4px 10px rgba(255,255,255,0.3), 0 8px 32px rgba(0,0,0,0.6), 0 0 20px var(--ball-glow), 0 0 0 12px rgba(255,215,0,0); }
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform:translateX(-20px); }
+    to { opacity:1; transform:translateX(0); }
+  }
+  @keyframes spin3d {
+    0% { transform: rotateY(0deg) rotateX(0deg); }
+    100% { transform: rotateY(1080deg) rotateX(360deg); }
+  }
 
-    .btn.primary{
-      background:var(--accent);
-      color:#fff;
-    }
-
-    .btn.secondary{
-      background:var(--accent2);
-    }
-
-    .btn:active{
-      transform:translate(3px,3px);
-      box-shadow:2px 2px 0 var(--line);
-    }
-
-    .resultWrap{
-      margin-top:20px;
-      display:grid;
-      gap:14px;
-    }
-
-    .resultCard{
-      border:4px solid var(--line);
-      background:#fff;
-      box-shadow:7px 7px 0 var(--line);
-      overflow:hidden;
-    }
-
-    .resultHead{
-      background:var(--accent2);
-      border-bottom:4px solid var(--line);
-      padding:10px 12px;
-      font-size:13px;
-      font-weight:1000;
-      text-transform:uppercase;
-    }
-
-    .resultBody{
-      padding:14px;
-      font-size:15px;
-      line-height:1.7;
-      font-weight:700;
-      white-space:pre-wrap;
-      word-break:keep-all;
-    }
-
-    .miniActions{
-      display:flex;
-      gap:8px;
-      padding:0 14px 14px;
-      flex-wrap:wrap;
-    }
-
-    .miniBtn{
-      border:3px solid var(--line);
-      background:#fff;
-      padding:8px 10px;
-      font-size:12px;
-      font-weight:1000;
-      cursor:pointer;
-    }
-
-    .twoCols{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:14px;
-    }
-
-    .footerNote{
-      margin-top:18px;
-      border:4px dashed var(--line);
-      background:#fffdf5;
-      padding:14px;
-      font-size:13px;
-      font-weight:700;
-      line-height:1.65;
-    }
-
-    .pillRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:10px;
-    }
-
-    .pill{
-      border:3px solid var(--line);
-      padding:7px 9px;
-      font-size:12px;
-      font-weight:1000;
-      background:#fff;
-    }
-
-    .ideaItem{
-      border-top:4px solid var(--line);
-      padding:14px;
-      background:#fff;
-    }
-
-    .ideaItem:first-child{
-      border-top:none;
-    }
-
-    .ideaTitle{
-      font-size:18px;
-      font-weight:1000;
-      margin-bottom:10px;
-      line-height:1.25;
-    }
-
-    .ideaMeta{
-      display:grid;
-      gap:8px;
-      font-size:14px;
-      line-height:1.65;
-      font-weight:700;
-    }
-
-    .copyAllBar{
-      margin-top:14px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .status{
-      margin-top:10px;
-      font-size:13px;
-      font-weight:900;
-      color:var(--success);
-      min-height:20px;
-    }
-
-    @media (min-width: 768px){
-      .formGrid{
-        grid-template-columns:1fr 1fr;
-      }
-      .twoCols{
-        grid-template-columns:1fr 1fr;
-      }
-      .gridTop{
-        grid-template-columns:1.15fr .85fr;
-      }
-    }
-  </style>
+  /* Mobile */
+  @media (max-width: 600px) {
+    .ball { width: 60px; height: 60px; font-size: 22px; }
+    .ball::before { top:7px; left:13px; width:15px; height:9px; }
+    .placeholder-ball { width: 60px; height: 60px; font-size: 16px; }
+    .balls-row { gap: 8px; }
+    .btn-generate { padding: 15px 40px; font-size: 14px; letter-spacing: 3px; }
+    .history-ball { width: 28px; height: 28px; font-size: 10px; }
+  }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <div class="badge">BRUTAL CONTENT MACHINE</div>
-      <h1>BRUTAL<br>FLOW</h1>
-      <p class="sub">
-        주제만 넣으면 썸네일 제목, 릴스 스크립트, 캡션, 해시태그까지 한 번에 생성하고,
-        계정 주제와 트렌드를 입력하면 이번 주 올릴 릴스 아이디어 5개를 뽑아주는
-        브루탈리즘 스타일 콘텐츠 제작 도구.
-      </p>
 
-      <div class="pillRow">
-        <div class="pill">THUMBNAIL TITLE</div>
-        <div class="pill">SCRIPT</div>
-        <div class="pill">CAPTION</div>
-        <div class="pill">HASHTAGS</div>
-        <div class="pill">REELS IDEAS</div>
-      </div>
-    </section>
+<canvas id="particles"></canvas>
+<canvas id="confetti"></canvas>
 
-    <div class="tabs">
-      <button class="tabBtn active" data-tab="tab-content">CONTENT BUILDER</button>
-      <button class="tabBtn" data-tab="tab-ideas">REELS IDEA GENERATOR</button>
-    </div>
+<div class="ambient-glow glow-1"></div>
+<div class="ambient-glow glow-2"></div>
+<div class="ambient-glow glow-3"></div>
 
-    <section id="tab-content" class="panel active">
-      <h2 class="sectionTitle">콘텐츠 기획 자동화</h2>
-      <p class="sectionDesc">
-        주제와 타깃, 톤을 입력하면 썸네일 제목 3개, 오프닝 훅 3개, 릴스 스크립트, 캡션, 해시태그, CTA를 자동 생성합니다.
-      </p>
+<button class="sound-toggle" id="soundToggle" title="사운드 ON/OFF">🔊</button>
 
-      <div class="formGrid">
-        <div class="field">
-          <label class="label">주제</label>
-          <input id="topic" type="text" placeholder="예: 남자 아이롱펌이 오래 유지되는 이유" />
-        </div>
+<div class="container">
+  <div class="logo">
+    <div class="logo-sub">★ Premium Lucky ★</div>
+    <div class="logo-main">LOTTO<br>UNIVERSE</div>
+    <div class="logo-tagline">당신의 행운을 깨워드립니다</div>
+  </div>
 
-        <div class="field">
-          <label class="label">타깃</label>
-          <input id="target" type="text" placeholder="예: 20~40대 남성 고객 / 초보 디자이너" />
-        </div>
+  <div class="separator"></div>
 
-        <div class="field">
-          <label class="label">톤앤매너</label>
-          <select id="tone">
-            <option>전문가형</option>
-            <option>직설형</option>
-            <option>친근형</option>
-            <option>고급형</option>
-            <option>스토리형</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label class="label">플랫폼</label>
-          <select id="platform">
-            <option>인스타 릴스</option>
-            <option>유튜브 쇼츠</option>
-            <option>블로그</option>
-            <option>틱톡</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label class="label">목적</label>
-          <select id="goal">
-            <option>조회수</option>
-            <option>저장 유도</option>
-            <option>문의 유도</option>
-            <option>브랜딩</option>
-            <option>예약 전환</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label class="label">추가 키워드</label>
-          <input id="keywords" type="text" placeholder="예: 유지력, 손질 편함, 볼륨, 전후 비교" />
-        </div>
-      </div>
-
-      <div class="controls">
-        <button class="btn primary" onclick="generateContentPack()">GENERATE PACK</button>
-        <button class="btn secondary" onclick="resetContentForm()">RESET</button>
-      </div>
-
-      <div id="contentStatus" class="status"></div>
-      <div id="contentResult" class="resultWrap"></div>
-    </section>
-
-    <section id="tab-ideas" class="panel">
-      <h2 class="sectionTitle">릴스 아이디어 생성기</h2>
-      <p class="sectionDesc">
-        내 계정 주제와 최근 트렌드, 이번 주 포커스 키워드를 입력하면 업로드 가능한 아이디어 5개를 생성합니다.
-      </p>
-
-      <div class="formGrid">
-        <div class="field">
-          <label class="label">내 계정 주제</label>
-          <input id="accountTheme" type="text" placeholder="예: 남성 헤어, 아이롱펌, 볼륨 디자인" />
-        </div>
-
-        <div class="field">
-          <label class="label">최근 트렌드</label>
-          <input id="trend" type="text" placeholder="예: 자연스러운 볼륨, 손질 쉬운 스타일, 전후 비교" />
-        </div>
-
-        <div class="field">
-          <label class="label">이번 주 집중 키워드</label>
-          <input id="focus" type="text" placeholder="예: 유지력, 재현성, 아침 손질" />
-        </div>
-
-        <div class="field">
-          <label class="label">콘텐츠 목적</label>
-          <select id="ideaGoal">
-            <option>조회수</option>
-            <option>브랜딩</option>
-            <option>저장 유도</option>
-            <option>문의 유도</option>
-            <option>예약 전환</option>
-          </select>
-        </div>
-
-        <div class="field" style="grid-column:1/-1;">
-          <label class="label">추가 메모</label>
-          <textarea id="memo" placeholder="예: 너무 식상하지 않게, 고객 공감형으로, 전후 차이 강조"></textarea>
-        </div>
-      </div>
-
-      <div class="controls">
-        <button class="btn primary" onclick="generateReelsIdeas()">GENERATE 5 IDEAS</button>
-        <button class="btn secondary" onclick="resetIdeaForm()">RESET</button>
-      </div>
-
-      <div id="ideaStatus" class="status"></div>
-      <div id="ideaResult" class="resultWrap"></div>
-    </section>
-
-    <div class="footerNote">
-      이 버전은 AI API 없이도 바로 사용할 수 있도록 설계된 로컬 생성형 도구입니다.
-      즉, 입력값을 바탕으로 미리 설계된 로직이 콘텐츠 구조를 자동 조합해 주는 방식입니다.
-      나중에 원하면 OpenAI, Gemini, Claude API를 연결해 더 자연스럽고 고급스럽게 확장할 수 있습니다.
+  <div class="ball-stage" id="ballStage">
+    <div class="placeholder-balls">
+      <div class="placeholder-ball">?</div>
+      <div class="placeholder-ball">?</div>
+      <div class="placeholder-ball">?</div>
+      <div class="placeholder-ball">?</div>
+      <div class="placeholder-ball">?</div>
+      <div class="placeholder-ball">?</div>
+      <span style="color:rgba(255,215,0,0.15);font-family:'Orbitron';font-size:28px;margin:0 4px;">+</span>
+      <div class="placeholder-ball" style="border-color:rgba(255,215,0,0.2);">?</div>
     </div>
   </div>
 
-  <script>
-    const tabButtons = document.querySelectorAll('.tabBtn');
-    const panels = document.querySelectorAll('.panel');
+  <button class="btn-generate" id="generateBtn" onclick="generate()">
+    GENERATE
+  </button>
 
-    tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const target = btn.dataset.tab;
-        tabButtons.forEach(b => b.classList.remove('active'));
-        panels.forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(target).classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+  <div class="options-row">
+    <button class="option-btn active" data-count="1" onclick="setCount(1, this)">1게임</button>
+    <button class="option-btn" data-count="3" onclick="setCount(3, this)">3게임</button>
+    <button class="option-btn" data-count="5" onclick="setCount(5, this)">5게임</button>
+    <button class="option-btn" data-count="auto" onclick="toggleAuto(this)">⚡ AUTO</button>
+  </div>
+
+  <div class="history-section">
+    <div class="history-header">
+      <div class="history-title">History</div>
+      <button class="history-clear" id="clearBtn" onclick="clearHistory()">전체 삭제</button>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="empty-state">버튼을 눌러 행운의 번호를 생성하세요 ✦</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// === PARTICLE SYSTEM ===
+const pc = document.getElementById('particles');
+const pctx = pc.getContext('2d');
+let particles = [];
+
+function resizeParticles() {
+  pc.width = window.innerWidth;
+  pc.height = window.innerHeight;
+}
+resizeParticles();
+window.addEventListener('resize', resizeParticles);
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x = Math.random() * pc.width;
+    this.y = Math.random() * pc.height;
+    this.size = Math.random() * 2 + 0.5;
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.speedY = (Math.random() - 0.5) * 0.3;
+    this.opacity = Math.random() * 0.5 + 0.1;
+    this.pulse = Math.random() * Math.PI * 2;
+    this.color = Math.random() > 0.7 ? '#FFD700' : '#ffffff';
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.pulse += 0.02;
+    if (this.x < 0 || this.x > pc.width || this.y < 0 || this.y > pc.height) this.reset();
+  }
+  draw() {
+    const o = this.opacity * (0.5 + 0.5 * Math.sin(this.pulse));
+    pctx.beginPath();
+    pctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    pctx.fillStyle = this.color;
+    pctx.globalAlpha = o;
+    pctx.fill();
+    pctx.globalAlpha = 1;
+  }
+}
+
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+function animateParticles() {
+  pctx.clearRect(0, 0, pc.width, pc.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// === CONFETTI SYSTEM ===
+const cc = document.getElementById('confetti');
+const cctx = cc.getContext('2d');
+let confettis = [];
+
+function resizeConfetti() {
+  cc.width = window.innerWidth;
+  cc.height = window.innerHeight;
+}
+resizeConfetti();
+window.addEventListener('resize', resizeConfetti);
+
+class Confetti {
+  constructor() {
+    this.x = Math.random() * cc.width;
+    this.y = -20;
+    this.size = Math.random() * 8 + 4;
+    this.speedY = Math.random() * 4 + 2;
+    this.speedX = (Math.random() - 0.5) * 4;
+    this.rotation = Math.random() * 360;
+    this.rotSpeed = (Math.random() - 0.5) * 10;
+    this.opacity = 1;
+    this.color = ['#FFD700','#e63329','#4facfe','#a855f7','#22c55e','#ff6b6b','#00f2fe'][Math.floor(Math.random()*7)];
+    this.shape = Math.random() > 0.5 ? 'rect' : 'circle';
+  }
+  update() {
+    this.y += this.speedY;
+    this.x += this.speedX;
+    this.rotation += this.rotSpeed;
+    this.speedY += 0.05;
+    this.opacity -= 0.005;
+    return this.opacity > 0 && this.y < cc.height + 20;
+  }
+  draw() {
+    cctx.save();
+    cctx.translate(this.x, this.y);
+    cctx.rotate(this.rotation * Math.PI / 180);
+    cctx.globalAlpha = this.opacity;
+    cctx.fillStyle = this.color;
+    if (this.shape === 'rect') {
+      cctx.fillRect(-this.size/2, -this.size/4, this.size, this.size/2);
+    } else {
+      cctx.beginPath();
+      cctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+      cctx.fill();
+    }
+    cctx.restore();
+  }
+}
+
+function launchConfetti() {
+  for (let i = 0; i < 120; i++) {
+    const c = new Confetti();
+    c.x = cc.width / 2 + (Math.random() - 0.5) * 300;
+    c.y = cc.height / 2;
+    c.speedY = -(Math.random() * 12 + 4);
+    c.speedX = (Math.random() - 0.5) * 12;
+    confettis.push(c);
+  }
+}
+
+function animateConfetti() {
+  cctx.clearRect(0, 0, cc.width, cc.height);
+  confettis = confettis.filter(c => { const alive = c.update(); c.draw(); return alive; });
+  if (confettis.length > 0) requestAnimationFrame(animateConfetti);
+}
+
+// === SOUND (Web Audio API) ===
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playTone(freq, duration, delay = 0) {
+  if (!soundEnabled) return;
+  initAudio();
+  setTimeout(() => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + duration);
+  }, delay);
+}
+
+function playBallSound(index) {
+  const notes = [523, 587, 659, 698, 784, 880, 988];
+  playTone(notes[index % 7], 0.3, 0);
+}
+
+function playBonusSound() {
+  playTone(1047, 0.15, 0);
+  playTone(1319, 0.15, 100);
+  playTone(1568, 0.4, 200);
+}
+
+document.getElementById('soundToggle').addEventListener('click', function() {
+  soundEnabled = !soundEnabled;
+  this.textContent = soundEnabled ? '🔊' : '🔇';
+});
+
+// === LOTTO LOGIC ===
+let gameCount = 1;
+let history = [];
+let historyCounter = 0;
+let isGenerating = false;
+let autoMode = false;
+let autoInterval = null;
+
+function getRange(n) {
+  if (n <= 10) return 'range-1';
+  if (n <= 20) return 'range-2';
+  if (n <= 30) return 'range-3';
+  if (n <= 40) return 'range-4';
+  return 'range-5';
+}
+
+function generateNumbers() {
+  const nums = [];
+  while (nums.length < 6) {
+    const n = Math.floor(Math.random() * 45) + 1;
+    if (!nums.includes(n)) nums.push(n);
+  }
+  nums.sort((a, b) => a - b);
+  let bonus;
+  do { bonus = Math.floor(Math.random() * 45) + 1; } while (nums.includes(bonus));
+  return { main: nums, bonus };
+}
+
+function setCount(n, el) {
+  gameCount = n;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  if (autoMode) {
+    autoMode = false;
+    clearInterval(autoInterval);
+    document.querySelector('[data-count="auto"]').classList.remove('active');
+  }
+}
+
+function toggleAuto(el) {
+  autoMode = !autoMode;
+  el.classList.toggle('active');
+  if (autoMode) {
+    document.querySelectorAll('.option-btn:not([data-count="auto"])').forEach(b => b.classList.remove('active'));
+    generate();
+    autoInterval = setInterval(() => {
+      if (!isGenerating) generate();
+    }, 4000);
+  } else {
+    clearInterval(autoInterval);
+  }
+}
+
+async function generate() {
+  if (isGenerating) return;
+  isGenerating = true;
+
+  const btn = document.getElementById('generateBtn');
+  btn.classList.add('spinning');
+  btn.textContent = '⟳ SPINNING...';
+
+  const count = autoMode ? 1 : gameCount;
+
+  for (let g = 0; g < count; g++) {
+    const { main, bonus } = generateNumbers();
+
+    await showBalls(main, bonus);
+    addToHistory(main, bonus);
+
+    if (g < count - 1) await sleep(800);
+  }
+
+  launchConfetti();
+  animateConfetti();
+
+  btn.classList.remove('spinning');
+  btn.textContent = 'GENERATE';
+  isGenerating = false;
+}
+
+function showBalls(main, bonus) {
+  return new Promise(resolve => {
+    const stage = document.getElementById('ballStage');
+    stage.innerHTML = '';
+
+    const row = document.createElement('div');
+    row.className = 'balls-row';
+
+    main.forEach((num, i) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'ball-wrapper';
+      const ball = document.createElement('div');
+      ball.className = `ball ${getRange(num)}`;
+      ball.textContent = num;
+      wrapper.appendChild(ball);
+      row.appendChild(wrapper);
+
+      setTimeout(() => {
+        wrapper.classList.add('visible', 'bounce');
+        playBallSound(i);
+      }, 300 + i * 200);
     });
 
-    function copyText(text){
-      navigator.clipboard.writeText(text).then(() => {
-        alert('복사되었습니다.');
-      }).catch(() => {
-        alert('복사에 실패했습니다.');
-      });
-    }
+    const plus = document.createElement('span');
+    plus.className = 'plus-sign';
+    plus.textContent = '+';
+    row.appendChild(plus);
 
-    function safe(v, fallback){
-      return (v && v.trim()) ? v.trim() : fallback;
-    }
+    const bonusWrapper = document.createElement('div');
+    bonusWrapper.className = 'ball-wrapper';
+    const bonusBall = document.createElement('div');
+    bonusBall.className = `ball ${getRange(bonus)} bonus`;
+    bonusBall.textContent = bonus;
+    bonusWrapper.appendChild(bonusBall);
+    row.appendChild(bonusWrapper);
 
-    function pick(arr, i){
-      return arr[i % arr.length];
-    }
+    setTimeout(() => {
+      plus.classList.add('visible');
+    }, 300 + 6 * 200);
 
-    function generateContentPack(){
-      const topic = safe(document.getElementById('topic').value, '고객이 궁금해하는 핵심 주제');
-      const target = safe(document.getElementById('target').value, '일반 고객');
-      const tone = safe(document.getElementById('tone').value, '전문가형');
-      const platform = safe(document.getElementById('platform').value, '인스타 릴스');
-      const goal = safe(document.getElementById('goal').value, '조회수');
-      const keywords = safe(document.getElementById('keywords').value, '전후 비교, 핵심 포인트');
+    setTimeout(() => {
+      bonusWrapper.classList.add('visible', 'bounce');
+      playBonusSound();
+    }, 300 + 6 * 200 + 200);
 
-      const titleTemplates = [
-        `${topic}, 결과 차이는 여기서 갈립니다`,
-        `${topic} 제대로 알면 결과가 달라집니다`,
-        `${topic} 왜 어떤 사람은 더 오래, 더 좋게 나올까?`,
-        `${topic} 실패와 완성의 차이`,
-        `${topic} 현장에서 바로 먹히는 핵심 포인트`
-      ];
+    stage.appendChild(row);
 
-      const hookTemplates = [
-        `많은 ${target}이 ${topic}에서 가장 많이 놓치는 건 바로 이것입니다.`,
-        `${topic}은 단순한 과정이 아니라 결과를 설계하는 작업입니다.`,
-        `겉으로는 비슷해 보여도 ${topic}의 완성도는 디테일에서 갈립니다.`,
-        `결과가 오래가는 사람과 금방 무너지는 사람의 차이, ${topic}에 답이 있습니다.`,
-        `${topic}을 이해하면 손질, 유지력, 만족도가 전부 달라집니다.`
-      ];
+    setTimeout(resolve, 300 + 7 * 200 + 400);
+  });
+}
 
-      const toneMap = {
-        "전문가형": "핵심 원리와 결과 차이를 분명하게 설명하는 방식",
-        "직설형": "군더더기 없이 결론부터 말하고 문제를 날카롭게 짚는 방식",
-        "친근형": "고객이 쉽게 이해하도록 부드럽고 편하게 설명하는 방식",
-        "고급형": "브랜드 신뢰감과 전문성을 동시에 느끼게 하는 방식",
-        "스토리형": "현장 경험과 변화 과정을 통해 몰입감을 만드는 방식"
-      };
+function addToHistory(main, bonus) {
+  historyCounter++;
+  const now = new Date();
+  const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
 
-      const ctaMap = {
-        "조회수": "이 내용이 도움이 됐다면 저장해두고 다음 콘텐츠도 확인해보세요.",
-        "저장 유도": "나중에 다시 보기 좋게 지금 저장해두세요.",
-        "문의 유도": "내 상태에 맞는 상담이 필요하다면 편하게 문의 주세요.",
-        "브랜딩": "기준이 있는 작업은 결과로 증명됩니다. 다음 콘텐츠도 기대해 주세요.",
-        "예약 전환": "내 스타일에 맞는 방향이 궁금하다면 예약 상담으로 연결해보세요."
-      };
+  history.unshift({ id: historyCounter, main, bonus, time });
+  if (history.length > 20) history.pop();
+  renderHistory();
+}
 
-      const hashtagBase = [
-        "#콘텐츠기획", "#릴스기획", "#숏폼아이디어", "#캡션작성", "#해시태그전략",
-        "#브랜딩", "#마케팅", "#인스타운영", "#콘텐츠자동화", "#아이디어생성"
-      ];
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (history.length === 0) {
+    list.innerHTML = '<div class="empty-state">버튼을 눌러 행운의 번호를 생성하세요 ✦</div>';
+    return;
+  }
+  list.innerHTML = history.map(h => `
+    <div class="history-item">
+      <span class="history-num">#${h.id}</span>
+      <div class="history-balls">
+        ${h.main.map(n => `<div class="history-ball ${getRange(n)}">${n}</div>`).join('')}
+        <span class="history-plus">+</span>
+        <div class="history-ball ${getRange(h.bonus)} bonus-border">${h.bonus}</div>
+      </div>
+      <span class="history-time">${h.time}</span>
+    </div>
+  `).join('');
+}
 
-      const keywordTags = keywords
-        .split(',')
-        .map(v => v.trim())
-        .filter(Boolean)
-        .slice(0, 8)
-        .map(v => "#" + v.replace(/\s+/g, ""));
+function clearHistory() {
+  history = [];
+  historyCounter = 0;
+  renderHistory();
+}
 
-      const titles = [
-        titleTemplates[0],
-        titleTemplates[1],
-        titleTemplates[3]
-      ];
-
-      const hooks = [
-        hookTemplates[0],
-        hookTemplates[1],
-        hookTemplates[3]
-      ];
-
-      const script = `[오프닝 1~3초]
-"${hooks[0]}"
-
-[핵심 설명 4~18초]
-오늘 이야기할 주제는 "${topic}"입니다.
-이 내용을 ${target} 기준으로 쉽게 풀어보면,
-가장 중요한 포인트는 결과가 우연이 아니라 설계된다는 점입니다.
-
-[디테일 설명 19~35초]
-특히 ${keywords} 같은 요소는 완성도를 크게 좌우합니다.
-겉으로만 따라 하면 비슷해 보여도,
-실제 결과는 기준과 디테일에서 차이가 납니다.
-
-[결론 36~50초]
-그래서 ${topic}은 단순히 하는 것이 아니라,
-왜 그렇게 해야 하는지 이해하고 접근해야 결과가 달라집니다.
-
-[마무리 CTA]
-${ctaMap[goal]}`;
-
-      const caption = `${topic}은 생각보다 훨씬 단순한 기술 문제가 아닙니다.
-
-${target}이 실제로 만족하는 결과를 만들려면
-보이는 부분만이 아니라 디테일한 기준과 설계가 중요합니다.
-
-이번 콘텐츠에서는 ${keywords}를 중심으로
-왜 결과 차이가 생기는지 핵심만 정리했습니다.
-
-톤 방향: ${tone} / 플랫폼: ${platform}
-설명 방식: ${toneMap[tone]}
-
-${ctaMap[goal]}`;
-
-      const hashtags = [...new Set([...hashtagBase, ...keywordTags])].slice(0, 15).join(" ");
-
-      const cta = ctaMap[goal];
-
-      const result = document.getElementById('contentResult');
-      const status = document.getElementById('contentStatus');
-      status.textContent = '콘텐츠 패키드가 생성되었습니다.';
-
-      const allText =
-`[썸네일 제목]
-1. ${titles[0]}
-2. ${titles[1]}
-3. ${titles[2]}
-
-[오프닝 훅]
-1. ${hooks[0]}
-2. ${hooks[1]}
-3. ${hooks[2]}
-
-[릴스 스크립트]
-${script}
-
-[캡션]
-${caption}
-
-[해시태그]
-${hashtags}
-
-[CTA]
-${cta}`;
-
-      result.innerHTML = `
-        <div class="resultCard">
-          <div class="resultHead">THUMBNAIL TITLES</div>
-          <div class="resultBody">${titles.map((t, i) => `${i+1}. ${t}`).join('\n')}</div>
-          <div class="miniActions">
-            <button class="miniBtn" onclick='copyText(${JSON.stringify(titles.join("\\n"))})'>COPY</button>
-          </div>
-        </div>
-
-        <div class="resultCard">
-          <div class="resultHead">OPENING HOOKS</div>
-          <div class="resultBody">${hooks.map((h, i) => `${i+1}. ${h}`).join('\n')}</div>
-          <div class="miniActions">
-            <button class="miniBtn" onclick='copyText(${JSON.stringify(hooks.join("\\n"))})'>COPY</button>
-          </div>
-        </div>
-
-        <div class="resultCard">
-          <div class="resultHead">SCRIPT</div>
-          <div class="resultBody">${script}</div>
-          <div class="miniActions">
-            <button class="miniBtn" onclick='copyText(${JSON.stringify(script)})'>COPY</button>
-          </div>
-        </div>
-
-        <div class="resultCard">
-          <div class="resultHead">CAPTION</div>
-          <div class="resultBody">${caption}</div>
-          <div class="miniActions">
-            <button class="miniBtn" onclick='copyText(${JSON.stringify(caption)})'>COPY</button>
-          </div>
-        </div>
-
-        <div class="resultCard">
-          <div class="resultHead">HASHTAGS + CTA</div>
-          <div class="resultBody">[해시태그]
-${hashtags}
-
-[CTA]
-${cta}</div>
-          <div class="miniActions">
-            <button class="miniBtn" onclick='copyText(${JSON.stringify(hashtags + "\\n\\n" + cta)})'>COPY</button>
-          </div>
-        </div>
-
-        <div class="copyAllBar">
-          <button class="btn primary" onclick='copyText(${JSON.stringify(allText)})'>COPY ALL</button>
-        </div>
-      `;
-    }
-
-    function generateReelsIdeas(){
-      const accountTheme = safe(document.getElementById('accountTheme').value, '전문 콘텐츠 계정');
-      const trend = safe(document.getElementById('trend').value, '전후 비교, 실용 정보');
-      const focus = safe(document.getElementById('focus').value, '이번 주 핵심 키워드');
-      const ideaGoal = safe(document.getElementById('ideaGoal').value, '조회수');
-      const memo = safe(document.getElementById('memo').value, '너무 식상하지 않게, 실전형으로');
-
-      const introSet = [
-        "사람들이 가장 많이 오해하는 포인트",
-        "결과가 갈리는 결정적 차이",
-        "겉보기와 실제가 다른 부분",
-        "고객은 모르지만 전문가가 보는 기준",
-        "지금 반응 나오기 좋은 구조"
-      ];
-
-      const angleSet = [
-        "전후 비교 중심",
-        "체크리스트 구조",
-        "짧고 강한 오프닝",
-        "오해 바로잡기 형식",
-        "실전 팁 정리형"
-      ];
-
-      const ideaBlocks = [];
-      for(let i=0; i<5; i++){
-        const title = `${accountTheme} | ${pick(introSet, i)} ${i+1}`;
-        const hook = `${trend} 흐름에서 지금 먹히는 포인트는 '${pick(introSet, i)}'입니다.`;
-        const shot = `${pick(angleSet, i)}으로 시작 → 핵심 장면 2개 → 결론 1개 → CTA 마무리`;
-        const message = `${focus}를 중심으로 ${accountTheme}의 전문성과 차별점을 보여주는 구성`;
-        const caption = `${accountTheme} 계정이라면 이번 주에는 ${trend} 키워드를 ${focus}와 연결해 보여주는 방식이 좋습니다. ${memo}`;
-        const tags = `#릴스아이디어 #콘텐츠아이디어 #숏폼전략 #${accountTheme.replace(/\s+/g,'')} #${focus.replace(/\s+/g,'')} #${ideaGoal.replace(/\s+/g,'')}`;
-        ideaBlocks.push({ title, hook, shot, message, caption, tags });
-      }
-
-      const result = document.getElementById('ideaResult');
-      const status = document.getElementById('ideaStatus');
-      status.textContent = '이번 주 업로드용 릴스 아이디어 5개가 생성되었습니다.';
-
-      const allIdeasText = ideaBlocks.map((item, idx) => {
-        return `[아이디어 ${idx+1}]
-제목: ${item.title}
-훅: ${item.hook}
-촬영 포인트: ${item.shot}
-핵심 메시지: ${item.message}
-캡션 방향: ${item.caption}
-해시태그: ${item.tags}`;
-      }).join('\n\n');
-
-      result.innerHTML = `
-        <div class="resultCard">
-          <div class="resultHead">THIS WEEK'S REELS IDEAS</div>
-          ${ideaBlocks.map((item, idx) => `
-            <div class="ideaItem">
-              <div class="ideaTitle">${idx+1}. ${item.title}</div>
-              <div class="ideaMeta">
-                <div><strong>훅:</strong> ${item.hook}</div>
-                <div><strong>촬영 포인트:</strong> ${item.shot}</div>
-                <div><strong>핵심 메시지:</strong> ${item.message}</div>
-                <div><strong>캡션 방향:</strong> ${item.caption}</div>
-                <div><strong>해시태그:</strong> ${item.tags}</div>
-              </div>
-            </div>
-          `).join('')}
-          <div class="miniActions" style="padding-top:14px;">
-            <button class="miniBtn" onclick='copyText(${JSON.stringify(allIdeasText)})'>COPY ALL IDEAS</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function resetContentForm(){
-      document.getElementById('topic').value = '';
-      document.getElementById('target').value = '';
-      document.getElementById('tone').selectedIndex = 0;
-      document.getElementById('platform').selectedIndex = 0;
-      document.getElementById('goal').selectedIndex = 0;
-      document.getElementById('keywords').value = '';
-      document.getElementById('contentResult').innerHTML = '';
-      document.getElementById('contentStatus').textContent = '';
-    }
-
-    function resetIdeaForm(){
-      document.getElementById('accountTheme').value = '';
-      document.getElementById('trend').value = '';
-      document.getElementById('focus').value = '';
-      document.getElementById('ideaGoal').selectedIndex = 0;
-      document.getElementById('memo').value = '';
-      document.getElementById('ideaResult').innerHTML = '';
-      document.getElementById('ideaStatus').textContent = '';
-    }
-  </script>
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
 </body>
 </html>
